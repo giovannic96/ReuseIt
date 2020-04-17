@@ -24,4 +24,21 @@
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+    <fragment
+        android:id="@+id/itemDetailsFrag"
+        android:name="it.polito.mad.mhackeroni.ItemDetailsFragment"
+        android:label="ItemDetailsFragment" >
+        <action
+            android:id="@+id/action_itemDetailsFragment2_to_itemEditFragment2"
+            app:destination="@id/itemEditFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemEditFrag"
+        app:popUpTo="@+id/itemDetailsFrag"
+        android:name="it.polito.mad.mhackeroni.ItemEditFragment"
+        android:label="ItemEditFragment" >
+        <action
+            android:id="@+id/action_itemEditFragment2_to_itemDetailsFragment2"
+            app:destination="@id/itemDetailsFrag" />
+    </fragment>
 </navigation>
