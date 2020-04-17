@@ -25,4 +25,6 @@
     <string name="close_dialog">Chiudi</string>
     <string name="warning_dialog">Attenzione</string>
     <string name="image_not_found">Immagine del profilo non trovata</string>
+    <string name="item_name">Nome Item</string>
+    <string name="item_price">Prezzo Item</string>
 </resources>
