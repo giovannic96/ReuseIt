@@ -24,4 +24,6 @@
     <string name="close_dialog">Close</string>
     <string name="warning_dialog">Warning</string>
     <string name="image_not_found">Cannot find profile image</string>
+    <string name="profile_update">Profile updated</string>
+    <string name="undo">Undo</string>
 </resources>

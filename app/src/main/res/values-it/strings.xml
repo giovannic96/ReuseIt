@@ -25,4 +25,6 @@
     <string name="close_dialog">Chiudi</string>
     <string name="warning_dialog">Attenzione</string>
     <string name="image_not_found">Immagine del profilo non trovata</string>
+    <string name="profile_update">Profilo aggiornato</string>
+    <string name="undo">Annulla</string>
 </resources>

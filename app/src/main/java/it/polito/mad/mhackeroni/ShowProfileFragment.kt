@@ -3,7 +3,9 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
@@ -42,6 +44,8 @@ class ShowProfileFragment : Fragment(){
             phone_number.text = profile.value?.phoneNumber ?: resources.getString(R.string.defaultLocation)
             location.text = profile.value?.location ?: resources.getString(R.string.defaultLocation)
         })
+
+        getResult()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,6 +70,27 @@ class ShowProfileFragment : Fragment(){
 
         view?.findNavController()?.navigate(R.id.showToEdit, bundle)
 
+    }
+
+    fun getResult(){
+        val newProfileJSON = arguments?.getString("new_profile", "")
+
+        val oldProfile = profile.value
+
+        if(!newProfileJSON.isNullOrEmpty()){
+            profile.value = newProfileJSON?.let { Profile.fromStringJSON(it) }
+
+            val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
+            if (snackbar != null) {
+                snackbar.setAction(getString(R.string.undo), View.OnClickListener {
+                    profile.value = oldProfile
+                })
+
+                snackbar.show()
+            }
+        }
+
+        arguments?.clear() // Clear arguments
     }
 
     private fun saveData(s: SharedPreferences, p:Profile) {
