@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/profile_nav"
-    app:startDestination="@id/showProfileFragment">
+    app:startDestination="@id/showProfileFrag">
 
     <fragment
-        android:id="@+id/showProfileFragment"
+        android:id="@+id/showProfileFrag"
         android:name="it.polito.mad.mhackeroni.ShowProfileFragment"
         android:label="ShowProfileFragment" >
         <action
-            android:id="@+id/action_showProfileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            android:id="@+id/showToEdit"
+            app:destination="@id/editProfileFrag"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/editProfileFragment"
+        android:id="@+id/editProfileFrag"
         android:name="it.polito.mad.mhackeroni.EditProfileFragment"
         android:label="EditProfileFragment" >
         <action
-            android:id="@+id/action_editProfileFragment_to_showProfileFragment"
-            app:destination="@id/showProfileFragment" />
+            android:id="@+id/editToShow"
+            app:popUpTo="@+id/showProfileFrag"
+            app:destination="@id/showProfileFrag"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 </navigation>

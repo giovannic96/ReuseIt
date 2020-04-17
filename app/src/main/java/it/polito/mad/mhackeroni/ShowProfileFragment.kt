@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_show_profile.*
 
@@ -23,7 +22,7 @@ class ShowProfileFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPref:SharedPreferences = context!!.getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
         loadData(sharedPref)
 
@@ -62,10 +61,11 @@ class ShowProfileFragment : Fragment(){
     }
 
     fun editProfile(){
-        bundleOf("profile" to profile.value?.let { Profile.toJSON(it).toString() })
-        fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment, EditProfileFragment())
-                ?.commit()
+        val bundle = Bundle()
+        bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
+
+        view?.findNavController()?.navigate(R.id.showToEdit, bundle)
+
     }
 
     private fun saveData(s: SharedPreferences, p:Profile) {
