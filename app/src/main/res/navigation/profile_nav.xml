@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/profile_nav"
+    app:startDestination="@id/showProfileFrag">
+
+    <fragment
+        android:id="@+id/showProfileFrag"
+        android:name="it.polito.mad.mhackeroni.ShowProfileFragment"
+        android:label="ShowProfileFragment">
+        <action
+            android:id="@+id/showToEdit"
+            app:destination="@id/editProfileFrag"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFrag"
+        android:name="it.polito.mad.mhackeroni.EditProfileFragment"
+        android:label="EditProfileFragment" >
+        <action
+            android:id="@+id/editToShow"
+            app:popUpTo="@+id/showProfileFrag"
+            app:destination="@id/showProfileFrag"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDetailsFrag"
+        android:name="it.polito.mad.mhackeroni.ItemDetailsFragment"
+        android:label="ItemDetailsFragment" >
+        <action
+            android:id="@+id/action_itemDetailsFragment2_to_itemEditFragment2"
+            app:destination="@id/itemEditFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemEditFrag"
+        app:popUpTo="@+id/itemDetailsFrag"
+        android:name="it.polito.mad.mhackeroni.ItemEditFragment"
+        android:label="ItemEditFragment" >
+        <action
+            android:id="@+id/action_itemEditFragment2_to_itemDetailsFragment2"
+            app:destination="@id/itemDetailsFrag" />
+    </fragment>
+</navigation>
