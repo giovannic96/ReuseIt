@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">ReuseIt</string>
+    <string name="edit">Edit</string>
+    <string name="shared_pref">SharedPrefs</string>
+    <string name="profile_sharedPref">profileSharedPref</string>
+    <string name="defaultFullName">Full Name</string>
+    <string name="defaultNickname">nickname</string>
+    <string name="defaultEmail">email@address</string>
+    <string name="defaultLocation">Geographic area of interest</string>
+    <string name="defaultAvatar">Avatar</string>
+    <string name="defaultBio">Update your bio!</string>
+    <string name="defaultPhoneNumber">Phone number (opt.)</string>
+    <string name="save">Save</string>
+    <string name="picFromGallery">Select from gallery</string>
+    <string name="picFromCamera">Take from camera</string>
+    <string name="photo">Photo</string>
+    <string name="mail_error">Email address not valid</string>
+    <string name="nickname_error">Nickname not valid</string>
+    <string name="phoneNumber_error">Phone number not valid</string>
+    <string name="location_error">Location not valid</string>
+    <string name="rotate_error">You must choose a photo a grant the required permission</string>
+    <string name="permission_expl">This app requires to write on external permission to take a profile picture</string>
+    <string name="permission_err">Cannot take picture or rotate without permission</string>
+    <string name="close_dialog">Close</string>
+    <string name="warning_dialog">Warning</string>
+    <string name="image_not_found">Cannot find profile image</string>
 </resources>
