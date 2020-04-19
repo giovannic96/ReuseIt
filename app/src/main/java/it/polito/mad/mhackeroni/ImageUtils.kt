@@ -1,20 +1,18 @@
 package it.polito.mad.mhackeroni
 
 import android.content.ContentResolver
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore.Images
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.OutputStream
+import android.util.Log
+import java.io.*
 
 
 class ImageUtils {
@@ -25,59 +23,23 @@ class ImageUtils {
 
             fun getBitmap(path: String, context: Context): Bitmap?{
                 var bitmap: Bitmap?
-
-                if(!canDisplayBitmap(path, context)) return getPlaceholder(context)
+                var input: InputStream? = null
 
                 try{
+                    input = context.contentResolver.openInputStream(Uri.parse(path))
+                    bitmap = BitmapFactory.decodeStream(input, null, null)!!
+                } catch (e1: FileNotFoundException){
                     bitmap = BitmapFactory.decodeFile(path)
-                    if(bitmap == null)
-                        throw FileNotFoundException() // Try to use content resolver
-                } catch (e:FileNotFoundException){
-                    try {
-                        val input = context.contentResolver.openInputStream(Uri.parse(path))
-                        bitmap = BitmapFactory.decodeStream(input, null, null)!!
-
-                    }catch (e:Exception){
-                        return getPlaceholder(context)
-                    }
+                } catch (e: Exception) {
+                    return getPlaceholder(context)
+                } finally {
+                    if(input != null)
+                        input.close()
                 }
 
                 return bitmap
             }
 
-            fun checkOrientation(path: String, context: Context): Bitmap {
-                var bitmap: Bitmap? = getBitmap(path, context)
-
-                try {
-                    val ei = ExifInterface(path)
-                    val orientation: Int = ei.getAttributeInt(
-                        ExifInterface.TAG_ORIENTATION,
-                        ExifInterface.ORIENTATION_FLIP_VERTICAL
-                    )
-                    lateinit var rotatedBitmap: Bitmap
-
-                    rotatedBitmap = when (orientation) {
-                        ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap!!, 90.0F)
-                        ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap!!, 180.0F)
-                        ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap!!, 270.0F)
-                        ExifInterface.ORIENTATION_NORMAL -> bitmap!!
-                        else -> bitmap!!
-                    }
-
-                    return rotatedBitmap
-
-                }catch (e:FileNotFoundException){
-                    return bitmap!!
-                }
-            }
-
-            fun rotateImage(source: Bitmap, angle: Float): Bitmap {
-                val matrix = Matrix()
-                matrix.postRotate(angle)
-                return Bitmap.createBitmap(
-                    source, 0, 0, source.width, source.height,
-                    matrix, true)
-            }
 
         fun rotateImageFromUri(uri: Uri, angle: Float, context: Context): Bitmap? {
             val source = getBitmap(uri.toString(), context)
@@ -91,47 +53,48 @@ class ImageUtils {
             }
         }
 
-            private fun getPlaceholder(context: Context):Bitmap{
+            private fun getPlaceholder(context: Context):Bitmap?{
                 val bitmap:Bitmap
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                     val vectorDrawable = context.getDrawable(R.drawable.ic_avatar)
 
                     bitmap = Bitmap.createBitmap(
-                        vectorDrawable!!.intrinsicWidth,
-                        vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+                            vectorDrawable!!.intrinsicWidth,
+                            vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
                     )
 
-                    vectorDrawable.setBounds(0, 0, Canvas(bitmap).getWidth(), Canvas(bitmap).getHeight())
+                    vectorDrawable.setBounds(0, 0, Canvas(bitmap).width, Canvas(bitmap).height)
                     vectorDrawable.draw(Canvas(bitmap))
+
                 } else {
                     bitmap = BitmapFactory.decodeResource(
-                        context.resources,
-                        R.drawable.ic_avatar
+                            context.resources,
+                            R.drawable.ic_avatar
                     )
                 }
 
                 return bitmap
-            }
+          }
 
             fun canDisplayBitmap(path: String, context: Context):Boolean{
-                var bitmap:Bitmap?
+                var input: InputStream? = null
+                var canDisplay = false
 
                 try{
-                    bitmap = BitmapFactory.decodeFile(path)
-                    if(bitmap == null) {
-                        throw FileNotFoundException() // Try to use content resolver
-                    }
-                } catch (e:FileNotFoundException){
-                    try {
-                        val input = context.contentResolver.openInputStream(Uri.parse(path))
-                        BitmapFactory.decodeStream(input, null, null)!!
-
-                    }catch (e:Exception){
-                        return false
-                    }
+                    input = context.contentResolver.openInputStream(Uri.parse(path))
+                    BitmapFactory.decodeStream(input, null, null)!!
+                    input?.close()
+                    canDisplay =  true
+                } catch (e1: FileNotFoundException){
+                    BitmapFactory.decodeFile(path)
+                    canDisplay = true
+                } catch (e: Exception) {
+                     canDisplay =  false
+                } finally {
+                    if(input != null)
+                        input.close()
+                    return canDisplay
                 }
-
-                return true
             }
 
             fun insertImage(
@@ -168,5 +131,6 @@ class ImageUtils {
                 }
                 return stringUrl
             }
+
     }
 }

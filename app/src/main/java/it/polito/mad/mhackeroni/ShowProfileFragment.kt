@@ -3,9 +3,7 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
@@ -15,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_show_profile.*
 
 class ShowProfileFragment : Fragment(){
     var profile: MutableLiveData<Profile> = MutableLiveData()
+    private var mListener: OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -46,6 +45,15 @@ class ShowProfileFragment : Fragment(){
         })
 
         getResult()
+
+        imageProfile.setOnClickListener {
+            val bundle = Bundle()
+
+            if(profile.value?.image?.let { it1 -> ImageUtils.canDisplayBitmap(it1, requireContext()) }!!){
+
+                bundle.putString("uri", profile.value?.image.toString())
+                view.findNavController().navigate(R.id.action_nav_showProfile_to_showProfileImageFragment, bundle) }
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -64,6 +72,15 @@ class ShowProfileFragment : Fragment(){
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            mListener = context as OnCompleteListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement OnCompleteListener")
+        }
+    }
+
     fun editProfile(){
         val bundle = Bundle()
         bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
@@ -74,21 +91,27 @@ class ShowProfileFragment : Fragment(){
 
     fun getResult(){
         val newProfileJSON = arguments?.getString("new_profile", "")
-
+        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         val oldProfile = profile.value
 
-        if(!newProfileJSON.isNullOrEmpty()){
+        if(!newProfileJSON.isNullOrEmpty() && newProfileJSON != oldProfile?.let { Profile.toJSON(it).toString() }){
+
             profile.value = newProfileJSON.let { Profile.fromStringJSON(it) }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     profile.value = oldProfile
+                    if (oldProfile != null) {
+                        saveData(sharedPref, oldProfile)
+                    }
                 })
 
                 snackbar.show()
             }
         }
+
+        profile.value?.let { saveData(sharedPref, it) }
 
         arguments?.clear() // Clear arguments
     }
@@ -98,6 +121,7 @@ class ShowProfileFragment : Fragment(){
             putString(getString(it.polito.mad.mhackeroni.R.string.profile_sharedPref), Profile.toJSON(p).toString())
             apply()
         }
+        mListener?.onComplete();
     }
 
     private fun loadData(s: SharedPreferences){
@@ -105,5 +129,7 @@ class ShowProfileFragment : Fragment(){
         profile.value = JSONString?.let { Profile.fromStringJSON(it) }
     }
 
-
+    interface OnCompleteListener {
+        fun onComplete()
+    }
 }
