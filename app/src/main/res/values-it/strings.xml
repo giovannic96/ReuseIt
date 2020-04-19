@@ -35,4 +35,6 @@
     <string name="item_price">Prezzo Item</string>
     <string name="profile_update">Profilo aggiornato</string>
     <string name="undo">Annulla</string>
+    <string name="profile_nav">Profilo</string>
+    <string name="items_nav">Oggetti in vendita</string>
 </resources>

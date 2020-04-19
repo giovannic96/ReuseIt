@@ -98,11 +98,11 @@ class ImageUtils {
 
                     bitmap = Bitmap.createBitmap(
                         vectorDrawable!!.intrinsicWidth,
-                        vectorDrawable!!.intrinsicHeight, Bitmap.Config.ARGB_8888
+                        vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
                     )
 
-                    vectorDrawable!!.setBounds(0, 0, Canvas(bitmap).getWidth(), Canvas(bitmap).getHeight())
-                    vectorDrawable!!.draw(Canvas(bitmap))
+                    vectorDrawable.setBounds(0, 0, Canvas(bitmap).getWidth(), Canvas(bitmap).getHeight())
+                    vectorDrawable.draw(Canvas(bitmap))
                 } else {
                     bitmap = BitmapFactory.decodeResource(
                         context.resources,
@@ -124,7 +124,7 @@ class ImageUtils {
                 } catch (e:FileNotFoundException){
                     try {
                         val input = context.contentResolver.openInputStream(Uri.parse(path))
-                        bitmap = BitmapFactory.decodeStream(input, null, null)!!
+                        BitmapFactory.decodeStream(input, null, null)!!
 
                     }catch (e:Exception){
                         return false
@@ -151,16 +151,11 @@ class ImageUtils {
                 var stringUrl: String? = null
                 try {
                     url = cr.insert(Images.Media.EXTERNAL_CONTENT_URI, values)
-                    if (source != null) {
-                        val imageOut: OutputStream? = cr.openOutputStream(url!!)
-                        try {
-                            source.compress(Bitmap.CompressFormat.JPEG, 30, imageOut)
-                        } finally {
-                            imageOut?.close()
-                        }
-                    } else {
-                        cr.delete(url!!, null, null)
-                        url = null
+                    val imageOut: OutputStream? = cr.openOutputStream(url!!)
+                    try {
+                        source.compress(Bitmap.CompressFormat.JPEG, 30, imageOut)
+                    } finally {
+                        imageOut?.close()
                     }
                 } catch (e: java.lang.Exception) {
                     if (url != null) {

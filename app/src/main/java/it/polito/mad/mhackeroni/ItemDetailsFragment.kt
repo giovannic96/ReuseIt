@@ -38,8 +38,11 @@ class ItemDetailsFragment: Fragment(){
     fun editItem(){
         //TODO with item
         //bundleOf("profile" to profile.value?.let { Profile.toJSON(it).toString() })
+       /*
         fragmentManager?.beginTransaction()
             ?.replace(R.id.fragment_placeholder, ItemEditFragment())
             ?.commit()
+        */
+
     }
 }

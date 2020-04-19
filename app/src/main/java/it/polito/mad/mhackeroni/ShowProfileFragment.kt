@@ -28,10 +28,10 @@ class ShowProfileFragment : Fragment(){
 
         loadData(sharedPref)
 
-        profile.observe(this, androidx.lifecycle.Observer {
+        profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
                 imageProfile.setImageBitmap(profile.value?.image?.let {
-                    it1 -> ImageUtils.getBitmap(it1, context!!)
+                    it1 -> ImageUtils.getBitmap(it1, requireContext())
                 })
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
@@ -68,7 +68,7 @@ class ShowProfileFragment : Fragment(){
         val bundle = Bundle()
         bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
 
-        view?.findNavController()?.navigate(R.id.showToEdit, bundle)
+        view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
 
     }
 
@@ -78,7 +78,7 @@ class ShowProfileFragment : Fragment(){
         val oldProfile = profile.value
 
         if(!newProfileJSON.isNullOrEmpty()){
-            profile.value = newProfileJSON?.let { Profile.fromStringJSON(it) }
+            profile.value = newProfileJSON.let { Profile.fromStringJSON(it) }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {

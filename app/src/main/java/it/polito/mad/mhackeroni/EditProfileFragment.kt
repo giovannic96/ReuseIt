@@ -36,10 +36,10 @@ class EditProfileFragment : Fragment() {
             profile.value = savedProfile
         }
 
-        profile.observe(this, androidx.lifecycle.Observer {
+        profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
                 edit_imageProfile.setImageBitmap(profile.value?.image?.let {
-                    it1 -> ImageUtils.getBitmap(it1, context!!)
+                    it1 -> ImageUtils.getBitmap(it1, requireContext())
                 })
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
@@ -71,7 +71,7 @@ class EditProfileFragment : Fragment() {
 
                 var bundle = bundleOf("new_profile" to profile.value?.let { Profile.toJSON(it).toString() })
 
-                view?.findNavController()?.navigate(R.id.editToShow, bundle)
+                view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
 
                 return true
             }

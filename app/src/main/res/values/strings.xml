@@ -34,4 +34,6 @@
     <string name="item_price">Item price</string>
     <string name="profile_update">Profile updated</string>
     <string name="undo">Undo</string>
+    <string name="profile_nav">Profile</string>
+    <string name="items_nav">Item on sale</string>
 </resources>
