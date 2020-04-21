@@ -1,12 +1,12 @@
 package it.polito.mad.mhackeroni
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
@@ -23,22 +23,26 @@ class ItemListFragment: Fragment() {
 
         itemList.adapter = ItemAdapter(items, object : MyAdapterListener {
             override fun editItemViewOnClick(item: Item) {
-                val bundle = Bundle()
-                bundle.putString("item", item.let { Item.toJSON(it).toString()})
-                view?.findNavController()?.navigate(R.id.action_nav_itemList_to_nav_ItemDetailEdit, bundle)
+                navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit, item)
+            }
+
+            override fun itemViewOnClick(item: Item) {
+                navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetail, item)
             }
         })
-        itemList.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-
+        itemList.layoutManager = if(items.size == 0)
+                                    LinearLayoutManager(context)
+                                else
+                                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
 
     private fun getItems(): MutableList<Item> {
+        //return mutableListOf() -> if we want to try empty list
         return mutableListOf(
             Item("Pane di grano tenero", 0.70),
             Item("iPhone 8 plus 64GB come nuovo", 1.20),
@@ -54,6 +58,12 @@ class ItemListFragment: Fragment() {
             Item("Cartongesso a marmorino", 1.20),
             Item("Giochi playstation 2 in ottimo stato", 0.30),
             Item("Lievito di birra", 22.20))
+    }
+
+    private fun navigateWithInfo(layoutId: Int, item: Item) {
+        val bundle = Bundle()
+        bundle.putString("item", item.let { Item.toJSON(it).toString()})
+        view?.findNavController()?.navigate(layoutId, bundle)
     }
 
 }

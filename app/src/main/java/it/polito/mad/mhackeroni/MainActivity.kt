@@ -72,8 +72,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         val navEmail = headerView.findViewById(R.id.drawable_mail) as TextView
         val navImage = headerView.findViewById(R.id.drawable_pic) as ImageView
 
-        if(profile != null){
-
+        if(profile != null) {
             navUsername.text = profile.fullName
             navEmail.text = profile.email
             navImage.setImageBitmap(profile.image?.let { ImageUtils.getBitmap(it, this) })

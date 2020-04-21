@@ -38,4 +38,5 @@
     <string name="profile_nav">Profilo</string>
     <string name="items_nav">Oggetti in vendita</string>
     <string name="edit_item">Modifica</string>
+    <string name="no_data_available">Nessun item presente nella lista</string>
 </resources>
