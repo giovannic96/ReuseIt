@@ -15,7 +15,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/itemImage"
+                android:id="@+id/edit_itemImage"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:contentDescription="@string/photo"
@@ -26,23 +26,25 @@
                 android:src="@drawable/ic_itemimage" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/edit_imageProfile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:id="@+id/edit_itemCamera"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
                 android:layout_gravity="center"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginTop="130dp"
+                android:layout_marginEnd="10dp"
                 android:clickable="true"
-                android:contentDescription="@string/photo"
+                android:background="@drawable/ic_camera_background"
                 android:focusable="true"
-                android:src="@drawable/ic_camera" />
+                android:src="@drawable/ic_camera"
+                app:civ_border_color="@color/colorPrimaryDark"
+                app:civ_border_width="13dp"/>
 
         </RelativeLayout>
 
         <EditText
-            android:id="@+id/itemTitle"
+            android:id="@+id/edit_itemTitle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -58,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImage" />
 
         <EditText
-            android:id="@+id/itemDesc"
+            android:id="@+id/edit_itemDesc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -74,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
 
         <EditText
-            android:id="@+id/itemCategory"
+            android:id="@+id/edit_itemCategory"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -88,9 +90,9 @@
             app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
 
         <EditText
-            android:id="@+id/itemPrice"
+            android:id="@+id/edit_itemPrice"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
@@ -104,7 +106,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImage" />
 
         <EditText
-            android:id="@+id/itemLocation"
+            android:id="@+id/edit_itemLocation"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -116,7 +118,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/drawable_mail"
+            android:id="@+id/edit_itemUpdate"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"

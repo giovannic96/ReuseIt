@@ -4,6 +4,7 @@
     <string name="edit">Modifica</string>
     <string name="shared_pref">SharedPrefs</string>
     <string name="profile_sharedPref">profileSharedPref</string>
+    <string name="item_sharedPref">itemSharedPref</string>
     <string name="defaultFullName">Nome completo</string>
     <string name="defaultNickname">nickname</string>
     <string name="defaultEmail">email@dominio</string>
@@ -17,6 +18,7 @@
     <string name="defaultPrice">0 €</string>
     <string name="defaultItemLocation">Località</string>
     <string name="defaultExpire">Data di scadenza</string>
+    <string name="defaultLastUpdate">Ultima Modifica</string>
     <string name="save">Salva</string>
     <string name="picFromGallery">Scegli dalla galleria</string>
     <string name="picFromCamera">Scatta una foto</string>
@@ -34,6 +36,7 @@
     <string name="item_name">Nome Item</string>
     <string name="item_price">Prezzo Item</string>
     <string name="profile_update">Profilo aggiornato</string>
+    <string name="item_update">Item aggiornato</string>
     <string name="undo">Annulla</string>
     <string name="profile_nav">Profilo</string>
     <string name="items_nav">Oggetti in vendita</string>
