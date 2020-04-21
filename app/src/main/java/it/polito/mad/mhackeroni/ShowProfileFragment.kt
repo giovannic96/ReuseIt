@@ -37,7 +37,7 @@ class ShowProfileFragment : Fragment(){
             }
 
             fullname.text = profile.value?.fullName ?: resources.getString(R.string.defaultFullName)
-            bio.text = profile.value?.bio ?: resources.getString(R.string.defaultNickname)
+            bio.text = profile.value?.bio ?: resources.getString(R.string.defaultBio)
             nickname.text = profile.value?.nickname ?: resources.getString(R.string.defaultNickname)
             mail.text = profile.value?.email ?: resources.getString(R.string.defaultEmail)
             phone_number.text = profile.value?.phoneNumber ?: resources.getString(R.string.defaultLocation)

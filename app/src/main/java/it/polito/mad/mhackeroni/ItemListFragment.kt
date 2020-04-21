@@ -1,37 +1,33 @@
 package it.polito.mad.mhackeroni
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
 
 class ItemListFragment: Fragment() {
+
+    private lateinit var items: MutableList<Item>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val v = inflater.inflate(R.layout.fragment_itemlist, container, false)
         val itemList:RecyclerView = v.findViewById(R.id.item_list)
+        items = getItems()
 
-        val items = arrayOf(
-            Item("Pane di grano tenero ma non troppo tenero, comunque non duro", 0.70f),
-            Item("Farina 00 Barilla a buon prezzo", 1.20f),
-            Item("Acqua sale minerale che fa male al cuore", 6.70f),
-            Item("sale", 14.20f),
-            Item("cellulare onetouchplus 3+ AFFARONE", 30.70f),
-            Item("penna biro che non bira!", 221.20f),
-            Item("PC senza sistema operativo, operati tu al suo posto", 10.70f),
-            Item("DVD sicilia best hit 1996", 165.20f),
-            Item("Hard disk più lento di tua nonna", 0.33f),
-            Item("SSD", 1.20f),
-            Item("Tastiera", 0.74f),
-            Item("Pastiera senza iera solo pasta", 1.20f),
-            Item("Pasta mulino bianco ma non cosi nero come sembra", 0.30f),
-            Item("Lievito di birra", 22.20f)
-        )
-        itemList.adapter = ItemAdapter(items)
+        itemList.adapter = ItemAdapter(items, object : MyAdapterListener {
+            override fun editItemViewOnClick(item: Item) {
+                val bundle = Bundle()
+                bundle.putString("item", item.let { Item.toJSON(it).toString()})
+                view?.findNavController()?.navigate(R.id.action_nav_itemList_to_nav_ItemDetailEdit, bundle)
+            }
+        })
         itemList.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
         return v
@@ -41,4 +37,23 @@ class ItemListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
     }
+
+    private fun getItems(): MutableList<Item> {
+        return mutableListOf(
+            Item("Pane di grano tenero", 0.70),
+            Item("iPhone 8 plus 64GB come nuovo", 1.20),
+            Item("iphone x 256 giga più air pods pro", 6.70),
+            Item("scarpe liu jo nuove originali", 14.20),
+            Item("case coolermaster come da immagine", 30.70),
+            Item("penna biro", 221.20),
+            Item("libro harry potter e la camera dei segreti usato", 10.70),
+            Item("tv philips 32'' fullHD", 165.20),
+            Item("Hard disk 512Gb", 0.33),
+            Item("SSD 256Gb", 1.20),
+            Item("Shitsu max back and shoulder massager", 0.74),
+            Item("Cartongesso a marmorino", 1.20),
+            Item("Giochi playstation 2 in ottimo stato", 0.30),
+            Item("Lievito di birra", 22.20))
+    }
+
 }

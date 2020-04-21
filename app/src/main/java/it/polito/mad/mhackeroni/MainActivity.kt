@@ -62,10 +62,10 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun updateHeader(){
+    private fun updateHeader() {
         val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        val JSONString : String? = sharedPref.getString(getString(R.string.profile_sharedPref), "")
-        val profile = JSONString?.let { Profile.fromStringJSON(it) }
+        val jsonString : String? = sharedPref.getString(getString(R.string.profile_sharedPref), "")
+        val profile = jsonString?.let { Profile.fromStringJSON(it) }
 
         val headerView = navView.getHeaderView(0)
         val navUsername = headerView.findViewById(R.id.drawable_name) as TextView
