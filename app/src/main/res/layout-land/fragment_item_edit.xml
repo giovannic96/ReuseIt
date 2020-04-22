@@ -26,18 +26,20 @@
                 android:src="@drawable/ic_itemimage" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/edit_imageProfile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:id="@+id/edit_itemCamera"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
                 android:layout_gravity="center"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginTop="130dp"
+                android:layout_marginEnd="10dp"
                 android:clickable="true"
-                android:contentDescription="@string/photo"
+                android:background="@drawable/ic_camera_background"
                 android:focusable="true"
-                android:src="@drawable/ic_camera" />
+                android:src="@drawable/ic_camera"
+                app:civ_border_color="@color/colorPrimaryDark"
+                app:civ_border_width="13dp"/>
 
         </RelativeLayout>
 

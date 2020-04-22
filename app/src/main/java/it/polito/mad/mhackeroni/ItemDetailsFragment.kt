@@ -106,4 +106,10 @@ class ItemDetailsFragment: Fragment(){
         fun onComplete()
     }
 
+    private fun navigateWithInfo(layoutId: Int, item: Item) {
+        val bundle = Bundle()
+        bundle.putString("item", item.let { Item.toJSON(it).toString()})
+        view?.findNavController()?.navigate(layoutId, bundle)
+    }
+
 }
