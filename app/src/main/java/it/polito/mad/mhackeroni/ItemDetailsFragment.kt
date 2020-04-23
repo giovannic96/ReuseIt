@@ -2,15 +2,15 @@ package it.polito.mad.mhackeroni
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
-import org.json.JSONObject
 import kotlinx.android.synthetic.main.fragment_item_details.*
+import org.json.JSONObject
 
 
 class ItemDetailsFragment: Fragment(){
@@ -25,15 +25,43 @@ class ItemDetailsFragment: Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
         val itemJSON=arguments?.getString("item")
         val jsonObject=JSONObject(itemJSON)
         val name: String = jsonObject.getString("name")
         val price: Double = jsonObject.getDouble("price")
+        val desc: String = jsonObject.getString("desc")
+        val category: String = jsonObject.getString("category")
+        val expiryDate: String = jsonObject.getString("expiryDate")
+        val location: String = jsonObject.getString("location")
+        val image:String = jsonObject.getString("image")
 
         itemTitle.text = name
         itemPrice.text = "$price €"
+        itemDesc.text = desc
+        itemCategory.text = category
+        itemExpiryDate.text = expiryDate
+        itemLocation.text = location
+
+        try {
+            itemImage.setImageResource(R.drawable.ic_box);
+
+        } catch (e: Exception) {
+            Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+        }
+
+
+
+        itemImage.setOnClickListener {
+            val bundle = Bundle()
+
+            try {
+                bundle.putString("uri", Uri.parse(image).toString()) //TODO RESOLVE URI
+                view.findNavController().navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
+            } catch (e: Exception) {
+                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+            }
+        }
 
         //getResult()
 
@@ -57,7 +85,7 @@ class ItemDetailsFragment: Fragment(){
 
     fun editItem(){
         val bundle = Bundle()
-        bundleOf("item" to item.value?.let { Item.toJSON(it).toString() })
+        bundle.putString("item", item.value?.let { Item.toJSON(it).toString()})
 
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }

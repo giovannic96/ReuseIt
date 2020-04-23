@@ -3,8 +3,9 @@ package it.polito.mad.mhackeroni
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
+import java.util.*
 
-class Item(val name:String, val price:Double) : Serializable {
+class Item(val name:String, val price:Double, val desc:String, val category:String, val expiryDate:String, val location:String, var image: String?) : Serializable {
 
     companion object Factory {
 
@@ -25,7 +26,12 @@ class Item(val name:String, val price:Double) : Serializable {
         private fun fromJSON(jsonObject: JSONObject): Item {
             return Item(
                 jsonObject.getString("name"),
-                jsonObject.getDouble("price")
+                jsonObject.getDouble("price"),
+                jsonObject.getString("desc"),
+                jsonObject.getString("category"),
+                jsonObject.getString("expiryDate"), //TODO CHANGE INTO DATE
+                jsonObject.getString("location"),
+                jsonObject.getString("image")
             )
         }
 
@@ -34,6 +40,16 @@ class Item(val name:String, val price:Double) : Serializable {
             try {
                 obj.put("name", item.name)
                 obj.put("price", item.price)
+                obj.put("desc", item.desc)
+                obj.put("category", item.category)
+                obj.put("expiryDate", item.expiryDate)
+                obj.put("location", item.location)
+
+                if(item.image.isNullOrEmpty())
+                    obj.put("image", "")
+                else
+                    obj.put("image", item.image)
+
             } catch (e: JSONException) {
                 e.printStackTrace()
             } finally {

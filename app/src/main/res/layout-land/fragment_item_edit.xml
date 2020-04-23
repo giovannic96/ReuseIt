@@ -15,7 +15,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/itemImage"
+                android:id="@+id/edit_itemImage"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:contentDescription="@string/photo"
@@ -44,7 +44,7 @@
         </RelativeLayout>
 
         <EditText
-            android:id="@+id/itemTitle"
+            android:id="@+id/edit_itemTitle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -60,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImage" />
 
         <EditText
-            android:id="@+id/itemDesc"
+            android:id="@+id/edit_itemDesc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
 
         <EditText
-            android:id="@+id/itemCategory"
+            android:id="@+id/edit_itemCategory"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -90,7 +90,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
 
         <EditText
-            android:id="@+id/itemPrice"
+            android:id="@+id/edit_itemPrice"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -106,7 +106,7 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImage" />
 
         <EditText
-            android:id="@+id/itemLocation"
+            android:id="@+id/edit_itemLocation"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -118,7 +118,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/drawable_mail"
+            android:id="@+id/edit_itemExpiryDate"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"

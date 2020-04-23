@@ -11,7 +11,7 @@
             android:id="@+id/action_nav_showProfile_to_nav_editProfile"
             app:destination="@id/nav_editProfile" />
         <action
-            android:id="@+id/action_nav_showProfile_to_showProfileImageFragment"
+            android:id="@+id/action_nav_showProfile_to_showImageFragment"
             app:destination="@id/nav_showImage"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_nav_ItemDetail_to_nav_ItemDetailEdit"
             app:destination="@id/nav_ItemDetailEdit" />
+        <action
+            android:id="@+id/action_nav_ItemDetail_to_nav_showImage"
+            app:destination="@id/nav_showImage" />
     </fragment>
     <fragment
         android:id="@+id/nav_ItemDetailEdit"
@@ -56,10 +59,10 @@
     </fragment>
     <fragment
         android:id="@+id/nav_showImage"
-        android:name="it.polito.mad.mhackeroni.ShowProfileImageFragment"
-        android:label="ShowProfileImageFragment" >
+        android:name="it.polito.mad.mhackeroni.ShowImageFragment"
+        android:label="ShowImageFragment" >
         <action
-            android:id="@+id/action_showProfileImageFragment_to_nav_showProfile"
+            android:id="@+id/action_showImageFragment_to_nav_showProfile"
             app:destination="@id/nav_showProfile"
             app:popUpTo="@id/nav_showProfile"
             app:popUpToInclusive="true"/>
