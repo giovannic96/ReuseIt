@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -19,21 +20,15 @@ import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
 import java.util.*
-import java.util.jar.Manifest
 
 class ItemEditFragment: Fragment() {
     var item: MutableLiveData<Item> = MutableLiveData()
     private val REQUEST_PICKIMAGE=9002
     private val REQUEST_CREATEIMAGE=9001
     private val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE=9002
-    private lateinit var currentPhotoPath: String
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v=inflater.inflate(R.layout.fragment_item_edit, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
         setHasOptionsMenu(true)
         return v
     }
@@ -43,16 +38,15 @@ class ItemEditFragment: Fragment() {
 
         val itemJSON=arguments?.getString("item", "")
         val savedItem=savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
+        Log.d("ITEM JSON", itemJSON.toString())
 
         if (!itemJSON.isNullOrEmpty()) {
             item.value=Item.fromStringJSON(itemJSON)
-            //currentPhotoPath = item.value?.image.toString()
         }
 
         // Get saved value
         if (savedItem != null) {
             item.value=savedItem
-            //currentPhotoPath = savedProfile.image.toString()
         }
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -65,6 +59,7 @@ class ItemEditFragment: Fragment() {
             edit_itemCategory.setText(item.value?.category ?: resources.getString(R.string.defaultCategory))
             edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
             edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
+            edit_itemCondition.setText(item.value?.condition ?: resources.getString(R.string.defaultCondition))
 
             try {
                 edit_itemImage.setImageBitmap(item.value?.image?.let {
@@ -238,7 +233,7 @@ class ItemEditFragment: Fragment() {
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
-            currentPhotoPath = absolutePath
+            //currentPhotoPath = absolutePath
         }
     }
 

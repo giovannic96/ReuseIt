@@ -16,6 +16,7 @@
     <string name="defaultDesc">Descrizione articolo</string>
     <string name="defaultCategory">Categoria</string>
     <string name="defaultPrice">0 €</string>
+    <string name="defaultCondition">Condizione</string>
     <string name="defaultItemLocation">Località</string>
     <string name="defaultExpire">Data di scadenza</string>
     <string name="defaultLastUpdate">Ultima Modifica</string>

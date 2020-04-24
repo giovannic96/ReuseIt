@@ -5,7 +5,7 @@ import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
 
-class Item(val name:String, val price:Double, val desc:String, val category:String, val expiryDate:String, val location:String, var image: String?) : Serializable {
+class Item(val name:String, val price:Double, val desc:String, val category:String, val expiryDate:String, val location:String, var condition: String, var image: String?) : Serializable {
 
     companion object Factory {
 
@@ -31,6 +31,7 @@ class Item(val name:String, val price:Double, val desc:String, val category:Stri
                 jsonObject.getString("category"),
                 jsonObject.getString("expiryDate"), //TODO CHANGE INTO DATE
                 jsonObject.getString("location"),
+                jsonObject.getString("condition"),
                 jsonObject.getString("image")
             )
         }
@@ -44,6 +45,7 @@ class Item(val name:String, val price:Double, val desc:String, val category:Stri
                 obj.put("category", item.category)
                 obj.put("expiryDate", item.expiryDate)
                 obj.put("location", item.location)
+                obj.put("condition", item.condition)
 
                 if(item.image.isNullOrEmpty())
                     obj.put("image", "")

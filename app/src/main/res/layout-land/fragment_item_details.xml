@@ -40,6 +40,20 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImage" />
 
         <TextView
+            android:id="@+id/itemCondition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/defaultCondition"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#505050"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+
+        <TextView
             android:id="@+id/itemDesc"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -52,7 +66,7 @@
             android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/itemCondition" />
 
         <TextView
             android:id="@+id/itemPrice"
@@ -84,6 +98,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
 
+        <TextView
+            android:id="@+id/itemExpiryDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/defaultExpire"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemCategory" />
+
         <ImageView
             android:id="@+id/mapImage"
             android:layout_width="0dp"
@@ -95,7 +121,7 @@
             android:src="@drawable/ic_map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/drawable_mail" />
+            app:layout_constraintTop_toBottomOf="@+id/itemExpiryDate" />
 
         <TextView
             android:id="@+id/itemLocation"
@@ -109,33 +135,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/mapImage" />
-
-        <TextView
-            android:id="@+id/drawable_mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/defaultExpire"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCategory" />
-
-        <TextView
-            android:id="@+id/itemLastUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:hint="@string/defaultLastUpdate"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

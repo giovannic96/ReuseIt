@@ -2,7 +2,6 @@ package it.polito.mad.mhackeroni
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -10,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_details.*
-import org.json.JSONObject
 
 
 class ItemDetailsFragment: Fragment(){
@@ -25,45 +23,53 @@ class ItemDetailsFragment: Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
-        val itemJSON=arguments?.getString("item")
-        val jsonObject=JSONObject(itemJSON)
-        val name: String = jsonObject.getString("name")
-        val price: Double = jsonObject.getDouble("price")
-        val desc: String = jsonObject.getString("desc")
-        val category: String = jsonObject.getString("category")
-        val expiryDate: String = jsonObject.getString("expiryDate")
-        val location: String = jsonObject.getString("location")
-        val image:String = jsonObject.getString("image")
+        val itemJSON = arguments?.getString("item", "")
 
-        itemTitle.text = name
-        itemPrice.text = "$price €"
-        itemDesc.text = desc
-        itemCategory.text = category
-        itemExpiryDate.text = expiryDate
-        itemLocation.text = location
+        item.value = itemJSON.let { it?.let { it1 -> Item.fromStringJSON(it1) } }
 
-        try {
-            itemImage.setImageResource(R.drawable.ic_box);
+        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
-        } catch (e: Exception) {
-            Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
-        }
+            itemTitle.text=item.value?.name ?: resources.getString(R.string.defaultTitle)
 
+            var price: Double?=item.value?.price;
+            if (price == null) {
+                itemPrice.text=resources.getString(R.string.defaultPrice)
+            } else {
+                itemPrice.text="$price"
 
+            }
 
-        itemImage.setOnClickListener {
-            val bundle = Bundle()
+            itemDesc.text=item.value?.desc ?: resources.getString(R.string.defaultDesc)
+            itemCategory.text=item.value?.category ?: resources.getString(R.string.defaultCategory)
+            itemExpiryDate.text=item.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
+            itemLocation.text=item.value?.location ?: resources.getString(R.string.defaultLocation)
+            itemCondition.text=item.value?.condition ?: resources.getString(R.string.defaultCondition)
+
 
             try {
-                bundle.putString("uri", Uri.parse(image).toString()) //TODO RESOLVE URI
-                view.findNavController().navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
+                itemImage.setImageResource(R.drawable.ic_box); //TODO RESOLVE URI
+
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
-        }
 
-        //getResult()
+            itemImage.setOnClickListener {
+                val bundle=Bundle()
+
+                try {
+                    //bundle.putString("uri", Uri.parse(image).toString()) //TODO RESOLVE URI
+                    view.findNavController()
+                        .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
+                } catch (e: Exception) {
+                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+
+            //getResult()
+
+        })
 
     }
 
@@ -86,7 +92,6 @@ class ItemDetailsFragment: Fragment(){
     fun editItem(){
         val bundle = Bundle()
         bundle.putString("item", item.value?.let { Item.toJSON(it).toString()})
-
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 

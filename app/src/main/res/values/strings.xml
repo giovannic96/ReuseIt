@@ -16,7 +16,8 @@
     <string name="defaultCategory">Category</string>
     <string name="defaultPrice">0 €</string>
     <string name="defaultItemLocation">Location</string>
-    <string name="defaultExpire">Expire date</string>
+    <string name="defaultCondition">Condition</string>
+    <string name="defaultExpire">Expiry date</string>
     <string name="defaultLastUpdate">Last Update</string>
     <string name="save">Save</string>
     <string name="picFromGallery">Select from gallery</string>
