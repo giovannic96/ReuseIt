@@ -28,6 +28,7 @@
     <string name="nickname_error">Nickname non valido</string>
     <string name="phoneNumber_error">Numero di telefono non valido</string>
     <string name="location_error">Località non valida</string>
+    <string name="price_error">Prezzo non valido</string>
     <string name="rotate_error">Seleziona una foto e abilita i permessi</string>
     <string name="permission_expl">L\'app richiede di poter accedere ai tuoi file per poter salvare le tue foto</string>
     <string name="permission_err">Impossibile usare la fotocamera o ruotare foto senza permessi</string>

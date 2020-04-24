@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/edit_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -42,6 +41,23 @@
                 app:civ_border_color="@color/colorPrimaryDark"
                 app:civ_border_width="13dp"/>
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/btn_rotate_imageItem"
+                android:layout_width="63dp"
+                android:layout_height="63dp"
+                android:layout_alignTop="@+id/edit_itemImage"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="110dp"
+                android:layout_marginEnd="80dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/ic_camera_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_rotate"
+                app:civ_border_color="@color/colorPrimaryDark"
+                app:civ_border_width="13dp" />
+
         </RelativeLayout>
 
         <EditText
@@ -57,13 +73,12 @@
             android:textColor="#000000"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemImage" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/edit_itemDesc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
@@ -73,8 +88,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/edit_itemCondition"
@@ -87,8 +101,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#505050"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/edit_itemCategory"
@@ -100,35 +113,6 @@
             android:hint="@string/defaultCategory"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#505050"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCondition" />
-
-        <EditText
-            android:id="@+id/edit_itemPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/defaultPrice"
-            android:textAlignment="viewStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemTitle"
-            app:layout_constraintTop_toBottomOf="@+id/itemImage" />
-
-        <EditText
-            android:id="@+id/edit_itemLocation"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/defaultItemLocation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -142,7 +126,32 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:hint="@string/defaultExpire"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCategory" />
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_itemPrice"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/defaultPrice"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/edit_itemLocation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/defaultItemLocation"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
 </ScrollView>

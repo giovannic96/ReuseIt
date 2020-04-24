@@ -1,5 +1,7 @@
 package it.polito.mad.mhackeroni
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,11 +12,17 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
@@ -23,9 +31,12 @@ import java.util.*
 
 class ItemEditFragment: Fragment() {
     var item: MutableLiveData<Item> = MutableLiveData()
+    private lateinit var currentItemPhotoPath: String
+    private val rotationCount: MutableLiveData<Int> = MutableLiveData()
     private val REQUEST_PICKIMAGE=9002
     private val REQUEST_CREATEIMAGE=9001
     private val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE=9002
+    private var isAddingItem: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -36,17 +47,28 @@ class ItemEditFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val itemJSON=arguments?.getString("item", "")
-        val savedItem=savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
-        Log.d("ITEM JSON", itemJSON.toString())
+        val rotationSaved = savedInstanceState?.getInt("rotation")
+        if(rotationSaved != null)
+            rotationCount.value = rotationSaved
+        else
+            rotationCount.value = 0
 
-        if (!itemJSON.isNullOrEmpty()) {
-            item.value=Item.fromStringJSON(itemJSON)
+        val itemJSON= arguments?.getString("item", "")
+
+        //NEW ITEM
+        if(itemJSON.isNullOrEmpty()) {
+            isAddingItem = true
         }
+        else { //EDIT ITEM
+            isAddingItem = false
+            val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
+            item.value = Item.fromStringJSON(itemJSON)
+            currentItemPhotoPath = item.value?.image.toString()
 
-        // Get saved value
-        if (savedItem != null) {
-            item.value=savedItem
+            if (savedItem != null) {
+                item.value = savedItem // Get saved value
+                currentItemPhotoPath = savedItem.image.toString()
+            }
         }
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -71,6 +93,12 @@ class ItemEditFragment: Fragment() {
 
         })
 
+        rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
+            val deg: Float = 90f * it
+            edit_itemImage.animate().rotation(deg).interpolator =
+                AccelerateDecelerateInterpolator()
+        })
+
         edit_itemCamera.setOnClickListener {
             val popupMenu=PopupMenu(requireContext(), edit_itemImage)
             popupMenu.menuInflater.inflate(R.menu.context_menu_image, popupMenu.menu)
@@ -91,6 +119,20 @@ class ItemEditFragment: Fragment() {
             }
             popupMenu.show()
         }
+
+        btn_rotate_imageItem.setOnClickListener {
+            if(::currentItemPhotoPath.isInitialized
+                && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())
+                && hasExStoragePermission()){
+                rotationCount.value = rotationCount.value?.plus(1)
+            } else if(!hasExStoragePermission()) {
+                checkExStoragePermission()
+            } else{
+                Snackbar
+                    .make(edit_item_container, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -98,46 +140,58 @@ class ItemEditFragment: Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
         // Handle menu item selection
-        return when (item.itemId) {
+        return when (menuItem.itemId) {
             R.id.menu_save -> {
 
-                /*if(::currentPhotoPath.isInitialized)
-                    item.value = Item(edit_fullname.text.toString(), edit_nickname.text.toString(),
-                        edit_mail.text.toString(), edit_location.text.toString(),
-                        currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                val price:Double = if(edit_itemPrice.text.toString().isEmpty())
+                    0.0
                 else
-                    profile.value = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
-                        edit_mail.text.toString(), edit_location.text.toString(),
-                        profile.value?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                    edit_itemPrice.text.toString().toDouble()
 
+                if(::currentItemPhotoPath.isInitialized)
+                    item.value = Item(edit_itemTitle.text.toString(), price,
+                        edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
+                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                        edit_itemCondition.text.toString(), currentItemPhotoPath
+                        )
+                else
+                    item.value = Item(edit_itemTitle.text.toString(), price,
+                        edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
+                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                        edit_itemCondition.text.toString(), item.value?.image)
 
                 val nRotation = rotationCount.value
-                if(::currentPhotoPath.isInitialized){
+                if(::currentItemPhotoPath.isInitialized){
                     if (nRotation != null) {
                         if(nRotation != 0 && nRotation.rem(4) != 0
-                            && ImageUtils.canDisplayBitmap(currentPhotoPath, requireContext())){ // Save the edited photo
+                            && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())){ // Save the edited photo
                             ImageUtils.rotateImageFromUri(
-                                Uri.parse(currentPhotoPath),
+                                Uri.parse(currentItemPhotoPath),
                                 90.0F* nRotation,
                                 requireContext()
                             )?.let {
-                                currentPhotoPath = ImageUtils.insertImage(requireActivity().contentResolver,
+                                currentItemPhotoPath = ImageUtils.insertImage(requireActivity().contentResolver,
                                     it
                                 ).toString()
                             }
                         }
                     }
-                    profile.value!!.image = currentPhotoPath
+                    item.value!!.image = currentItemPhotoPath
                 }
+                val newItem = item.value
 
-                val bundle = bundleOf("new_profile" to profile.value?.let { Profile.toJSON(it).toString() })
-                view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
-                */
+                val bundle = bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
+
+                if(isAddingItem)
+                    view?.findNavController()?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                else
+                    view?.findNavController()?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+
                 return true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(menuItem)
         }
     }
 
@@ -164,26 +218,27 @@ class ItemEditFragment: Fragment() {
     override fun onActivityResult(requestCode:Int, resultCode:Int, data:Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        /*if (requestCode == REQUEST_CREATEIMAGE && resultCode == AppCompatActivity.RESULT_OK) {
-            if(::currentPhotoPath.isInitialized){
-                val oldPhoto = currentPhotoPath
+        if (requestCode == REQUEST_CREATEIMAGE && resultCode == AppCompatActivity.RESULT_OK) {
+            if(::currentItemPhotoPath.isInitialized){
+                val oldPhoto = currentItemPhotoPath
 
-                currentPhotoPath = ImageUtils.getBitmap(currentPhotoPath, requireContext())?.let {
+                currentItemPhotoPath = ImageUtils.getBitmap(currentItemPhotoPath, requireContext())?.let {
                     ImageUtils.insertImage(requireActivity().contentResolver,
                         it
                     )
                 }.toString()
                 File(oldPhoto).delete()
 
-                edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(currentPhotoPath, requireContext()))
+                edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
+                rotationCount.value = 0
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
-            edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
-            currentPhotoPath = data?.data.toString()
-            getPermissionOnUri(Uri.parse(currentPhotoPath))
+            edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
+            currentItemPhotoPath = data?.data.toString()
+            getPermissionOnUri(Uri.parse(currentItemPhotoPath))
             rotationCount.value = 0
-        }*/
+        }
     }
 
     private fun dispatchPickImageIntent() {
@@ -237,14 +292,37 @@ class ItemEditFragment: Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val price:Double = if(edit_itemPrice.text.toString().isEmpty())
+            0.0
+        else
+            edit_itemPrice.text.toString().toDouble()
+
+        if(::currentItemPhotoPath.isInitialized)
+            item.value = Item(edit_itemTitle.text.toString(), price,
+                edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
+                edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                edit_itemCondition.text.toString(), currentItemPhotoPath
+            )
+        else
+            item.value = Item(edit_itemTitle.text.toString(), price,
+                edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
+                edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                edit_itemCondition.text.toString(), item.value?.image)
+
+        outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
+        rotationCount.value?.let { outState.putInt("rotation", it) }
+    }
+
     private fun hasExStoragePermission(): Boolean{
-        /*return (ContextCompat.checkSelfPermission(requireContext(),
-            Manifest.permisson.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)*/
-        return false;
+        return (ContextCompat.checkSelfPermission(requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
 
     private fun checkExStoragePermission(): Boolean{
-        /*if (ContextCompat.checkSelfPermission(requireActivity(),
+        if (ContextCompat.checkSelfPermission(requireActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
             // Not granted
@@ -262,7 +340,7 @@ class ItemEditFragment: Fragment() {
                 builder.setMessage(resources.getString(R.string.permission_expl))
 
                 // Set a positive button and its click listener on alert dialog
-                builder.setPositiveButton("Ok"){ dialog, which ->
+                builder.setPositiveButton("Ok"){ _, _ ->
                     ActivityCompat.requestPermissions(requireActivity(),
                         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                         PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
@@ -284,8 +362,7 @@ class ItemEditFragment: Fragment() {
         } else {
             // Permission has already been granted
             return true
-        }*/
-        return false;
+        }
     }
 
     private fun getPermissionOnUri(uri:Uri){

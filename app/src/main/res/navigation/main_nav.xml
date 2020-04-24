@@ -45,6 +45,11 @@
         <action
             android:id="@+id/action_nav_ItemDetailEdit_to_nav_ItemDetail"
             app:destination="@id/nav_ItemDetail" />
+        <action
+            android:id="@+id/action_nav_ItemDetailEdit_to_nav_itemList"
+            app:destination="@id/nav_itemList"
+            app:popUpTo="@id/nav_itemList"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/nav_itemList"

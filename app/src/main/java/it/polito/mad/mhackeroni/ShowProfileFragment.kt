@@ -91,15 +91,13 @@ class ShowProfileFragment : Fragment(){
         }
     }
 
-    fun editProfile(){
+    private fun editProfile() {
         val bundle = Bundle()
         bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
-
         view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
-
     }
 
-    fun getResult(){
+    private fun getResult() {
         val newProfileJSON = arguments?.getString("new_profile", "")
         val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         val oldProfile = profile.value
@@ -120,9 +118,7 @@ class ShowProfileFragment : Fragment(){
                 snackbar.show()
             }
         }
-
         profile.value?.let { saveData(sharedPref, it) }
-
         arguments?.clear() // Clear arguments
     }
 

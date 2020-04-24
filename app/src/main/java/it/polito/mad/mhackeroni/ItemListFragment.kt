@@ -1,5 +1,7 @@
 package it.polito.mad.mhackeroni
 
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
 
 class ItemListFragment: Fragment() {
@@ -21,6 +24,11 @@ class ItemListFragment: Fragment() {
         val itemList:RecyclerView = v.findViewById(R.id.item_list)
         items = getItems()
 
+        val fab:FloatingActionButton = v.findViewById(R.id.fab)
+        fab.setOnClickListener {
+            navigateWithoutInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit)
+        }
+
         itemList.adapter = ItemAdapter(items, object : MyAdapterListener {
             override fun editItemViewOnClick(item: Item) {
                 navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit, item)
@@ -32,13 +40,18 @@ class ItemListFragment: Fragment() {
         })
         itemList.layoutManager = if(items.size == 0)
                                     LinearLayoutManager(context)
-                                else
-                                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                                else {
+                                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                                        StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+                                    else
+                                        StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                                }
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getResult()
     }
 
     private fun getItems(): MutableList<Item> {
@@ -66,4 +79,18 @@ class ItemListFragment: Fragment() {
         view?.findNavController()?.navigate(layoutId, bundle)
     }
 
+    private fun navigateWithoutInfo(layoutId: Int) {
+        val bundle = Bundle()
+        bundle.putString("item", null)
+        view?.findNavController()?.navigate(layoutId, bundle)
+    }
+
+    private fun getResult() {
+        val newItemJSON = arguments?.getString("new_item", "")
+        if(!newItemJSON.isNullOrEmpty()) {
+            //TODO update list
+            //TODO notify list
+        }
+        arguments?.clear() // Clear arguments
+    }
 }

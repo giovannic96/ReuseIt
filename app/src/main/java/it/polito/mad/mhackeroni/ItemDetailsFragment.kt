@@ -3,6 +3,7 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment(){
     var item: MutableLiveData<Item> = MutableLiveData()
-    private var mListener: ShowProfileFragment.OnCompleteListener? = null
+    private var mListener: ItemDetailsFragment.OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -25,52 +26,57 @@ class ItemDetailsFragment: Fragment(){
         super.onViewCreated(view, savedInstanceState)
         val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
-        val itemJSON = arguments?.getString("item", "")
-
-        item.value = itemJSON.let { it?.let { it1 -> Item.fromStringJSON(it1) } }
+        loadData(sharedPref)
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-
-            itemTitle.text=item.value?.name ?: resources.getString(R.string.defaultTitle)
-
-            var price: Double?=item.value?.price;
-            if (price == null) {
-                itemPrice.text=resources.getString(R.string.defaultPrice)
-            } else {
-                itemPrice.text="$price"
-
-            }
-
-            itemDesc.text=item.value?.desc ?: resources.getString(R.string.defaultDesc)
-            itemCategory.text=item.value?.category ?: resources.getString(R.string.defaultCategory)
-            itemExpiryDate.text=item.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
-            itemLocation.text=item.value?.location ?: resources.getString(R.string.defaultLocation)
-            itemCondition.text=item.value?.condition ?: resources.getString(R.string.defaultCondition)
-
-
             try {
-                itemImage.setImageResource(R.drawable.ic_box); //TODO RESOLVE URI
-
+                itemImage.setImageBitmap(item.value?.image?.let { it1 ->
+                    ImageUtils.getBitmap(it1, requireContext())
+                })
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            itemImage.setOnClickListener {
-                val bundle=Bundle()
+            itemTitle.text = item.value?.name ?: resources.getString(R.string.defaultTitle)
 
-                try {
-                    //bundle.putString("uri", Uri.parse(image).toString()) //TODO RESOLVE URI
-                    view.findNavController()
-                        .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
-                } catch (e: Exception) {
-                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
-                }
+            try {
+                val price: Double? = item.value?.price;
+                if (price == null)
+                    itemPrice.text = resources.getString(R.string.defaultPrice)
+                else
+                    itemPrice.text = "$price"
+            }
+            catch (e: Exception) {
+                Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
-            //getResult()
-
+            itemDesc.text = item.value?.desc ?: resources.getString(R.string.defaultDesc)
+            itemCategory.text = item.value?.category ?: resources.getString(R.string.defaultCategory)
+            itemExpiryDate.text = item.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
+            itemLocation.text = item.value?.location ?: resources.getString(R.string.defaultLocation)
+            itemCondition.text = item.value?.condition ?: resources.getString(R.string.defaultCondition)
         })
 
+        getResult()
+
+        itemImage.setOnClickListener {
+            val bundle=Bundle()
+            try {
+                if (item.value?.image?.let { it1 ->
+                        ImageUtils.canDisplayBitmap(
+                            it1,
+                            requireContext()
+                        )
+                    }!!) {
+
+                    bundle.putString("uri", item.value?.image.toString())
+                    view.findNavController()
+                        .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
+                }
+            } catch (e: Exception) {
+                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,19 +95,18 @@ class ItemDetailsFragment: Fragment(){
         }
     }
 
-    fun editItem(){
+    private fun editItem() {
         val bundle = Bundle()
         bundle.putString("item", item.value?.let { Item.toJSON(it).toString()})
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
-    fun getResult(){
+    private fun getResult() {
         val newItemJSON = arguments?.getString("new_item", "")
-        val sharedPref: SharedPreferences= requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         val oldItem = item.value
 
-        if(!newItemJSON.isNullOrEmpty() && newItemJSON != oldItem?.let { Item.toJSON(it).toString() }){
-
+        if(!newItemJSON.isNullOrEmpty() && newItemJSON != oldItem?.let { Item.toJSON(it).toString() }) {
             item.value = newItemJSON.let { Item.fromStringJSON(it) }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
@@ -112,13 +117,10 @@ class ItemDetailsFragment: Fragment(){
                         saveData(sharedPref, oldItem)
                     }
                 })
-
                 snackbar.show()
             }
         }
-
         item.value?.let { saveData(sharedPref, it) }
-
         arguments?.clear() // Clear arguments
     }
 
@@ -135,14 +137,19 @@ class ItemDetailsFragment: Fragment(){
         item.value = JSONString?.let { Item.fromStringJSON(it) }
     }
 
+    /* TODO: WITH THIS FUNCTION, EDIT ITEM CRASHES DURING SCREEN ROTATION
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        item.value = Item(itemTitle.text.toString(), itemPrice.text.toString(),
+            itemDesc.text.toString(), itemCategory.text.toString(), itemExpiryDate.text.toString(),
+            itemLocation.text.toString(), itemCondition.text.toString(), "");
+
+        outState.putString("item", item.value?.let { Item.toJSON(it).toString()})
+     }
+     */
+
     interface OnCompleteListener {
         fun onComplete()
     }
-
-    private fun navigateWithInfo(layoutId: Int, item: Item) {
-        val bundle = Bundle()
-        bundle.putString("item", item.let { Item.toJSON(it).toString()})
-        view?.findNavController()?.navigate(layoutId, bundle)
-    }
-
 }
