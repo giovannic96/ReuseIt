@@ -19,7 +19,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
 
-class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
+class MainActivity : AppCompatActivity(), ItemListFragment.OnCompleteListener{
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
@@ -31,13 +31,6 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        /* TODO maybe remove it
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "TO BE IMPLEMENTED", Snackbar.LENGTH_LONG)
-                    .setAction("Ok", null).show()
-        }
-         */
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)

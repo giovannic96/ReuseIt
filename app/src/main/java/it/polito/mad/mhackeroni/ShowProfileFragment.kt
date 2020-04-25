@@ -11,9 +11,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_show_profile.*
 
 
-class ShowProfileFragment : Fragment(){
+class ShowProfileFragment : Fragment() {
     var profile: MutableLiveData<Profile> = MutableLiveData()
-    private var mListener: OnCompleteListener? = null
+    private val storageHelper:StorageHelper = StorageHelper(context)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -25,7 +25,7 @@ class ShowProfileFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
-        loadData(sharedPref)
+        profile.value = storageHelper.loadProfile(sharedPref)
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
@@ -82,15 +82,6 @@ class ShowProfileFragment : Fragment(){
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            mListener = context as OnCompleteListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnCompleteListener")
-        }
-    }
-
     private fun editProfile() {
         val bundle = Bundle()
         bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
@@ -111,32 +102,13 @@ class ShowProfileFragment : Fragment(){
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     profile.value = oldProfile
                     if (oldProfile != null) {
-                        saveData(sharedPref, oldProfile)
+                        storageHelper.saveProfile(sharedPref, oldProfile)
                     }
                 })
-
                 snackbar.show()
             }
         }
-        profile.value?.let { saveData(sharedPref, it) }
+        profile.value?.let { storageHelper.saveProfile(sharedPref, it) }
         arguments?.clear() // Clear arguments
-    }
-
-    private fun saveData(s: SharedPreferences, p:Profile) {
-        with (s.edit()) {
-            putString(getString(it.polito.mad.mhackeroni.R.string.profile_sharedPref), Profile.toJSON(p).toString())
-            apply()
-        }
-        mListener?.onComplete();
-    }
-
-    private fun loadData(s: SharedPreferences){
-        val JSONString : String? = s.getString(getString(R.string.profile_sharedPref), "")
-        profile.value = JSONString?.let { Profile.fromStringJSON(it) }
-    }
-
-    //TODO remove this when listFragment is set to home
-    interface OnCompleteListener {
-        fun onComplete()
     }
 }

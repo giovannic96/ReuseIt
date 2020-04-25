@@ -59,16 +59,4 @@ class Profile(var fullName:String, var nickname:String,
             }
         }
     }
-
-    /*
-    fun capitalizeFullName(str: String):String {
-        val strArray = str.split(" ").toTypedArray()
-        val builder = StringBuilder()
-        for (s in strArray) {
-            val cap = s.substring(0, 1).toUpperCase(Locale.ROOT) + s.substring(1)
-            builder.append("$cap ")
-        }
-        return builder.toString()
-    }
-     */
 }

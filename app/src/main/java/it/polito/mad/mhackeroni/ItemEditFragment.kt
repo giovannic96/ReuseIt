@@ -180,8 +180,6 @@ class ItemEditFragment: Fragment() {
                     }
                     item.value!!.image = currentItemPhotoPath
                 }
-                val newItem = item.value
-
                 val bundle = bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
 
                 if(isAddingItem)

@@ -3,7 +3,6 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -11,9 +10,10 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_details.*
 
-
-class ItemDetailsFragment: Fragment(){
+class ItemDetailsFragment: Fragment() {
     var item: MutableLiveData<Item> = MutableLiveData()
+    private lateinit var sharedPref: SharedPreferences
+    private val storageHelper:StorageHelper = StorageHelper(context)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -23,9 +23,9 @@ class ItemDetailsFragment: Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
-        loadData(sharedPref)
+        item.value = storageHelper.loadItem(sharedPref)
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
@@ -101,38 +101,45 @@ class ItemDetailsFragment: Fragment(){
     }
 
     private fun getResult() {
-        val newItemJSON = arguments?.getString("new_item", "")
-        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        val oldItem = item.value
+        //get item derived from edit fragment (editedItem)
+        val editedItemJSON = arguments?.getString("new_item", "")
 
-        if(!newItemJSON.isNullOrEmpty() && newItemJSON != oldItem?.let { Item.toJSON(it).toString() }) {
-            item.value = newItemJSON.let { Item.fromStringJSON(it) }
+        //get item derived from list fragment (selectedItem)
+        val selectedItemJSON = arguments?.getString("item", "")
+
+        //EDITED ITEM
+        if(!editedItemJSON.isNullOrEmpty()) {
+            handleEditItem(editedItemJSON)
+        }
+        //SELECTED ITEM
+        else if(!selectedItemJSON.isNullOrEmpty()) {
+            handleSelectedItem(selectedItemJSON)
+        }
+        arguments?.clear() // clear arguments
+    }
+
+    private fun handleEditItem(editedItemJSON: String) {
+        val oldItem = item.value
+        if(editedItemJSON != oldItem?.let { Item.toJSON(it).toString() }) {
+            item.value = editedItemJSON.let { Item.fromStringJSON(it) }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     item.value = oldItem
                     if (oldItem != null) {
-                        saveData(sharedPref, oldItem)
+                        storageHelper.saveItem(sharedPref, oldItem)
                     }
                 })
                 snackbar.show()
             }
         }
-        item.value?.let { saveData(sharedPref, it) }
-        arguments?.clear() // Clear arguments
+        item.value?.let { storageHelper.saveItem(sharedPref, it) }
     }
 
-    private fun saveData(s: SharedPreferences, i:Item) {
-        with (s.edit()) {
-            putString(getString(it.polito.mad.mhackeroni.R.string.item_sharedPref), Item.toJSON(i).toString())
-            apply()
-        }
-    }
-
-    private fun loadData(s: SharedPreferences){
-        val JSONString : String? = s.getString(getString(R.string.item_sharedPref), "")
-        item.value = JSONString?.let { Item.fromStringJSON(it) }
+    private fun handleSelectedItem(selectedItemJSON: String) {
+        item.value = selectedItemJSON.let { Item.fromStringJSON(it) }
+        item.value?.let { storageHelper.saveItem(sharedPref, it) }
     }
 
     /* TODO: WITH THIS FUNCTION, EDIT ITEM CRASHES DURING SCREEN ROTATION
