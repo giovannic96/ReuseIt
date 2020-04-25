@@ -235,6 +235,14 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Used to solve lazy update issue
+        if(::currentPhotoPath.isInitialized){
+            edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(currentPhotoPath, requireContext()))
+        }
+    }
+
     private fun dispatchPickImageIntent() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = "image/*"
