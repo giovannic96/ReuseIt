@@ -2,9 +2,7 @@ package it.polito.mad.mhackeroni
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.beust.klaxon.Klaxon
-import com.beust.klaxon.json
 
 class StorageHelper(context: Context?) {
 
