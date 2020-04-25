@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        updateHeader()
+        updateHeader(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -56,10 +57,10 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    private fun updateHeader() {
+    private fun updateHeader(context: Context) {
         val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        val jsonString : String? = sharedPref.getString(getString(R.string.profile_sharedPref), "")
-        val profile = jsonString?.let { Profile.fromStringJSON(it) }
+        val storageHelper = StorageHelper(context)
+        val profile = storageHelper.loadProfile(sharedPref)
 
         val headerView = navView.getHeaderView(0)
         val navUsername = headerView.findViewById(R.id.drawable_name) as TextView
@@ -74,6 +75,6 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     }
 
     override fun onComplete() {
-        updateHeader()
+        updateHeader(this)
     }
 }

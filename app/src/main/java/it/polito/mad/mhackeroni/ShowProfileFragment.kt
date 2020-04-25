@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_show_profile.*
 
 class ShowProfileFragment : Fragment() {
     var profile: MutableLiveData<Profile> = MutableLiveData()
-    private val storageHelper:StorageHelper = StorageHelper(context)
+    private lateinit var storageHelper:StorageHelper
     private var mListener: OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,6 +27,7 @@ class ShowProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
+        storageHelper = StorageHelper(requireContext())
         profile.value = storageHelper.loadProfile(sharedPref)
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -92,6 +94,7 @@ class ShowProfileFragment : Fragment() {
     private fun getResult() {
         val newProfileJSON = arguments?.getString("new_profile", "")
         val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+
         val oldProfile = profile.value
 
         if(!newProfileJSON.isNullOrEmpty() && newProfileJSON != oldProfile?.let { Profile.toJSON(it).toString() }){
@@ -111,6 +114,7 @@ class ShowProfileFragment : Fragment() {
             }
         }
         profile.value?.let { storageHelper.saveProfile(sharedPref, it) }
+        mListener?.onComplete()
         arguments?.clear() // Clear arguments
     }
 
