@@ -11,9 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment() {
-    var item: MutableLiveData<Item> = MutableLiveData()
-    private lateinit var sharedPref: SharedPreferences
-    private val storageHelper:StorageHelper = StorageHelper(context)
+    var item: Item? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -23,52 +21,20 @@ class ItemDetailsFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
-        item.value = storageHelper.loadItem(sharedPref)
-
-        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            try {
-                itemImage.setImageBitmap(item.value?.image?.let { it1 ->
-                    ImageUtils.getBitmap(it1, requireContext())
-                })
-            } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
-            }
-
-            itemTitle.text = item.value?.name ?: resources.getString(R.string.defaultTitle)
-
-            try {
-                val price: Double? = item.value?.price;
-                if (price == null)
-                    itemPrice.text = resources.getString(R.string.defaultPrice)
-                else
-                    itemPrice.text = "$price"
-            }
-            catch (e: Exception) {
-                Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
-            }
-
-            itemDesc.text = item.value?.desc ?: resources.getString(R.string.defaultDesc)
-            itemCategory.text = item.value?.category ?: resources.getString(R.string.defaultCategory)
-            itemExpiryDate.text = item.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
-            itemLocation.text = item.value?.location ?: resources.getString(R.string.defaultLocation)
-            itemCondition.text = item.value?.condition ?: resources.getString(R.string.defaultCondition)
-        })
-
-        getResult()
+        item = getResult(view)
 
         itemImage.setOnClickListener {
             val bundle=Bundle()
             try {
-                if (item.value?.image?.let { it1 ->
+                if (item?.image?.let { it1 ->
                         ImageUtils.canDisplayBitmap(
                             it1,
                             requireContext()
                         )
                     }!!) {
 
-                    bundle.putString("uri", item.value?.image.toString())
+                    bundle.putString("uri", item?.image.toString())
                     view.findNavController()
                         .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
                 }
@@ -96,11 +62,11 @@ class ItemDetailsFragment: Fragment() {
 
     private fun editItem() {
         val bundle = Bundle()
-        bundle.putString("item", item.value?.let { Item.toJSON(it).toString()})
+        bundle.putString("item", item?.let { Item.toJSON(it).toString()})
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
-    private fun getResult() {
+    private fun getResult(view:View): Item? {
         //get item derived from edit fragment (editedItem)
         val editedItemJSON = arguments?.getString("new_item", "")
 
@@ -108,38 +74,67 @@ class ItemDetailsFragment: Fragment() {
         val selectedItemJSON = arguments?.getString("item", "")
 
         //EDITED ITEM
-        if(!editedItemJSON.isNullOrEmpty()) {
+        return if(!editedItemJSON.isNullOrEmpty()) {
             handleEditItem(editedItemJSON)
+            arguments?.clear() // clear arguments
+            Item.fromStringJSON(editedItemJSON)
         }
         //SELECTED ITEM
         else if(!selectedItemJSON.isNullOrEmpty()) {
-            handleSelectedItem(selectedItemJSON)
-        }
-        arguments?.clear() // clear arguments
+            handleSelectedItem(selectedItemJSON, view)
+            arguments?.clear() // clear arguments
+            Item.fromStringJSON(selectedItemJSON)
+        } else
+            null
     }
 
     private fun handleEditItem(editedItemJSON: String) {
-        val oldItem = item.value
+        val oldItem = item
         if(editedItemJSON != oldItem?.let { Item.toJSON(it).toString() }) {
-            item.value = editedItemJSON.let { Item.fromStringJSON(it) }
+            item = editedItemJSON.let { Item.fromStringJSON(it) }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-                    item.value = oldItem
-                    if (oldItem != null) {
-                        storageHelper.saveItem(sharedPref, oldItem)
-                    }
+                    item = oldItem
                 })
                 snackbar.show()
             }
         }
-        item.value?.let { storageHelper.saveItem(sharedPref, it) }
     }
 
-    private fun handleSelectedItem(selectedItemJSON: String) {
-        item.value = selectedItemJSON.let { Item.fromStringJSON(it) }
-        item.value?.let { storageHelper.saveItem(sharedPref, it) }
+    private fun handleSelectedItem(selectedItemJSON: String, view:View) {
+        item = selectedItemJSON.let { Item.fromStringJSON(it) }
+        updateItemView(item, view)
+    }
+
+    private fun updateItemView(item:Item?, view:View) {
+        try {
+            itemImage.setImageBitmap(item?.image?.let { it1 ->
+                ImageUtils.getBitmap(it1, requireContext())
+            })
+        } catch (e: Exception) {
+            Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+        }
+
+        itemTitle.text = item?.name ?: resources.getString(R.string.defaultTitle)
+
+        try {
+            val price: Double? = item?.price;
+            if (price == null)
+                itemPrice.text = resources.getString(R.string.defaultPrice)
+            else
+                itemPrice.text = "$price"
+        }
+        catch (e: Exception) {
+            Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
+        }
+
+        itemDesc.text = item?.desc ?: resources.getString(R.string.defaultDesc)
+        itemCategory.text = item?.category ?: resources.getString(R.string.defaultCategory)
+        itemExpiryDate.text = item?.expiryDate ?: resources.getString(R.string.defaultExpire)
+        itemLocation.text = item?.location ?: resources.getString(R.string.defaultLocation)
+        itemCondition.text = item?.condition ?: resources.getString(R.string.defaultCondition)
     }
 
     /* TODO: WITH THIS FUNCTION, EDIT ITEM CRASHES DURING SCREEN ROTATION

@@ -59,7 +59,8 @@ class ItemEditFragment: Fragment() {
         if(itemJSON.isNullOrEmpty()) {
             isAddingItem = true
         }
-        else { //EDIT ITEM
+        //EDIT ITEM
+        else {
             isAddingItem = false
             val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
             item.value = Item.fromStringJSON(itemJSON)

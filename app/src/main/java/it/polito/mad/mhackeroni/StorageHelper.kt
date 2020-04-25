@@ -19,11 +19,9 @@ class StorageHelper(context: Context?) {
 
     fun loadItemList(s: SharedPreferences):MutableList<Item> {
         var jSONString: String? = s.getString(myContext?.getString(R.string.itemList_sharedPref), "")
-        Log.d("KKK", jSONString)
         if(!jSONString.isNullOrEmpty()) {
             if(jSONString[0] != '[')
                 jSONString = "[${jSONString}]" //convert to json array
-            Log.d("KKK", jSONString)
             val items = Klaxon().parseArray<Item>(jSONString)?.toMutableList()
             if (items != null) {
                 return items

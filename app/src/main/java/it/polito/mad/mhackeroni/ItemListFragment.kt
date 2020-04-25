@@ -21,12 +21,11 @@ class ItemListFragment: Fragment() {
     private var items: MutableList<Item> = mutableListOf()
     private lateinit var myAdapter:ItemAdapter
     private lateinit var sharedPref: SharedPreferences
-    private var mListener: OnCompleteListener? = null
     private val storageHelper:StorageHelper = StorageHelper(context)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref_list), Context.MODE_PRIVATE)
         val v = inflater.inflate(R.layout.fragment_itemlist, container, false)
         val itemList:RecyclerView = v.findViewById(R.id.item_list)
         items = storageHelper.loadItemList(sharedPref)
@@ -91,21 +90,7 @@ class ItemListFragment: Fragment() {
         if(newItem != null) {
             items.add(0, newItem) //TODO set correct position (maybe sort items by date)
             storageHelper.saveItemList(sharedPref, items)
-            mListener?.onComplete()
             myAdapter.notifyItemInserted(0)
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            mListener = context as ItemListFragment.OnCompleteListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnCompleteListener")
-        }
-    }
-
-    interface OnCompleteListener {
-        fun onComplete()
     }
 }

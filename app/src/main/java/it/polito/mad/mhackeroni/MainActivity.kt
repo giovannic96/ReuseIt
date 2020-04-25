@@ -19,7 +19,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
 
-class MainActivity : AppCompatActivity(), ItemListFragment.OnCompleteListener{
+class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView

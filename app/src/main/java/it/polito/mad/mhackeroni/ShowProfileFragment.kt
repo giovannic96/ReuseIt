@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_show_profile.*
 class ShowProfileFragment : Fragment() {
     var profile: MutableLiveData<Profile> = MutableLiveData()
     private val storageHelper:StorageHelper = StorageHelper(context)
+    private var mListener: OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -103,6 +104,7 @@ class ShowProfileFragment : Fragment() {
                     profile.value = oldProfile
                     if (oldProfile != null) {
                         storageHelper.saveProfile(sharedPref, oldProfile)
+                        mListener?.onComplete()
                     }
                 })
                 snackbar.show()
@@ -110,5 +112,18 @@ class ShowProfileFragment : Fragment() {
         }
         profile.value?.let { storageHelper.saveProfile(sharedPref, it) }
         arguments?.clear() // Clear arguments
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            mListener = context as ShowProfileFragment.OnCompleteListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement OnCompleteListener")
+        }
+    }
+
+    interface OnCompleteListener {
+        fun onComplete()
     }
 }
