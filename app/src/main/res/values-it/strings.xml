@@ -3,7 +3,6 @@
     <string name="app_name">ReuseIt</string>
     <string name="edit">Modifica</string>
     <string name="shared_pref">SharedPrefs</string>
-    <string name="shared_pref_list">SharedPrefsList</string>
     <string name="profile_sharedPref">profileSharedPref</string>
     <string name="item_sharedPref">itemSharedPref</string>
     <string name="itemList_sharedPref">itemListSharedPref</string>

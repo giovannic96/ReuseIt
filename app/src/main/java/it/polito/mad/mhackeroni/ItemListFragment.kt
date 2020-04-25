@@ -21,11 +21,12 @@ class ItemListFragment: Fragment() {
     private var items: MutableList<Item> = mutableListOf()
     private lateinit var myAdapter:ItemAdapter
     private lateinit var sharedPref: SharedPreferences
-    private val storageHelper:StorageHelper = StorageHelper(context)
+    private lateinit var storageHelper:StorageHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref_list), Context.MODE_PRIVATE)
+        storageHelper = StorageHelper(requireContext())
+        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         val v = inflater.inflate(R.layout.fragment_itemlist, container, false)
         val itemList:RecyclerView = v.findViewById(R.id.item_list)
         items = storageHelper.loadItemList(sharedPref)
