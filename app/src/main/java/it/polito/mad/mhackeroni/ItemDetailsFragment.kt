@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment(){
     var item: MutableLiveData<Item> = MutableLiveData()
-    private var mListener: ItemDetailsFragment.OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -124,12 +123,11 @@ class ItemDetailsFragment: Fragment(){
         arguments?.clear() // Clear arguments
     }
 
-    private fun saveData(s: SharedPreferences, p:Item) {
+    private fun saveData(s: SharedPreferences, i:Item) {
         with (s.edit()) {
-            putString(getString(it.polito.mad.mhackeroni.R.string.item_sharedPref), Item.toJSON(p).toString())
+            putString(getString(it.polito.mad.mhackeroni.R.string.item_sharedPref), Item.toJSON(i).toString())
             apply()
         }
-        mListener?.onComplete();
     }
 
     private fun loadData(s: SharedPreferences){
@@ -148,8 +146,4 @@ class ItemDetailsFragment: Fragment(){
         outState.putString("item", item.value?.let { Item.toJSON(it).toString()})
      }
      */
-
-    interface OnCompleteListener {
-        fun onComplete()
-    }
 }

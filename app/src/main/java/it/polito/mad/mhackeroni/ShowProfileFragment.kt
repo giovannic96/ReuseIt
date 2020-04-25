@@ -135,6 +135,7 @@ class ShowProfileFragment : Fragment(){
         profile.value = JSONString?.let { Profile.fromStringJSON(it) }
     }
 
+    //TODO remove this when listFragment is set to home
     interface OnCompleteListener {
         fun onComplete()
     }

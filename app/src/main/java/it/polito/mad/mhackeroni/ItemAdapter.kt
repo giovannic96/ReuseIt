@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 
-class ItemAdapter(private val items: MutableList<Item>, private val listener: MyAdapterListener):
+class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):
     RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     init {
@@ -50,6 +50,11 @@ class ItemAdapter(private val items: MutableList<Item>, private val listener: My
 
     abstract class ViewHolder(v: View): RecyclerView.ViewHolder(v) {
         abstract fun bind(item: Item)
+    }
+
+    fun refresh(newItems: MutableList<Item>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     //class that handles list with items
