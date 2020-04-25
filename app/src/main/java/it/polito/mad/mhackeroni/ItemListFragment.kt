@@ -24,13 +24,18 @@ class ItemListFragment: Fragment() {
     private val storageHelper:StorageHelper = StorageHelper(context)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_itemlist, container, false)
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref_list), Context.MODE_PRIVATE)
-        val v = inflater.inflate(R.layout.fragment_itemlist, container, false)
-        val itemList:RecyclerView = v.findViewById(R.id.item_list)
+
+        val itemList:RecyclerView = view.findViewById(R.id.item_list)
         items = storageHelper.loadItemList(sharedPref)
 
-        val fab:FloatingActionButton = v.findViewById(R.id.fab)
+        val fab:FloatingActionButton = view.findViewById(R.id.fab)
         fab.setOnClickListener {
             navigateWithoutInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit)
         }
@@ -46,24 +51,21 @@ class ItemListFragment: Fragment() {
         })
         itemList.adapter = myAdapter
         itemList.layoutManager = if(items.size == 0)
-                                    LinearLayoutManager(context)
-                                else {
-                                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                                        StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
-                                    else
-                                        StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-                                }
-        return v
-    }
+            LinearLayoutManager(context)
+        else {
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+            else
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        getResultAndUpdateList()
+        getResultAndUpdateList(itemList)
     }
 
     override fun onResume() {
         super.onResume()
         myAdapter.refresh(storageHelper.loadItemList(sharedPref));
+
     }
 
     private fun navigateWithInfo(layoutId: Int, item: Item) {
@@ -78,10 +80,16 @@ class ItemListFragment: Fragment() {
         view?.findNavController()?.navigate(layoutId, bundle)
     }
 
-    private fun getResultAndUpdateList() {
+    private fun getResultAndUpdateList(recyclerView: RecyclerView) {
         val newItemJSON = arguments?.getString("new_item", "")
         if(!newItemJSON.isNullOrEmpty()) {
             insertSingleItem(newItemJSON.let { Item.fromStringJSON(it) }) //update list
+            recyclerView.layoutManager =
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+                else
+                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+
         }
         arguments?.clear()
     }

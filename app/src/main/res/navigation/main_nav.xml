@@ -33,9 +33,7 @@
         android:label="ItemDetailsFragment" >
         <action
             android:id="@+id/action_nav_ItemDetail_to_nav_ItemDetailEdit"
-            app:destination="@id/nav_ItemDetailEdit"
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/nav_ItemDetailEdit"/>
+            app:destination="@id/nav_ItemDetailEdit" />
         <action
             android:id="@+id/action_nav_ItemDetail_to_nav_showImage"
             app:destination="@id/nav_showImage" />

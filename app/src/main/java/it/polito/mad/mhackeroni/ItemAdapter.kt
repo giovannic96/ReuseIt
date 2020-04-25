@@ -1,5 +1,6 @@
 package it.polito.mad.mhackeroni
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,6 @@ import java.lang.ref.WeakReference
 
 class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):
     RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
-
-    init {
-        getItemViewType(0)
-    }
 
     private val VIEW_TYPE_ITEM = 10
     private val VIEW_TYPE_EMPTY = 11
@@ -31,6 +28,7 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
 
         //return view with items
         return if (viewType == VIEW_TYPE_ITEM) {
+
             v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item, parent, false) //get layout inflater and inflate item layout
             ItemViewHolder(v, listener)
@@ -53,7 +51,9 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
     }
 
     fun refresh(newItems: MutableList<Item>) {
-        items = newItems
+        items.clear()
+        newItems.sort()
+        items.addAll(newItems)
         notifyDataSetChanged()
     }
 
@@ -86,5 +86,6 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         fun editItemViewOnClick(item: Item) //listener for edit button of the card view
         fun itemViewOnClick(item: Item) //listener for click on any part of the card view (except edit button)
     }
+
 
 }

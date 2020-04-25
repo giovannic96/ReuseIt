@@ -3,6 +3,7 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment() {
     var item: Item? = null
+    var model: MutableLiveData<Item>  = MutableLiveData()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -22,7 +24,31 @@ class ItemDetailsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        item = getResult(view)
+        model.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            try {
+                itemImage.setImageBitmap(model.value?.image?.let {
+                        it1 -> ImageUtils.getBitmap(it1, requireContext())
+                })
+            } catch (e: Exception) {
+                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+            }
+
+            itemTitle.text = model.value?.name ?: resources.getString(R.string.defaultTitle)
+            itemCondition.text = model.value?.condition ?: resources.getString(R.string.defaultCondition)
+            itemDesc.text = model.value?.desc ?: resources.getString(R.string.defaultDesc)
+            itemPrice.text = (model.value?.price ?: resources.getString(R.string.defaultPrice)).toString()
+            itemCategory.text = model.value?.category ?: resources.getString(R.string.defaultCategory)
+            itemExpiryDate.text = model.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
+            itemLocation.text = model.value?.location ?: resources.getString(R.string.defaultLocation)
+        })
+
+        if(item == null) {
+            item = getResult(view)
+        }
+
+        model.value = item
+
+
 
         itemImage.setOnClickListener {
             val bundle=Bundle()
@@ -90,6 +116,9 @@ class ItemDetailsFragment: Fragment() {
 
     private fun handleEditItem(editedItemJSON: String) {
         val oldItem = item
+        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        val storageHelper = StorageHelper(requireContext())
+
         if(editedItemJSON != oldItem?.let { Item.toJSON(it).toString() }) {
             item = editedItemJSON.let { Item.fromStringJSON(it) }
 

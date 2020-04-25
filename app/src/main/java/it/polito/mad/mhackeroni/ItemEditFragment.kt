@@ -185,9 +185,10 @@ class ItemEditFragment: Fragment() {
 
                 if(isAddingItem)
                     view?.findNavController()?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-                else
-                    view?.findNavController()?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
-
+                else {
+                    view?.findNavController()
+                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+                }
                 return true
             }
             else -> super.onOptionsItemSelected(menuItem)

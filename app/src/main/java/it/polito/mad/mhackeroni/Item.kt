@@ -3,9 +3,8 @@ package it.polito.mad.mhackeroni
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
-import java.util.*
 
-class Item(val name:String, val price:Double, val desc:String, val category:String, val expiryDate:String, val location:String, var condition: String, var image: String?) : Serializable {
+class Item(val name:String, val price:Double, val desc:String, val category:String, val expiryDate:String, val location:String, var condition: String, var image: String?) : Serializable, Comparable<Item> {
 
     companion object Factory {
 
@@ -59,5 +58,8 @@ class Item(val name:String, val price:Double, val desc:String, val category:Stri
             }
         }
     }
+
+    override fun compareTo(other: Item): Int = this.expiryDate.compareTo(other.expiryDate)
+    override fun toString(): String = "$expiryDate"
 
 }
