@@ -14,8 +14,9 @@
     <string name="defaultPhoneNumber">Phone number (opt.)</string>
     <string name="defaultTitle">Item title</string>
     <string name="defaultDesc">Item description</string>
-    <string name="defaultCategory">Category</string>
-    <string name="defaultPrice">0 €</string>
+    <string name="defaultCategory">Category:</string>
+    <string name="defaultSubCategory">SubCategory</string>
+    <string name="defaultPrice">0.0</string>
     <string name="defaultItemLocation">Location</string>
     <string name="defaultCondition">Condition</string>
     <string name="defaultExpire">Expiry date</string>
@@ -44,4 +45,92 @@
     <string name="items_nav">Item on sale</string>
     <string name="edit_item">Edit item</string>
     <string name="no_data_available">No data available</string>
+    <string-array name="categories">
+        <item>Select category</item>
+        <item>Arts &amp; Crafts</item>
+        <item>Sports and Outdoors</item>
+        <item>Baby</item>
+        <item>Women\&#39;s fashion</item>
+        <item>Men\&#39;s fashion</item>
+        <item>Electonics</item>
+        <item>Games &amp; Videogames</item>
+        <item>Automotive</item>
+    </string-array>
+    <string-array name="conditions">
+        <item>Select condition</item>
+        <item>New</item>
+        <item>As new</item>
+        <item>Optimal</item>
+        <item>Good</item>
+        <item>Acceptable</item>
+    </string-array>
+    <string-array name="arts">
+        <item>Painting, Drawing &amp; Art Supplies</item>
+        <item>Sewing</item>
+        <item>Scrapbooking &amp; Stamping</item>
+        <item>Party Decorations &amp; Supplies</item>
+    </string-array>
+    <string-array name="sports">
+        <item>Sports and Outdoors</item>
+        <item>Outdoor Recreation</item>
+        <item>Sports &amp; Fitness</item>
+        <item>Pet Supplies</item>
+    </string-array>
+    <string-array name="babies">
+        <item>Apparel &amp; Accessories</item>
+        <item>Baby &amp; Toddler Toys</item>
+        <item>Car Seats &amp; Accessories</item>
+        <item>Pregnancy &amp; Maternity</item>
+        <item>Strollers &amp; Accessories</item>
+    </string-array>
+    <string-array name="womens">
+        <item>Clothing</item>
+        <item>Shoes</item>
+        <item>Watches</item>
+        <item>Handbags</item>
+        <item>Accessories</item>
+    </string-array>
+    <string-array name="mens">
+        <item>Clothing</item>
+        <item>Shoes</item>
+        <item>Watches</item>
+        <item>Accessories</item>
+    </string-array>
+    <string-array name="electronics">
+        <item>Computers</item>
+        <item>Monitors</item>
+        <item>Printers &amp; Scanners</item>
+        <item>Camera &amp; Photo</item>
+        <item>Smartphone &amp; Tablet</item>
+        <item>Audio</item>
+        <item>Television &amp; Video</item>
+        <item>Video Game Consoles</item>
+        <item>Wearable Technology</item>
+        <item>Accessories &amp; Supplies</item>
+        <item>Irons &amp; Steamers</item>
+        <item>Vacuums &amp; Floor Care</item>
+    </string-array>
+    <string-array name="games">
+        <item>Action Figures &amp; Statues</item>
+        <item>Arts &amp; Crafts</item>
+        <item>Building Toys</item>
+        <item>Dolls &amp; Accessories</item>
+        <item>Kid\&#39;s Electronics</item>
+        <item>Learning &amp; Education</item>
+        <item>Tricycles, Scooters &amp; Wagons</item>
+        <item>Videogames</item>
+    </string-array>
+    <string-array name="automotives">
+        <item>Car Electronics &amp; Accessories</item>
+        <item>Accessories</item>
+        <item>Motorcycle &amp; Powersports</item>
+        <item>Replacement Parts</item>
+        <item>RV Parts &amp; Accessories</item>
+        <item>Tools &amp; Equipment</item>
+    </string-array>
+    <string-array name="subcategories">
+        <item>Select subcategory</item>
+        <item>aaa</item>
+    </string-array>
+
 </resources>

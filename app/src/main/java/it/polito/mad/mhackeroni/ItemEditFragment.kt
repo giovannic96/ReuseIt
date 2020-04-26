@@ -2,7 +2,9 @@ package it.polito.mad.mhackeroni
 
 import android.Manifest
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,9 +12,11 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -27,7 +31,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
+import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class ItemEditFragment: Fragment() {
     var item: MutableLiveData<Item> = MutableLiveData()
@@ -37,6 +43,13 @@ class ItemEditFragment: Fragment() {
     private val REQUEST_CREATEIMAGE=9001
     private val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE=9002
     private var isAddingItem: Boolean = false
+    private var cat : String? = null
+    private var subCat: String? = null
+    private var cond : String? = null
+    val c = Calendar.getInstance()
+    val year = c.get(Calendar.YEAR)
+    val month = c.get(Calendar.MONTH)
+    val day = c.get(Calendar.DAY_OF_MONTH)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -72,6 +85,129 @@ class ItemEditFragment: Fragment() {
             }
         }
 
+        val categories = resources.getStringArray(R.array.categories)
+        val subcategories = resources.getStringArray(R.array.subcategories)
+        val arts = resources.getStringArray(R.array.arts)
+        val sports = resources.getStringArray(R.array.sports)
+        val babies = resources.getStringArray(R.array.babies)
+        val womens = resources.getStringArray(R.array.womens)
+        val mens = resources.getStringArray(R.array.mens)
+        val electronics = resources.getStringArray(R.array.electronics)
+        val games = resources.getStringArray(R.array.games)
+        val automotives = resources.getStringArray(R.array.electronics)
+        val conditions = resources.getStringArray(R.array.conditions)
+        var selectedCat = categories
+
+        var adapterCat = ArrayAdapter(requireContext(),
+            android.R.layout.simple_spinner_item, categories)
+        edit_itemCategory.adapter = adapterCat
+
+        var adapterSubcat = ArrayAdapter(requireContext(),
+            android.R.layout.simple_spinner_item, subcategories)
+        edit_itemSubCategory.adapter = adapterSubcat
+
+        val adapterCond = ArrayAdapter(requireContext(),
+            android.R.layout.simple_spinner_item, conditions)
+        edit_itemCondition.adapter = adapterCond
+
+        edit_itemCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when(position){
+                    1-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, arts)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = arts
+                    }
+                    2-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, sports)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = sports
+                    }
+                    3-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, babies)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = babies
+                    }
+                    4-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, womens)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = womens
+                    }
+                    5-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, mens)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = mens
+                    }
+                    6-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, electronics)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = electronics
+                    }
+                    7-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, games)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = games
+                    }
+                    8-> {adapterSubcat = ArrayAdapter(requireContext(),
+                        android.R.layout.simple_spinner_item, automotives)
+                        edit_itemSubCategory.adapter = adapterSubcat
+                        selectedCat = automotives
+                    }
+                }
+                cat = categories[position]
+            }
+        }
+
+        edit_itemSubCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                subCat = selectedCat[position]
+            }
+        }
+
+
+        edit_itemCondition.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                cond = conditions[position]
+            }
+        }
+
+        edit_itemExpiryDate.setOnClickListener(){
+
+            val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+
+                edit_itemExpiryDate.setText("$year/$monthOfYear/$dayOfMonth")
+            }, year, month, day)
+
+            dpd.show()
+
+        }
+
+
+
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
             edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
@@ -79,10 +215,7 @@ class ItemEditFragment: Fragment() {
                 item.value?.price.toString() ?: resources.getString(R.string.defaultPrice)
             )
             edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultTitle))
-            edit_itemCategory.setText(item.value?.category ?: resources.getString(R.string.defaultCategory))
-            edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
             edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
-            edit_itemCondition.setText(item.value?.condition ?: resources.getString(R.string.defaultCondition))
 
             try {
                 edit_itemImage.setImageBitmap(item.value?.image?.let {
@@ -152,16 +285,28 @@ class ItemEditFragment: Fragment() {
                     edit_itemPrice.text.toString().toDouble()
 
                 if(::currentItemPhotoPath.isInitialized)
-                    item.value = Item(edit_itemTitle.text.toString(), price,
-                        edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
-                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                        edit_itemCondition.text.toString(), currentItemPhotoPath
-                        )
+                    item.value = cat?.let {
+                        cond?.let { it1 ->
+                            subCat?.let { it2 ->
+                                Item(edit_itemTitle.text.toString(), price,
+                                    edit_itemDesc.text.toString(), it, it2,
+                                    edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                                    it1, currentItemPhotoPath
+                                )
+                            }
+                        }
+                    }
                 else
-                    item.value = Item(edit_itemTitle.text.toString(), price,
-                        edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
-                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                        edit_itemCondition.text.toString(), item.value?.image)
+                    item.value = cat?.let {
+                        cond?.let { it1 ->
+                            subCat?.let { it2 ->
+                                Item(edit_itemTitle.text.toString(), price,
+                                    edit_itemDesc.text.toString(), it, it2,
+                                    edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                                    it1, item.value?.image)
+                            }
+                        }
+                    }
 
                 val nRotation = rotationCount.value
                 if(::currentItemPhotoPath.isInitialized){
@@ -191,6 +336,14 @@ class ItemEditFragment: Fragment() {
                 return true
             }
             else -> super.onOptionsItemSelected(menuItem)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Used to solve lazy update issue
+        if(::currentItemPhotoPath.isInitialized){
+            edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
         }
     }
 
@@ -300,16 +453,28 @@ class ItemEditFragment: Fragment() {
             edit_itemPrice.text.toString().toDouble()
 
         if(::currentItemPhotoPath.isInitialized)
-            item.value = Item(edit_itemTitle.text.toString(), price,
-                edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
-                edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                edit_itemCondition.text.toString(), currentItemPhotoPath
-            )
+            item.value = cat?.let {
+                cond?.let { it1 ->
+                    subCat?.let { it2 ->
+                        Item(edit_itemTitle.text.toString(), price,
+                            edit_itemDesc.text.toString(), it, it2,
+                            edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                            it1, currentItemPhotoPath
+                        )
+                    }
+                }
+            }
         else
-            item.value = Item(edit_itemTitle.text.toString(), price,
-                edit_itemDesc.text.toString(), edit_itemCategory.text.toString(),
-                edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                edit_itemCondition.text.toString(), item.value?.image)
+            item.value = cat?.let {
+                cond?.let { it1 ->
+                    subCat?.let { it2 ->
+                        Item(edit_itemTitle.text.toString(), price,
+                            edit_itemDesc.text.toString(), it, it2,
+                            edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
+                            it1, item.value?.image)
+                    }
+                }
+            }
 
         outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }

@@ -30,17 +30,17 @@
                 android:id="@+id/edit_itemCamera"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/btn_rotate_imageItem"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="130dp"
-                android:layout_marginEnd="10dp"
-                android:clickable="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_camera_background"
+                android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_camera"
                 app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="13dp"/>
+                app:civ_border_width="13dp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/btn_rotate_imageItem"
@@ -48,10 +48,8 @@
                 android:layout_height="63dp"
                 android:layout_alignTop="@+id/edit_itemImage"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="110dp"
-                android:layout_marginEnd="80dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_camera_background"
                 android:clickable="true"
                 android:focusable="true"
@@ -85,6 +83,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:hint="@string/defaultDesc"
+            android:drawableEnd="@drawable/ic_quote"
             android:inputType="textMultiLine"
             android:textAlignment="viewStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -92,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <EditText
+        <Spinner
             android:id="@+id/edit_itemCondition"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -105,8 +104,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <EditText
+        <Spinner
             android:id="@+id/edit_itemCategory"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/defaultCategory"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#505050"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Spinner
+            android:id="@+id/edit_itemSubCategory"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -127,23 +139,12 @@
             android:layout_marginEnd="20dp"
             android:hint="@string/defaultPrice"
             android:textAlignment="viewStart"
+            android:drawableEnd="@drawable/ic_euro_black"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#000000"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/itemTitle" />
-
-        <EditText
-            android:id="@+id/edit_itemLocation"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/defaultItemLocation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/edit_itemExpiryDate"
@@ -154,6 +155,22 @@
             android:layout_marginEnd="20dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:hint="@string/defaultExpire"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:clickable="true"
+            android:editable="false"
+            android:drawableEnd="@drawable/ic_date"/>
+
+        <EditText
+            android:id="@+id/edit_itemLocation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/defaultItemLocation"
+            android:drawableEnd="@drawable/ic_location"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>

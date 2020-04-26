@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment() {
     var item: Item? = null
+    var price: Double? = null
+    var cat: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -120,7 +122,7 @@ class ItemDetailsFragment: Fragment() {
         itemTitle.text = item?.name ?: resources.getString(R.string.defaultTitle)
 
         try {
-            val price: Double? = item?.price;
+            price = item?.price;
             if (price == null)
                 itemPrice.text = resources.getString(R.string.defaultPrice)
             else
@@ -131,21 +133,32 @@ class ItemDetailsFragment: Fragment() {
         }
 
         itemDesc.text = item?.desc ?: resources.getString(R.string.defaultDesc)
-        itemCategory.text = item?.category ?: resources.getString(R.string.defaultCategory)
+        cat = item?.category ?: resources.getString(R.string.defaultCategory)
+        itemCategory.text = "$cat:"
+        itemSubCategory.text = item?.subcategory ?: resources.getString(R.string.defaultSubCategory)
         itemExpiryDate.text = item?.expiryDate ?: resources.getString(R.string.defaultExpire)
         itemLocation.text = item?.location ?: resources.getString(R.string.defaultLocation)
-        itemCondition.text = item?.condition ?: resources.getString(R.string.defaultCondition)
+        var cond = item?.condition ?: resources.getString(R.string.defaultCondition)
+        var defCond = resources.getString(R.string.defaultCondition)
+        itemCondition.text = "$defCond: $cond"
     }
 
-    /* TODO: WITH THIS FUNCTION, EDIT ITEM CRASHES DURING SCREEN ROTATION
-    override fun onSaveInstanceState(outState: Bundle) {
+    //TODO
+    /*override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        item.value = Item(itemTitle.text.toString(), itemPrice.text.toString(),
-            itemDesc.text.toString(), itemCategory.text.toString(), itemExpiryDate.text.toString(),
-            itemLocation.text.toString(), itemCondition.text.toString(), "");
+        val price:Double = if(itemPrice.text.toString().isEmpty())
+            0.0
+        else
+            itemPrice.text.toString().toDouble()
 
-        outState.putString("item", item.value?.let { Item.toJSON(it).toString()})
-     }
-     */
+        item.value = Item(itemTitle.text.toString(), price,
+                        itemDesc.text.toString(), cat, itemSubCategory.text.toString(),
+                        itemExpiryDate.text.toString(), itemLocation.text.toString(),
+                        itemCondition.text.toString(), item?.image
+                    )
+
+
+        outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
+    }*/
 }
