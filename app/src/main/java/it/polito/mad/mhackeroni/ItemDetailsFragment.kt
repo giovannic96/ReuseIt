@@ -3,15 +3,17 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment() {
-    var item: Item? = null
+    var item: MutableLiveData<Item> = MutableLiveData()
     var price: Double? = null
     var cat: String = ""
     var cond: String = ""
@@ -25,19 +27,52 @@ class ItemDetailsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        item = getResult(view)
+        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            try {
+                itemImage.setImageBitmap(item?.value?.image?.let { it1 ->
+                    ImageUtils.getBitmap(it1, requireContext())
+                })
+            } catch (e: Exception) {
+                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+            }
+
+            itemTitle.text = item?.value?.name ?: resources.getString(R.string.defaultTitle)
+
+            try {
+                price = item?.value?.price;
+                if (price == null)
+                    itemPrice.text = resources.getString(R.string.defaultPrice)
+                else
+                    itemPrice.text = "$price"
+            }
+            catch (e: Exception) {
+                Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
+            }
+
+            itemDesc.text = item?.value?.desc ?: resources.getString(R.string.defaultDesc)
+            cat = item?.value?.category ?: resources.getString(R.string.defaultCategory)
+            itemCategory.text = "$cat:"
+            itemSubCategory.text = item?.value?.subcategory ?: resources.getString(R.string.defaultSubCategory)
+            itemExpiryDate.text = item?.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
+            itemLocation.text = item?.value?.location ?: resources.getString(R.string.defaultLocation)
+            cond = item?.value?.condition ?: resources.getString(R.string.defaultCondition)
+            var defCond = resources.getString(R.string.defaultCondition)
+            itemCondition.text = "$defCond: $cond"
+        })
+
+        getResult(view)
 
         itemImage.setOnClickListener {
             val bundle=Bundle()
             try {
-                if (item?.image?.let { it1 ->
+                if (item?.value?.image?.let { it1 ->
                         ImageUtils.canDisplayBitmap(
                             it1,
                             requireContext()
                         )
                     }!!) {
 
-                    bundle.putString("uri", item?.image.toString())
+                    bundle.putString("uri", item?.value?.image.toString())
                     view.findNavController()
                         .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
                 }
@@ -65,11 +100,11 @@ class ItemDetailsFragment: Fragment() {
 
     private fun editItem() {
         val bundle = Bundle()
-        bundle.putString("item", item?.let { Item.toJSON(it).toString()})
+        bundle.putString("item", item?.let { it.value?.let { it1 -> Item.toJSON(it1).toString() } })
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
-    private fun getResult(view:View): Item? {
+    private fun getResult(view:View) {
         //get item derived from edit fragment (editedItem)
         val editedItemJSON = arguments?.getString("new_item", "")
 
@@ -77,29 +112,32 @@ class ItemDetailsFragment: Fragment() {
         val selectedItemJSON = arguments?.getString("item", "")
 
         //EDITED ITEM
-        return if(!editedItemJSON.isNullOrEmpty()) {
-            handleEditItem(editedItemJSON)
+        if (!editedItemJSON.isNullOrEmpty()) {
+            val oldItem = arguments?.getString("old_item", "")
+            if (oldItem != null) {
+                handleEditItem(editedItemJSON, oldItem)
+            }
             arguments?.clear() // clear arguments
             Item.fromStringJSON(editedItemJSON)
         }
         //SELECTED ITEM
-        else if(!selectedItemJSON.isNullOrEmpty()) {
+        else if (!selectedItemJSON.isNullOrEmpty()) {
             handleSelectedItem(selectedItemJSON, view)
             arguments?.clear() // clear arguments
             Item.fromStringJSON(selectedItemJSON)
-        } else
-            null
+        }
     }
 
-    private fun handleEditItem(editedItemJSON: String) {
-        val oldItem = item
-        if(editedItemJSON != oldItem?.let { Item.toJSON(it).toString() }) {
-            item = editedItemJSON.let { Item.fromStringJSON(it) }
+    private fun handleEditItem(editedItemJSON: String, oldItem: String) {
+
+        if(editedItemJSON != oldItem) {
+
+            item?.value = editedItemJSON.let { Item.fromStringJSON(it) }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-                    item = oldItem
+                    item.value = Item.fromStringJSON(oldItem)
                 })
                 snackbar.show()
             }
@@ -107,43 +145,8 @@ class ItemDetailsFragment: Fragment() {
     }
 
     private fun handleSelectedItem(selectedItemJSON: String, view:View) {
-        item = selectedItemJSON.let { Item.fromStringJSON(it) }
-        updateItemView(item, view)
+        item?.value = selectedItemJSON.let { Item.fromStringJSON(it) }
     }
-
-    private fun updateItemView(item:Item?, view:View) {
-        try {
-            itemImage.setImageBitmap(item?.image?.let { it1 ->
-                ImageUtils.getBitmap(it1, requireContext())
-            })
-        } catch (e: Exception) {
-            Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
-        }
-
-        itemTitle.text = item?.name ?: resources.getString(R.string.defaultTitle)
-
-        try {
-            price = item?.price;
-            if (price == null)
-                itemPrice.text = resources.getString(R.string.defaultPrice)
-            else
-                itemPrice.text = "$price"
-        }
-        catch (e: Exception) {
-            Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
-        }
-
-        itemDesc.text = item?.desc ?: resources.getString(R.string.defaultDesc)
-        cat = item?.category ?: resources.getString(R.string.defaultCategory)
-        itemCategory.text = "$cat:"
-        itemSubCategory.text = item?.subcategory ?: resources.getString(R.string.defaultSubCategory)
-        itemExpiryDate.text = item?.expiryDate ?: resources.getString(R.string.defaultExpire)
-        itemLocation.text = item?.location ?: resources.getString(R.string.defaultLocation)
-        cond = item?.condition ?: resources.getString(R.string.defaultCondition)
-        var defCond = resources.getString(R.string.defaultCondition)
-        itemCondition.text = "$defCond: $cond"
-    }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -153,12 +156,12 @@ class ItemDetailsFragment: Fragment() {
         else
             itemPrice.text.toString().toDouble()
 
-        item = Item(itemTitle.text.toString(), price,
+        item?.value = Item(itemTitle.text.toString(), price,
                         itemDesc.text.toString(), cat, itemSubCategory.text.toString(),
                         itemExpiryDate.text.toString(), itemLocation.text.toString(),
-                        cond, item?.image
+                        cond, item?.value?.image
                     )
 
-        outState.putString("item", item?.let { Item.toJSON(it).toString() })
+        outState.putString("item", item?.let { Item.toJSON(item?.value!!).toString() })
     }
 }

@@ -52,7 +52,7 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
 
     fun refresh(newItems: MutableList<Item>) {
         items.clear()
-        newItems.sort()
+        // newItems.sort()
         items.addAll(newItems)
         notifyDataSetChanged()
     }

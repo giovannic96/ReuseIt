@@ -52,6 +52,7 @@
             app:destination="@id/nav_ItemDetail"
             app:popUpTo="@id/nav_ItemDetail"
             app:popUpToInclusive="true"/>
+
         <action
             android:id="@+id/action_nav_ItemDetailEdit_to_nav_itemList"
             app:destination="@id/nav_itemList"

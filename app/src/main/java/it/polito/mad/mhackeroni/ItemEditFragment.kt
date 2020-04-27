@@ -37,6 +37,7 @@ import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class ItemEditFragment: Fragment() {
     var item: MutableLiveData<Item> = MutableLiveData()
+    private var oldItem: Item? = null
     private lateinit var currentItemPhotoPath: String
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
     private val REQUEST_PICKIMAGE=9002
@@ -77,6 +78,7 @@ class ItemEditFragment: Fragment() {
             isAddingItem = false
             val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
             item.value = Item.fromStringJSON(itemJSON)
+            oldItem = item.value
             currentItemPhotoPath = item.value?.image.toString()
 
             if (savedItem != null) {
@@ -326,13 +328,24 @@ class ItemEditFragment: Fragment() {
                     }
                     item.value!!.image = currentItemPhotoPath
                 }
-                val bundle = bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
 
-                if(isAddingItem)
-                    view?.findNavController()?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-                else {
+                if(isAddingItem) {
+                    val bundle =
+                        bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
+
                     view?.findNavController()
-                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                }else {
+                    if(oldItem == item.value){
+                        view?.findNavController()?.popBackStack()
+                    } else {
+                        val bundle =
+                            bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString()},
+                            "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+
+                        view?.findNavController()
+                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+                    }
                 }
                 return true
             }

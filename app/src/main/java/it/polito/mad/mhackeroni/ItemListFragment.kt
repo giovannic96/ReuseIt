@@ -30,7 +30,7 @@ class ItemListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref_list), Context.MODE_PRIVATE)
+        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
         val itemList:RecyclerView = view.findViewById(R.id.item_list)
         items = storageHelper.loadItemList(sharedPref)
