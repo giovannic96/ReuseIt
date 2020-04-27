@@ -164,4 +164,16 @@ class ItemDetailsFragment: Fragment() {
 
         outState.putString("item", item?.let { Item.toJSON(item?.value!!).toString() })
     }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
+
+            if(savedItem != null)
+                item.value = savedItem
+        }
+    }
+
+
 }
