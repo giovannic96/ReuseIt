@@ -14,6 +14,7 @@ class ItemDetailsFragment: Fragment() {
     var item: Item? = null
     var price: Double? = null
     var cat: String = ""
+    var cond: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -138,13 +139,13 @@ class ItemDetailsFragment: Fragment() {
         itemSubCategory.text = item?.subcategory ?: resources.getString(R.string.defaultSubCategory)
         itemExpiryDate.text = item?.expiryDate ?: resources.getString(R.string.defaultExpire)
         itemLocation.text = item?.location ?: resources.getString(R.string.defaultLocation)
-        var cond = item?.condition ?: resources.getString(R.string.defaultCondition)
+        cond = item?.condition ?: resources.getString(R.string.defaultCondition)
         var defCond = resources.getString(R.string.defaultCondition)
         itemCondition.text = "$defCond: $cond"
     }
 
-    //TODO
-    /*override fun onSaveInstanceState(outState: Bundle) {
+
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         val price:Double = if(itemPrice.text.toString().isEmpty())
@@ -152,13 +153,12 @@ class ItemDetailsFragment: Fragment() {
         else
             itemPrice.text.toString().toDouble()
 
-        item.value = Item(itemTitle.text.toString(), price,
+        item = Item(itemTitle.text.toString(), price,
                         itemDesc.text.toString(), cat, itemSubCategory.text.toString(),
                         itemExpiryDate.text.toString(), itemLocation.text.toString(),
-                        itemCondition.text.toString(), item?.image
+                        cond, item?.image
                     )
 
-
-        outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
-    }*/
+        outState.putString("item", item?.let { Item.toJSON(it).toString() })
+    }
 }

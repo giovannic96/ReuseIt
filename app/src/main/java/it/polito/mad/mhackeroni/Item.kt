@@ -30,7 +30,7 @@ class Item(val name:String, val price:Double, val desc:String, val category:Stri
                 jsonObject.getString("desc"),
                 jsonObject.getString("category"),
                 jsonObject.getString("subcategory"),
-                jsonObject.getString("expiryDate"), //TODO CHANGE INTO DATE
+                jsonObject.getString("expiryDate"),
                 jsonObject.getString("location"),
                 jsonObject.getString("condition"),
                 jsonObject.getString("image")
