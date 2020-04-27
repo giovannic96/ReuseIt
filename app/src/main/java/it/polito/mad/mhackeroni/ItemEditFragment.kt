@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -16,8 +15,8 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.DatePicker
 import android.widget.PopupMenu
+import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -31,9 +30,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class ItemEditFragment: Fragment() {
     var item: MutableLiveData<Item> = MutableLiveData()
@@ -123,42 +120,42 @@ class ItemEditFragment: Fragment() {
                 id: Long
             ) {
                 when(position){
-                    1-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    0-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, arts)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = arts
                     }
-                    2-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    1-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, sports)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = sports
                     }
-                    3-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    2-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, babies)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = babies
                     }
-                    4-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    3-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, womens)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = womens
                     }
-                    5-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    4-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, mens)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = mens
                     }
-                    6-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    5-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, electronics)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = electronics
                     }
-                    7-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    6-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, games)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = games
                     }
-                    8-> {adapterSubcat = ArrayAdapter(requireContext(),
+                    7-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, automotives)
                         edit_itemSubCategory.adapter = adapterSubcat
                         selectedCat = automotives
@@ -180,6 +177,16 @@ class ItemEditFragment: Fragment() {
             ) {
                 subCat = selectedCat[position]
             }
+        }
+
+        if(item.value?.category!=null){
+            setSpinText(edit_itemCategory, item.value?.category)
+        }
+        if(item.value?.condition!=null){
+            setSpinText(edit_itemCondition, item.value?.condition)
+        }
+        if(item.value?.subcategory!=null){
+            setSpinText(edit_itemSubCategory, item.value?.subcategory)
         }
 
 
@@ -208,8 +215,6 @@ class ItemEditFragment: Fragment() {
 
         }
 
-
-
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
             edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
@@ -217,6 +222,7 @@ class ItemEditFragment: Fragment() {
                 item.value?.price.toString() ?: resources.getString(R.string.defaultPrice)
             )
             edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultTitle))
+            edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
             edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
 
             try {
@@ -548,5 +554,13 @@ class ItemEditFragment: Fragment() {
         val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         contentResolver.takePersistableUriPermission(uri, takeFlags)
+    }
+
+    fun setSpinText(spin: Spinner, text: String?) {
+        for (i in 0 until spin.getAdapter().getCount()) {
+            if (text?.let { spin.getAdapter().getItem(i).toString().contains(it) }!!) {
+                spin.setSelection(i)
+            }
+        }
     }
 }

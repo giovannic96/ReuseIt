@@ -14,7 +14,7 @@
     <string name="defaultPhoneNumber">Phone number (opt.)</string>
     <string name="defaultTitle">Item title</string>
     <string name="defaultDesc">Item description</string>
-    <string name="defaultCategory">Category:</string>
+    <string name="defaultCategory">Category</string>
     <string name="defaultSubCategory">SubCategory</string>
     <string name="defaultPrice">0.0</string>
     <string name="defaultItemLocation">Location</string>
@@ -46,7 +46,6 @@
     <string name="edit_item">Edit item</string>
     <string name="no_data_available">No data available</string>
     <string-array name="categories">
-        <item>Select category</item>
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>
         <item>Baby</item>
@@ -57,7 +56,6 @@
         <item>Automotive</item>
     </string-array>
     <string-array name="conditions">
-        <item>Select condition</item>
         <item>New</item>
         <item>As new</item>
         <item>Optimal</item>

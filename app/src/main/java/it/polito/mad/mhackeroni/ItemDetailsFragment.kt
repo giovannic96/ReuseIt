@@ -1,13 +1,9 @@
 package it.polito.mad.mhackeroni
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_details.*
@@ -51,7 +47,7 @@ class ItemDetailsFragment: Fragment() {
 
             itemDesc.text = item?.value?.desc ?: resources.getString(R.string.defaultDesc)
             cat = item?.value?.category ?: resources.getString(R.string.defaultCategory)
-            itemCategory.text = "$cat:"
+            itemCategory.text = "$cat  -"
             itemSubCategory.text = item?.value?.subcategory ?: resources.getString(R.string.defaultSubCategory)
             itemExpiryDate.text = item?.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
             itemLocation.text = item?.value?.location ?: resources.getString(R.string.defaultLocation)
