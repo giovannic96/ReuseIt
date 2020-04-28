@@ -29,6 +29,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
+import kotlinx.android.synthetic.main.item.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -49,6 +50,7 @@ class ItemEditFragment: Fragment() {
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
+    private var pickerShowing = false
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -77,7 +79,7 @@ class ItemEditFragment: Fragment() {
             isAddingItem = false
             val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
             item.value = Item.fromStringJSON(itemJSON)
-            oldItem = item.value
+            oldItem = Item.fromStringJSON(itemJSON)
             currentItemPhotoPath = item.value?.image.toString()
 
             if (savedItem != null) {
@@ -252,16 +254,26 @@ class ItemEditFragment: Fragment() {
         edit_itemExpiryDate.inputType = InputType.TYPE_NULL
 
         edit_itemExpiryDate.setOnFocusChangeListener { v, hasFocus ->
-            picker.show(parentFragmentManager, picker.toString())
-            picker.addOnCancelListener {
-                Log.d("DatePicker Activity", "Dialog was cancelled")
-            }
-            picker.addOnNegativeButtonClickListener {
-                Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
-            }
-            picker.addOnPositiveButtonClickListener {
-                Log.d("DatePicker Activity", "Date String = ${picker.headerText}:: Date epoch value = $it")
-                edit_itemExpiryDate.setText("$it")
+            if(!pickerShowing) {
+                picker.show(parentFragmentManager, picker.toString())
+                pickerShowing = true
+
+                picker.addOnCancelListener {
+                    pickerShowing = false
+                    Log.d("DatePicker Activity", "Dialog was cancelled")
+                }
+                picker.addOnNegativeButtonClickListener {
+                    pickerShowing = false
+                    Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
+                }
+                picker.addOnPositiveButtonClickListener {
+                    Log.d(
+                        "DatePicker Activity",
+                        "Date String = ${picker.headerText}:: Date epoch value = $it"
+                    )
+                    edit_itemExpiryDate.setText("$it")
+                    pickerShowing = false
+                }
             }
         }
 
@@ -346,48 +358,21 @@ class ItemEditFragment: Fragment() {
         return when (menuItem.itemId) {
             R.id.menu_save -> {
 
-                item.value
-
-                var price:Double
-
-                if(edit_itemPrice.text.toString().isNullOrBlank()){
-                    price = 0.0
+                if(isAddingItem){
+                    item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
+                        edit_itemLocation.text.toString(), cond ?: "", null)
                 } else {
-                    if(edit_itemPrice.text.toString().equals("null")){
-                        price = 0.0
-                    } else {
-                        try {
-                            price = edit_itemPrice.toString().toDouble()
-                            Log.d("MAG", "Price: ${price}")
-                        }catch(e: NumberFormatException){
-                            price = 0.0
-                        }
-                    }
+                    item.value?.name = edit_itemTitle.text.toString()
+                    item.value?.condition = cond ?: item.value!!.condition
+                    item.value?.desc = edit_itemDesc.text.toString()
+                    item.value?.location = edit_itemLocation.text.toString()
+                    item.value?.price = edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0
+                    item.value?.expiryDate = edit_itemExpiryDate.text.toString()
+                    item.value?.category = cat ?: item.value!!.category
+                    item.value?.subcategory = subCat ?: item.value!!.subcategory
                 }
 
-                if(::currentItemPhotoPath.isInitialized)
-                    item.value = cat?.let {
-                        cond?.let { it1 ->
-                            subCat?.let { it2 ->
-                                Item(-1, edit_itemTitle.text.toString(), price,
-                                    edit_itemDesc.text.toString(), it, it2,
-                                    edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                                    it1, currentItemPhotoPath
-                                )
-                            }
-                        }
-                    }
-                else
-                    item.value = cat?.let {
-                        cond?.let { it1 ->
-                            subCat?.let { it2 ->
-                                Item(-1, edit_itemTitle.text.toString(), price,
-                                    edit_itemDesc.text.toString(), it, it2,
-                                    edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                                    it1, item.value?.image)
-                            }
-                        }
-                    }
 
                 val nRotation = rotationCount.value
                 if(::currentItemPhotoPath.isInitialized){
@@ -405,7 +390,7 @@ class ItemEditFragment: Fragment() {
                             }
                         }
                     }
-                    item.value!!.image = currentItemPhotoPath
+                    item.value?.image = currentItemPhotoPath
                 }
 
                 if(isAddingItem) {
@@ -421,6 +406,8 @@ class ItemEditFragment: Fragment() {
                     item.value!!.id = oldItem?.id ?: -1
                     val fromList = arguments?.getBoolean("fromList", false)
 
+                    Log.d("MAG", Item.toJSON(item?.value!!).toString())
+                    Log.d("MAG old", oldItem?.let { Item.toJSON(it).toString() })
 
                     if(fromList!!){
                         val bundle =

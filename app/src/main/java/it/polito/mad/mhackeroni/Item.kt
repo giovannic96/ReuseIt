@@ -6,7 +6,7 @@ import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
 
-class Item(var id: Int, val name:String, val price:Double, val desc:String, val category:String, val subcategory: String, val expiryDate:String, val location:String, var condition: String, var image: String?) : Serializable {
+class Item(var id: Int, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?) : Serializable {
     companion object Factory {
 
         fun fromStringJSON(jsonString: String): Item? {

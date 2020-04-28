@@ -40,10 +40,15 @@ class StorageHelper(context: Context?) {
                 for(i in 0..items.size){
                     if(items[i].id == item.id){
                         items[i] = item
+                        Log.d("MAG", Item.toJSON(item).toString())
                         saveItemList(s, items)
                         return
                     }
                 }
+
+                Log.d("MAG","Not found id ${item.id}")
+            } else {
+                Log.d("MAG","NULL ERROR")
             }
         }
     }
