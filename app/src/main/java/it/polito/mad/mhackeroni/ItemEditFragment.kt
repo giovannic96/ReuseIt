@@ -14,10 +14,12 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.PopupMenu
+import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
@@ -28,7 +30,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
-import java.lang.NumberFormatException
 import java.util.*
 
 class ItemEditFragment: Fragment() {
@@ -57,8 +58,6 @@ class ItemEditFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("MAG", "CREATED")
 
         val rotationSaved = savedInstanceState?.getInt("rotation")
         if(rotationSaved != null)
@@ -99,7 +98,7 @@ class ItemEditFragment: Fragment() {
         val conditions = resources.getStringArray(R.array.conditions)
         var selectedCat = categories
 
-        var adapterCat = ArrayAdapter(requireContext(),
+        val adapterCat = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, categories)
 
         edit_itemCategory.adapter = adapterCat
@@ -219,23 +218,23 @@ class ItemEditFragment: Fragment() {
         }
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if(item.value != null){
+                edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
+                edit_itemPrice.setText(
+                    item.value?.price.toString() ?: resources.getString(R.string.defaultPrice)
+                )
+                edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultTitle))
+                edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
+                edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
 
-            edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
-            edit_itemPrice.setText(
-                item.value?.price.toString() ?: resources.getString(R.string.defaultPrice)
-            )
-            edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultTitle))
-            edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
-            edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
-
-            try {
-                edit_itemImage.setImageBitmap(item.value?.image?.let {
-                        it1 -> ImageUtils.getBitmap(it1, requireContext())
-                })
-            } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                try {
+                    edit_itemImage.setImageBitmap(item.value?.image?.let {
+                            it1 -> ImageUtils.getBitmap(it1, requireContext())
+                    })
+                } catch (e: Exception) {
+                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                }
             }
-
         })
 
         rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
@@ -443,7 +442,7 @@ class ItemEditFragment: Fragment() {
     private fun dispatchPickImageIntent() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = "image/*"
-        startActivityForResult(intent, REQUEST_PICKIMAGE)
+        this.startActivityForResult(intent, REQUEST_PICKIMAGE)
     }
 
     private fun dispatchTakePictureIntent() {
@@ -495,10 +494,16 @@ class ItemEditFragment: Fragment() {
         super.onSaveInstanceState(outState)
 
         if(this.isVisible) {
+
+            /*
             val price: Double = if (edit_itemPrice.text.toString().isEmpty() || edit_itemPrice.text == null)
                 0.0
             else
                 edit_itemPrice.text.toString().toDouble()
+             */
+            val price = 1.0
+
+            Log.d("MAG", "SAVING")
 
             if (::currentItemPhotoPath.isInitialized)
                 item.value = cat?.let {
@@ -543,9 +548,7 @@ class ItemEditFragment: Fragment() {
                     }
                 }
 
-            Log.d("MAG", "SAVING")
             outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
-
             rotationCount.value?.let { outState.putInt("rotation", it) }
         }
     }
@@ -553,15 +556,18 @@ class ItemEditFragment: Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        Log.d("MAG", "RESTORE")
+
         if (savedInstanceState != null) {
             val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
             val rotation = savedInstanceState.getInt("rotation")
 
             rotationCount.value = rotation
 
-            if(savedItem != null)
+            if(savedItem != null){
                 item.value = savedItem
+                Log.d("MAG", "Restoring")
+            }
+
         }
     }
 

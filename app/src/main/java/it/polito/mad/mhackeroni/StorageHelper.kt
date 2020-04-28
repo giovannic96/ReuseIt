@@ -39,15 +39,11 @@ class StorageHelper(context: Context?) {
             if (items != null) {
                 for(i in 0..items.size){
                     if(items[i].id == item.id){
-                        Log.d("MAG", "FOUND")
                         items[i] = item
                         saveItemList(s, items)
                         return
                     }
                 }
-                Log.d("MAG", "NOT FOUND")
-            } else {
-                Log.d("MAG", "Items was null")
             }
         }
     }
