@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -248,7 +249,9 @@ class ItemEditFragment: Fragment() {
 
         //build date picker and add callbacks
         val picker = builder.build()
-        edit_itemExpiryDate.setOnClickListener() {
+        edit_itemExpiryDate.inputType = InputType.TYPE_NULL
+
+        edit_itemExpiryDate.setOnFocusChangeListener { v, hasFocus ->
             picker.show(parentFragmentManager, picker.toString())
             picker.addOnCancelListener {
                 Log.d("DatePicker Activity", "Dialog was cancelled")
@@ -342,6 +345,9 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
+
+                item.value
+
                 var price:Double
 
                 if(edit_itemPrice.text.toString().isNullOrBlank()){
@@ -352,6 +358,7 @@ class ItemEditFragment: Fragment() {
                     } else {
                         try {
                             price = edit_itemPrice.toString().toDouble()
+                            Log.d("MAG", "Price: ${price}")
                         }catch(e: NumberFormatException){
                             price = 0.0
                         }
