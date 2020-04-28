@@ -301,15 +301,15 @@ class EditProfileFragment : Fragment() {
 
     private fun checkExStoragePermission(): Boolean{
         if (ContextCompat.checkSelfPermission(requireActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
             // Not granted
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                 // Show an explanation to the user
-                val builder = AlertDialog.Builder(requireActivity())
+                val builder = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
 
                 // Set the alert dialog title
                 builder.setTitle(R.string.warning_dialog)
@@ -318,23 +318,23 @@ class EditProfileFragment : Fragment() {
                 builder.setMessage(resources.getString(R.string.permission_expl))
 
                 // Set a positive button and its click listener on alert dialog
-                builder.setPositiveButton("Ok"){ dialog, which ->
-                    ActivityCompat.requestPermissions(requireActivity(),
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
+                builder.setPositiveButton("Ok"){ _, _ ->
+                    requestPermissions(
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
                 }
 
                 // Display a negative button on alert dialog
                 builder.setNegativeButton(R.string.close_dialog, null)
 
-                val dialog: AlertDialog = builder.create()
+                val dialog: androidx.appcompat.app.AlertDialog = builder.create()
                 dialog.show()
             }
             else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(requireActivity(),
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
             }
             return false
         } else {

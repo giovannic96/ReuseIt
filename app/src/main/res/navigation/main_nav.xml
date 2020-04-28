@@ -43,7 +43,7 @@
             android:id="@+id/action_nav_ItemDetail_to_nav_itemList"
             app:destination="@id/nav_itemList"
             app:popUpToInclusive="true"
-            app:popUpTo="@id/nav_itemList"/>
+            app:popUpTo="@id/nav_ItemDetail"/>
     </fragment>
     <fragment
         android:id="@+id/nav_ItemDetailEdit"

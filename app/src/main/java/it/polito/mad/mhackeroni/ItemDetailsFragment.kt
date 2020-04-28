@@ -16,7 +16,6 @@ class ItemDetailsFragment: Fragment() {
     var price: Double? = null
     var cat: String = ""
     var cond: String = ""
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
         setHasOptionsMenu(true)
@@ -28,8 +27,9 @@ class ItemDetailsFragment: Fragment() {
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
-                itemImage.setImageBitmap(item?.value?.image?.let { it1 ->
-                    ImageUtils.getBitmap(it1, requireContext())
+                if(!item?.value?.image.isNullOrEmpty())
+                    itemImage.setImageBitmap(item?.value?.image?.let { it1 ->
+                        ImageUtils.getBitmap(it1, requireContext())
                 })
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
@@ -63,20 +63,21 @@ class ItemDetailsFragment: Fragment() {
 
         itemImage.setOnClickListener {
             val bundle=Bundle()
-            try {
-                if (item?.value?.image?.let { it1 ->
-                        ImageUtils.canDisplayBitmap(
-                            it1,
-                            requireContext()
-                        )
-                    }!!) {
+            if (!item?.value?.image.isNullOrEmpty()) {
+                try {
+                    if (item?.value?.image?.let { it1 ->
+                            ImageUtils.canDisplayBitmap(
+                                it1,
+                                requireContext())
+                        }!!) {
 
-                    bundle.putString("uri", item?.value?.image.toString())
-                    view.findNavController()
-                        .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
+                        bundle.putString("uri", item?.value?.image.toString())
+                        view.findNavController()
+                            .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
+                    }
+                } catch (e: Exception) {
+                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
         }
     }

@@ -14,10 +14,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.PopupMenu
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -31,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
+import java.lang.NumberFormatException
 import java.util.*
 
 class ItemEditFragment: Fragment() {
@@ -60,13 +58,15 @@ class ItemEditFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("MAG", "CREATED")
+
         val rotationSaved = savedInstanceState?.getInt("rotation")
         if(rotationSaved != null)
             rotationCount.value = rotationSaved
         else
             rotationCount.value = 0
 
-        val itemJSON= arguments?.getString("item", "")
+        var itemJSON= arguments?.getString("item", "")
 
         //NEW ITEM
         if(itemJSON.isNullOrEmpty()) {
@@ -288,12 +288,20 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
-                val price:Double
+                var price:Double
 
                 if(edit_itemPrice.text.toString().isNullOrBlank()){
                     price = 0.0
                 } else {
-                    price = edit_itemPrice.text.toString().toDouble()
+                    if(edit_itemPrice.text.toString().equals("null")){
+                        price = 0.0
+                    } else {
+                        try {
+                            price = edit_itemPrice.toString().toDouble()
+                        }catch(e: NumberFormatException){
+                            price = 0.0
+                        }
+                    }
                 }
 
                 if(::currentItemPhotoPath.isInitialized)
@@ -347,15 +355,25 @@ class ItemEditFragment: Fragment() {
 
                     view?.findNavController()
                         ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+
                 }else {
                     item.value!!.id = oldItem?.id ?: -1
-                    val bundle =
+                    val fromList = arguments?.getBoolean("fromList", false)
+
+
+                    if(fromList!!){
+                        val bundle =
+                            bundleOf("edited_item" to item.value?.let { Item.toJSON(it).toString()},
+                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+                        view?.findNavController()
+                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                    } else {
+                        val bundle =
                             bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString()},
-                            "old_item" to oldItem?.let { Item.toJSON(it).toString() })
-
-                    view?.findNavController()
-                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
-
+                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+                        view?.findNavController()
+                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+                    }
                 }
                 return true
             }
@@ -373,6 +391,9 @@ class ItemEditFragment: Fragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+
         when (requestCode) {
             PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
 
@@ -390,6 +411,7 @@ class ItemEditFragment: Fragment() {
             }
         }
     }
+
 
     override fun onActivityResult(requestCode:Int, resultCode:Int, data:Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -448,7 +470,7 @@ class ItemEditFragment: Fragment() {
                         it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, REQUEST_CREATEIMAGE)
+                    this.startActivityForResult(takePictureIntent, REQUEST_CREATEIMAGE)
                 }
             }
         }
@@ -472,7 +494,7 @@ class ItemEditFragment: Fragment() {
         super.onSaveInstanceState(outState)
 
         if(this.isVisible) {
-            val price: Double = if (edit_itemPrice.text.toString().isEmpty())
+            val price: Double = if (edit_itemPrice.text.toString().isEmpty() || edit_itemPrice.text == null)
                 0.0
             else
                 edit_itemPrice.text.toString().toDouble()
@@ -520,8 +542,25 @@ class ItemEditFragment: Fragment() {
                     }
                 }
 
+            Log.d("MAG", "SAVING")
             outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
+
             rotationCount.value?.let { outState.putInt("rotation", it) }
+        }
+    }
+
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        Log.d("MAG", "RESTORE")
+        if (savedInstanceState != null) {
+            val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
+            val rotation = savedInstanceState.getInt("rotation")
+
+            rotationCount.value = rotation
+
+            if(savedItem != null)
+                item.value = savedItem
         }
     }
 
@@ -536,7 +575,7 @@ class ItemEditFragment: Fragment() {
 
             // Not granted
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+            if (shouldShowRequestPermissionRationale(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                 // Show an explanation to the user
@@ -550,7 +589,7 @@ class ItemEditFragment: Fragment() {
 
                 // Set a positive button and its click listener on alert dialog
                 builder.setPositiveButton("Ok"){ _, _ ->
-                    ActivityCompat.requestPermissions(requireActivity(),
+                    requestPermissions(
                         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                         PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
                 }
@@ -563,7 +602,7 @@ class ItemEditFragment: Fragment() {
             }
             else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(requireActivity(),
+                requestPermissions(
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
             }
@@ -573,6 +612,7 @@ class ItemEditFragment: Fragment() {
             return true
         }
     }
+
 
     private fun getPermissionOnUri(uri:Uri){
         val contentResolver = requireActivity().contentResolver
