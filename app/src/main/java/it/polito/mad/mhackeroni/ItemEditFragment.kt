@@ -101,6 +101,7 @@ class ItemEditFragment: Fragment() {
 
         var adapterCat = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, categories)
+
         edit_itemCategory.adapter = adapterCat
 
         var adapterSubcat = ArrayAdapter(requireContext(),
