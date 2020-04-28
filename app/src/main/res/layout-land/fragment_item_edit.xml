@@ -14,7 +14,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:id="@+id/edit_itemImage"
@@ -176,50 +177,66 @@
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/edit_itemPrice"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:hint="@string/defaultPrice"
             android:textAlignment="viewStart"
-            android:drawableEnd="@drawable/ic_euro_black"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemTitle" />
-
-        <EditText
-            android:id="@+id/edit_itemExpiryDate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:hint="@string/defaultExpire"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:clickable="true"
-            android:inputType="date"
-            android:editable="false"
-            android:drawableEnd="@drawable/ic_date"/>
+            app:startIconDrawable="@drawable/ic_euro_black"
+            android:hint="@string/defaultPrice" >
 
-        <EditText
-            android:id="@+id/edit_itemLocation"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:hint="@string/defaultItemLocation"
-            android:maxLength="64"
-            android:drawableEnd="@drawable/ic_location"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAlignment="viewStart"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:hintAnimationEnabled="false"
+            app:startIconDrawable="@drawable/ic_date"
+            android:hint="@string/defaultExpire" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemExpiryDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/ic_location"
+            android:hint="@string/defaultItemLocation" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="64" />
+        </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 </ScrollView>

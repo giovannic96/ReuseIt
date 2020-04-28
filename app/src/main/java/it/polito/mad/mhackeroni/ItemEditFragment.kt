@@ -26,6 +26,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
@@ -204,16 +206,41 @@ class ItemEditFragment: Fragment() {
             }
         }
 
+
+        val builder = MaterialDatePicker.Builder.datePicker()
+
+        //Define date constraints
+        val constraintsBuilder = CalendarConstraints.Builder()
+        val calendar = Calendar.getInstance()
+        constraintsBuilder.setStart(calendar.timeInMillis)
+        calendar.roll(Calendar.YEAR, 1)
+        constraintsBuilder.setEnd(calendar.timeInMillis)
+        builder.setCalendarConstraints(constraintsBuilder.build())
+
+        //build date picker and add callbacks
+        val picker = builder.build()
+        edit_itemExpiryDate.setOnClickListener() {
+            picker.show(parentFragmentManager, picker.toString())
+            picker.addOnCancelListener {
+                Log.d("DatePicker Activity", "Dialog was cancelled")
+            }
+            picker.addOnNegativeButtonClickListener {
+                Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
+            }
+            picker.addOnPositiveButtonClickListener {
+                Log.d("DatePicker Activity", "Date String = ${picker.headerText}:: Date epoch value = $it")
+                edit_itemExpiryDate.setText("$it")
+            }
+        }
+
+        /*
         edit_itemExpiryDate.setOnClickListener(){
-
             val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-
                 edit_itemExpiryDate.setText("$year/$monthOfYear/$dayOfMonth")
             }, year, month, day)
-
             dpd.show()
-
         }
+         */
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(item.value != null){
