@@ -44,6 +44,7 @@
     <string name="profile_nav">Profile</string>
     <string name="items_nav">Item on sale</string>
     <string name="edit_item">Edit item</string>
+    <string name="selectSubcat">Select a subcategory</string>
     <string name="no_data_available">No data available</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>

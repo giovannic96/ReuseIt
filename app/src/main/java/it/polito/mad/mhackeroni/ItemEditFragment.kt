@@ -105,14 +105,19 @@ class ItemEditFragment: Fragment() {
         )
         edit_itemCategory.setAdapter(adapterCat)
 
-        var adapterSubcat: ArrayAdapter<String>
+        var adapterSubcat: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            subcategories
+        )
 
         val adapterCond = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, conditions)
         edit_itemCondition.setAdapter(adapterCond)
 
 
-        edit_itemCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        edit_itemCategory.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -122,6 +127,16 @@ class ItemEditFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
+            }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+
+                edit_itemSubCategory.setText(R.string.selectSubcat)
 
                 when(position){
                     0-> {adapterSubcat = ArrayAdapter(requireContext(),
@@ -157,11 +172,14 @@ class ItemEditFragment: Fragment() {
                         selectedCat = automotives
                     }
                 }
+
+                edit_itemSubCategory.setAdapter(adapterSubcat)
                 cat = categories[position]
             }
         }
 
-        edit_itemSubCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        edit_itemSubCategory.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -171,9 +189,42 @@ class ItemEditFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
+            }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 subCat = selectedCat[position]
             }
         }
+
+        edit_itemCondition.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+            }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                cond = conditions[position]
+            }
+        }
+
+
 
         if(item.value?.category!=null){
             edit_itemCategory.setText(item.value?.category)
@@ -184,21 +235,6 @@ class ItemEditFragment: Fragment() {
         if(item.value?.subcategory!=null){
             edit_itemSubCategory.setText(item.value?.subcategory)
         }
-
-        edit_itemCondition.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                cond = conditions[position]
-            }
-        }
-
 
         val builder = MaterialDatePicker.Builder.datePicker()
 
