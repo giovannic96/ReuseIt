@@ -99,17 +99,17 @@ class ItemEditFragment: Fragment() {
         val conditions = resources.getStringArray(R.array.conditions)
         var selectedCat = categories
 
-        var adapterCat = ArrayAdapter(requireContext(),
+        val adapterCat = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, categories)
-        edit_itemCategory.adapter = adapterCat
+        edit_itemCategory.setAdapter(adapterCat)
 
         var adapterSubcat = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, subcategories)
-        edit_itemSubCategory.adapter = adapterSubcat
+        edit_itemSubCategory.setAdapter(adapterSubcat)
 
         val adapterCond = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, conditions)
-        edit_itemCondition.adapter = adapterCond
+        edit_itemCondition.setAdapter(adapterCond)
 
         edit_itemCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -124,42 +124,42 @@ class ItemEditFragment: Fragment() {
                 when(position){
                     0-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, arts)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = arts
                     }
                     1-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, sports)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = sports
                     }
                     2-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, babies)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = babies
                     }
                     3-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, womens)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = womens
                     }
                     4-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, mens)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = mens
                     }
                     5-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, electronics)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = electronics
                     }
                     6-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, games)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = games
                     }
                     7-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, automotives)
-                        edit_itemSubCategory.adapter = adapterSubcat
+                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = automotives
                     }
                 }
@@ -182,15 +182,14 @@ class ItemEditFragment: Fragment() {
         }
 
         if(item.value?.category!=null){
-            setSpinText(edit_itemCategory, item.value?.category)
+            edit_itemCategory.setText(item.value?.category)
         }
         if(item.value?.condition!=null){
-            setSpinText(edit_itemCondition, item.value?.condition)
+            edit_itemCondition.setText(item.value?.condition)
         }
         if(item.value?.subcategory!=null){
-            setSpinText(edit_itemSubCategory, item.value?.subcategory)
+            edit_itemSubCategory.setText(item.value?.subcategory)
         }
-
 
         edit_itemCondition.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {

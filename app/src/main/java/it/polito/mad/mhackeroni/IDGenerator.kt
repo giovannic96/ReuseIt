@@ -9,7 +9,7 @@ object IDGenerator {
     fun getNextID(context: Context): Int{
         sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref), Context.MODE_PRIVATE)
         var count = sharedPref.getInt("next_id", 0) //0 is default value.
-        count++;
+        count++
 
         sharedPref.edit().putInt("next_id", count).apply()
 

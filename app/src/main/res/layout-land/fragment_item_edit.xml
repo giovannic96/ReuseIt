@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -59,79 +60,121 @@
 
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/edit_itemTitle"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
-            android:hint="@string/defaultTitle"
-            android:maxLength="64"
-            android:digits="abcdefghijklmnopqrstuvwxyzáéíóúàèìòùABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÈÉÌÍÒÓÙÚ'. "
             android:textAlignment="viewStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#000000"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemImage" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_itemImage"
+            app:startIconDrawable="@drawable/ic_title"
+            app:endIconMode="clear_text"
+            android:hint="@string/defaultTitle">
 
-        <EditText
-            android:id="@+id/edit_itemDesc"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="64"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:hint="@string/defaultDesc"
-            android:maxLength="512"
-            android:drawableEnd="@drawable/ic_quote"
-            android:inputType="textMultiLine"
             android:textAlignment="viewStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/ic_description"
+            app:endIconMode="clear_text"
+            app:counterEnabled="true"
+            app:counterMaxLength="120"
+            android:hint="@string/defaultDesc" >
 
-        <Spinner
-            android:id="@+id/edit_itemCondition"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="512"
+                android:inputType="textMultiLine"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
+            android:gravity="center"
+            app:startIconDrawable="@drawable/ic_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCondition"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#505050"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
-        <Spinner
-            android:id="@+id/edit_itemCategory"
+            <AutoCompleteTextView
+                android:id="@+id/edit_itemCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="#505050"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:hint="@string/defaultCategory"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#505050"
+            android:gravity="center"
+            app:startIconDrawable="@drawable/ic_description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/defaultCategory"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
-        <Spinner
-            android:id="@+id/edit_itemSubCategory"
+            <AutoCompleteTextView
+                android:id="@+id/edit_itemCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="#505050"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:hint="@string/defaultCategory"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#505050"
+            android:gravity="center"
+            app:startIconDrawable="@drawable/ic_description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/defaultSubCategory"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/edit_itemSubCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="#505050"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <EditText
             android:id="@+id/edit_itemPrice"
