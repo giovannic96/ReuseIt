@@ -2,6 +2,7 @@ package it.polito.mad.mhackeroni
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.beust.klaxon.Klaxon
 
 class StorageHelper(context: Context?) {
@@ -28,16 +29,27 @@ class StorageHelper(context: Context?) {
         return mutableListOf()
     }
 
-    fun saveItem(s: SharedPreferences, i:Item) {
-        with (s.edit()) {
-            putString(myContext?.getString(R.string.item_sharedPref), Item.toJSON(i).toString())
-            apply()
-        }
-    }
+    fun editItem(s: SharedPreferences, item: Item){
+        var jSONString: String? = s.getString(myContext?.getString(R.string.itemList_sharedPref), "")
+        if(!jSONString.isNullOrEmpty()) {
+            if(jSONString[0] != '[')
+                jSONString = "[${jSONString}]" //convert to json array
+            val items = Klaxon().parseArray<Item>(jSONString)?.toMutableList()
 
-    fun loadItem(s: SharedPreferences):Item? {
-        val jSONString : String? = s.getString(myContext?.getString(R.string.item_sharedPref), "")
-        return jSONString?.let { Item.fromStringJSON(it) }
+            if (items != null) {
+                for(i in 0..items.size){
+                    if(items[i].id == item.id){
+                        Log.d("MAG", "FOUND")
+                        items[i] = item
+                        saveItemList(s, items)
+                        return
+                    }
+                }
+                Log.d("MAG", "NOT FOUND")
+            } else {
+                Log.d("MAG", "Items was null")
+            }
+        }
     }
 
     fun saveProfile(s: SharedPreferences, p:Profile) {

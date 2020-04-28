@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
@@ -48,6 +49,7 @@ class ItemEditFragment: Fragment() {
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -286,17 +288,19 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
+                val price:Double
 
-                val price:Double = if(edit_itemPrice.text.toString().isEmpty())
-                    0.0
-                else
-                    edit_itemPrice.text.toString().toDouble()
+                if(edit_itemPrice.text.toString().isNullOrBlank()){
+                    price = 0.0
+                } else {
+                    price = edit_itemPrice.text.toString().toDouble()
+                }
 
                 if(::currentItemPhotoPath.isInitialized)
                     item.value = cat?.let {
                         cond?.let { it1 ->
                             subCat?.let { it2 ->
-                                Item(edit_itemTitle.text.toString(), price,
+                                Item(-1, edit_itemTitle.text.toString(), price,
                                     edit_itemDesc.text.toString(), it, it2,
                                     edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
                                     it1, currentItemPhotoPath
@@ -308,7 +312,7 @@ class ItemEditFragment: Fragment() {
                     item.value = cat?.let {
                         cond?.let { it1 ->
                             subCat?.let { it2 ->
-                                Item(edit_itemTitle.text.toString(), price,
+                                Item(-1, edit_itemTitle.text.toString(), price,
                                     edit_itemDesc.text.toString(), it, it2,
                                     edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
                                     it1, item.value?.image)
@@ -336,22 +340,22 @@ class ItemEditFragment: Fragment() {
                 }
 
                 if(isAddingItem) {
+                    item.value!!.id = IDGenerator.getNextID(requireContext())
+
                     val bundle =
                         bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
 
                     view?.findNavController()
                         ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
                 }else {
-                    if(oldItem == item.value){
-                        view?.findNavController()?.popBackStack()
-                    } else {
-                        val bundle =
+                    item.value!!.id = oldItem?.id ?: -1
+                    val bundle =
                             bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString()},
                             "old_item" to oldItem?.let { Item.toJSON(it).toString() })
 
-                        view?.findNavController()
-                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
-                    }
+                    view?.findNavController()
+                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+
                 }
                 return true
             }
@@ -460,44 +464,65 @@ class ItemEditFragment: Fragment() {
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
-            //currentPhotoPath = absolutePath
+            currentItemPhotoPath = absolutePath
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        val price:Double = if(edit_itemPrice.text.toString().isEmpty())
-            0.0
-        else
-            edit_itemPrice.text.toString().toDouble()
+        if(this.isVisible) {
+            val price: Double = if (edit_itemPrice.text.toString().isEmpty())
+                0.0
+            else
+                edit_itemPrice.text.toString().toDouble()
 
-        if(::currentItemPhotoPath.isInitialized)
-            item.value = cat?.let {
-                cond?.let { it1 ->
-                    subCat?.let { it2 ->
-                        Item(edit_itemTitle.text.toString(), price,
-                            edit_itemDesc.text.toString(), it, it2,
-                            edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                            it1, currentItemPhotoPath
-                        )
+            if (::currentItemPhotoPath.isInitialized)
+                item.value = cat?.let {
+                    cond?.let { it1 ->
+                        subCat?.let { it2 ->
+                            item.value?.id?.let { it3 ->
+                                Item(
+                                    it3,
+                                    edit_itemTitle.text.toString(),
+                                    price,
+                                    edit_itemDesc.text.toString(),
+                                    it,
+                                    it2,
+                                    edit_itemExpiryDate.text.toString(),
+                                    edit_itemLocation.text.toString(),
+                                    it1,
+                                    currentItemPhotoPath
+                                )
+                            }
+                        }
                     }
                 }
-            }
-        else
-            item.value = cat?.let {
-                cond?.let { it1 ->
-                    subCat?.let { it2 ->
-                        Item(edit_itemTitle.text.toString(), price,
-                            edit_itemDesc.text.toString(), it, it2,
-                            edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(),
-                            it1, item.value?.image)
+            else
+                item.value = cat?.let {
+                    cond?.let { it1 ->
+                        subCat?.let { it2 ->
+                            item.value?.id?.let { it3 ->
+                                Item(
+                                    it3,
+                                    edit_itemTitle.text.toString(),
+                                    price,
+                                    edit_itemDesc.text.toString(),
+                                    it,
+                                    it2,
+                                    edit_itemExpiryDate.text.toString(),
+                                    edit_itemLocation.text.toString(),
+                                    it1,
+                                    item.value?.image
+                                )
+                            }
+                        }
                     }
                 }
-            }
 
-        outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
-        rotationCount.value?.let { outState.putInt("rotation", it) }
+            outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
+            rotationCount.value?.let { outState.putInt("rotation", it) }
+        }
     }
 
     private fun hasExStoragePermission(): Boolean{

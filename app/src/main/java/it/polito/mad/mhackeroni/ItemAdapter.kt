@@ -63,6 +63,8 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         private val price:TextView = v.findViewById(R.id.item_price)
         private val editItem: ImageView = v.findViewById(R.id.edit_item)
         private val listenerRef: WeakReference<MyAdapterListener>? = WeakReference(listener)
+        private val image:ImageView = v.findViewById(R.id.drawable_pic)
+        private val context = v.context
 
         override fun bind(item:Item) {
             name.text = item.name
@@ -73,6 +75,14 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
             }
             itemView.setOnClickListener {
                 listenerRef?.get()?.itemViewOnClick(item)
+            }
+
+            Log.d("MAG", "Item ${item.id} image: ${item.image}")
+
+            if(item.image.isNullOrEmpty()){
+                image.setImageResource(R.drawable.ic_box)
+            } else if(item.image?.let { ImageUtils.canDisplayBitmap(it, context) }!!){
+                image.setImageBitmap(ImageUtils.getBitmap(item.image!!, context))
             }
         }
     }

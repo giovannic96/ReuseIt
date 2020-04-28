@@ -1,12 +1,12 @@
 package it.polito.mad.mhackeroni
 
+import android.content.Context
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
 
-class Item(val name:String, val price:Double, val desc:String, val category:String, val subcategory: String, val expiryDate:String, val location:String, var condition: String, var image: String?) : Serializable {
-
+class Item(var id: Int, val name:String, val price:Double, val desc:String, val category:String, val subcategory: String, val expiryDate:String, val location:String, var condition: String, var image: String?) : Serializable {
     companion object Factory {
 
         fun fromStringJSON(jsonString: String): Item? {
@@ -25,6 +25,7 @@ class Item(val name:String, val price:Double, val desc:String, val category:Stri
 
         private fun fromJSON(jsonObject: JSONObject): Item {
             return Item(
+                jsonObject.getInt("id"),
                 jsonObject.getString("name"),
                 jsonObject.getDouble("price"),
                 jsonObject.getString("desc"),
@@ -40,6 +41,7 @@ class Item(val name:String, val price:Double, val desc:String, val category:Stri
         fun toJSON(item: Item): JSONObject {
             val obj: JSONObject = JSONObject()
             try {
+                obj.put("id", item.id)
                 obj.put("name", item.name)
                 obj.put("price", item.price)
                 obj.put("desc", item.desc)

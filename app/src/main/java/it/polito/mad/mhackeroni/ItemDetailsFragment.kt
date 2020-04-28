@@ -1,6 +1,9 @@
 package it.polito.mad.mhackeroni
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -110,35 +113,48 @@ class ItemDetailsFragment: Fragment() {
         //EDITED ITEM
         if (!editedItemJSON.isNullOrEmpty()) {
             val oldItem = arguments?.getString("old_item", "")
+
+            if(oldItem.equals(editedItemJSON)){
+                handleSelectedItem(editedItemJSON, view)
+            }
+
             if (oldItem != null) {
                 handleEditItem(editedItemJSON, oldItem)
             }
-            arguments?.clear() // clear arguments
-            Item.fromStringJSON(editedItemJSON)
         }
         //SELECTED ITEM
         else if (!selectedItemJSON.isNullOrEmpty()) {
             handleSelectedItem(selectedItemJSON, view)
-            arguments?.clear() // clear arguments
-            Item.fromStringJSON(selectedItemJSON)
         }
+
+        arguments?.clear() // clear arguments
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
+        val storageHelper = StorageHelper(requireContext())
+        val sharedPref:SharedPreferences = requireContext()
+            .getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
         if(editedItemJSON != oldItem) {
 
             item?.value = editedItemJSON.let { Item.fromStringJSON(it) }
 
+
+            item.value?.let { storageHelper.editItem(sharedPref, it) }
+
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     item.value = Item.fromStringJSON(oldItem)
+
+                    item.value?.let { storageHelper.editItem(sharedPref, it) }
+
                 })
                 snackbar.show()
             }
         }
     }
+
 
     private fun handleSelectedItem(selectedItemJSON: String, view:View) {
         item?.value = selectedItemJSON.let { Item.fromStringJSON(it) }
@@ -146,19 +162,8 @@ class ItemDetailsFragment: Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        val price:Double = if(itemPrice.text.toString().isEmpty())
-            0.0
-        else
-            itemPrice.text.toString().toDouble()
-
-        item?.value = Item(itemTitle.text.toString(), price,
-                        itemDesc.text.toString(), cat, itemSubCategory.text.toString(),
-                        itemExpiryDate.text.toString(), itemLocation.text.toString(),
-                        cond, item?.value?.image
-                    )
-
         outState.putString("item", item?.let { Item.toJSON(item?.value!!).toString() })
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -170,6 +175,4 @@ class ItemDetailsFragment: Fragment() {
                 item.value = savedItem
         }
     }
-
-
 }
