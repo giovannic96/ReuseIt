@@ -69,7 +69,6 @@
         <item>Party Decorations &amp; Supplies</item>
     </string-array>
     <string-array name="sports">
-        <item>Sports and Outdoors</item>
         <item>Outdoor Recreation</item>
         <item>Sports &amp; Fitness</item>
         <item>Pet Supplies</item>
@@ -127,8 +126,7 @@
         <item>Tools &amp; Equipment</item>
     </string-array>
     <string-array name="subcategories">
-        <item>Select subcategory</item>
-        <item>aaa</item>
+        <item>Select a category</item>
     </string-array>
 
 </resources>

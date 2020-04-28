@@ -80,7 +80,9 @@
                 android:layout_height="wrap_content"
                 android:maxLength="64"
                 android:textColor="#000000"
+                android:backgroundTint="#FFFFFF"
                 android:textStyle="bold"
+
             />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,16 +98,17 @@
             app:startIconDrawable="@drawable/ic_description"
             app:endIconMode="clear_text"
             app:counterEnabled="true"
-            app:counterMaxLength="120"
+            app:counterMaxLength="300"
             android:hint="@string/defaultDesc" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_itemDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="512"
+                android:maxLength="300"
                 android:inputType="textMultiLine"
                 android:textColor="#000000"
+                android:background="#FFFFFF"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -117,19 +120,20 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            app:startIconDrawable="@drawable/ic_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/ic_condition"
             android:hint="@string/defaultCondition"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
-        <AutoCompleteTextView
-            android:id="@+id/edit_itemCondition"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:textColor="#505050"
-            tools:ignore="LabelFor" />
+            <AutoCompleteTextView
+                android:id="@+id/edit_itemCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="#505050"
+                android:backgroundTint="#FFFFFF"
+                tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -152,6 +156,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:textColor="#505050"
+                android:backgroundTint="#FFFFFF"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:textColor="#505050"
+                android:backgroundTint="#FFFFFF"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -196,6 +202,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:textColor="#000000"
+                android:background="#FFFFFF"
+
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -217,6 +225,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:background="#FFFFFF"
+
                 android:focusable="true"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -238,7 +248,9 @@
                 android:id="@+id/edit_itemLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="64"/>
+                android:maxLength="64"
+                android:background="#FFFFFF"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

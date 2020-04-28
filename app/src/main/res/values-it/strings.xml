@@ -47,87 +47,86 @@
     <string name="edit_item">Modifica</string>
     <string name="no_data_available">Nessun item presente nella lista</string>
     <string-array name="categories">
-        <item>Arts &amp; Crafts</item>
-        <item>Sports and Outdoors</item>
-        <item>Baby</item>
-        <item>Women\&#39;s fashion</item>
-        <item>Men\&#39;s fashion</item>
-        <item>Electonics</item>
-        <item>Games &amp; Videogames</item>
-        <item>Automotive</item>
+        <item>Arti &amp; Mestieri</item>
+        <item>Sport &amp; attività all\&#39;aperto</item>
+        <item>Bambini</item>
+        <item>Donna</item>
+        <item>Uomo</item>
+        <item>Elettronica</item>
+        <item>Giochi &amp; Videogiochi</item>
+        <item>Automobilistica</item>
     </string-array>
     <string-array name="conditions">
-        <item>New</item>
-        <item>As new</item>
-        <item>Optimal</item>
-        <item>Good</item>
-        <item>Acceptable</item>
+        <item>Nuovo</item>
+        <item>Come nuovo</item>
+        <item>Ottimo</item>
+        <item>Buono</item>
+        <item>Accettabile</item>
     </string-array>
     <string-array name="arts">
-        <item>Painting, Drawing &amp; Art Supplies</item>
-        <item>Sewing</item>
-        <item>Scrapbooking &amp; Stamping</item>
-        <item>Party Decorations &amp; Supplies</item>
+        <item>Pittura, Disegno &amp; Accessori</item>
+        <item>Cucire</item>
+        <item>Foto &amp; Stampa</item>
+        <item>Decorazioni &amp; Accessori</item>
     </string-array>
     <string-array name="sports">
-        <item>Sports and Outdoors</item>
-        <item>Outdoor Recreation</item>
-        <item>Sports &amp; Fitness</item>
-        <item>Pet Supplies</item>
+        <item>Attività all\&#39;aperto</item>
+        <item>Sport &amp; Fitness</item>
+        <item>Accessori per animali</item>
     </string-array>
     <string-array name="babies">
-        <item>Apparel &amp; Accessories</item>
-        <item>Baby &amp; Toddler Toys</item>
-        <item>Car Seats &amp; Accessories</item>
-        <item>Pregnancy &amp; Maternity</item>
-        <item>Strollers &amp; Accessories</item>
+        <item>Abbigliamento &amp; Accessori</item>
+        <item>Giochi Bimbo &amp; Neonato</item>
+        <item>Sedili auto &amp; Accessori</item>
+        <item>Gravidanza &amp; Maternità</item>
+        <item>Passeggini &amp; Accessori</item>
     </string-array>
     <string-array name="womens">
-        <item>Clothing</item>
-        <item>Shoes</item>
-        <item>Watches</item>
-        <item>Handbags</item>
-        <item>Accessories</item>
+        <item>Abbigliamento</item>
+        <item>Scarpe</item>
+        <item>Orologi</item>
+        <item>Borse</item>
+        <item>Accessori</item>
     </string-array>
     <string-array name="mens">
-        <item>Clothing</item>
-        <item>Shoes</item>
-        <item>Watches</item>
-        <item>Accessories</item>
+        <item>Abbigliamento</item>
+        <item>Scarpe</item>
+        <item>Orologi</item>
+        <item>Accessori</item>
     </string-array>
     <string-array name="electronics">
-        <item>Computers</item>
-        <item>Monitors</item>
-        <item>Printers &amp; Scanners</item>
-        <item>Camera &amp; Photo</item>
+        <item>Computer</item>
+        <item>Monitor</item>
+        <item>Stampanti &amp; Scanner</item>
+        <item>Fotocamere &amp; Foto</item>
         <item>Smartphone &amp; Tablet</item>
         <item>Audio</item>
-        <item>Television &amp; Video</item>
-        <item>Video Game Consoles</item>
-        <item>Wearable Technology</item>
-        <item>Accessories &amp; Supplies</item>
-        <item>Irons &amp; Steamers</item>
-        <item>Vacuums &amp; Floor Care</item>
+        <item>Televisioni &amp; Video</item>
+        <item>Console &amp; Videogiochi</item>
+        <item>Tecnologia Indossabile</item>
+        <item>Accessori &amp; Forniture</item>
+        <item>Ferri da stiro &amp; Micronde</item>
+        <item>Aspiratori &amp; Accessori Casa</item>
     </string-array>
     <string-array name="games">
-        <item>Action Figures &amp; Statues</item>
-        <item>Arts &amp; Crafts</item>
-        <item>Building Toys</item>
-        <item>Dolls &amp; Accessories</item>
-        <item>Kid\&#39;s Electronics</item>
-        <item>Learning &amp; Education</item>
-        <item>Tricycles, Scooters &amp; Wagons</item>
-        <item>Videogames</item>
+        <item>Action Figures &amp; Statue</item>
+        <item>Arti &amp; Mestieri</item>
+        <item>Giochi da Costruzione</item>
+        <item>Bambole &amp; Accessori</item>
+        <item>Elettronica per Bambini</item>
+        <item>Giochi Educativi</item>
+        <item>Tricicli, Scooter &amp; Treni</item>
+        <item>Videogiochi</item>
     </string-array>
     <string-array name="automotives">
-        <item>Car Electronics &amp; Accessories</item>
-        <item>Accessories</item>
-        <item>Motorcycle &amp; Powersports</item>
-        <item>Replacement Parts</item>
-        <item>RV Parts &amp; Accessories</item>
-        <item>Tools &amp; Equipment</item>
+        <item>Elettronica &amp; Accessories</item>
+        <item>Accessori</item>
+        <item>Moto &amp; Quad</item>
+        <item>Pezzi di Ricambio</item>
+        <item>Camper Accessories</item>
+        <item>Strumenti &amp; Equipaggiamenti</item>
     </string-array>
     <string-array name="subcategories">
-        <item>Select subcategory</item>
+        <item>Seleziona una categoria</item>
     </string-array>
 </resources>

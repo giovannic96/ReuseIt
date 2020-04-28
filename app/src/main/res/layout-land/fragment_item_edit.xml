@@ -81,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:maxLength="64"
                 android:textColor="#000000"
+                android:background="#FFFFFF"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,7 +106,8 @@
                 android:layout_height="wrap_content"
                 android:maxLength="512"
                 android:inputType="textMultiLine"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -116,7 +118,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            app:startIconDrawable="@drawable/ic_description"
+            app:startIconDrawable="@drawable/ic_condition"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCondition"
@@ -128,6 +130,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:textColor="#505050"
+                android:backgroundTint="#FFFFFF"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,7 +142,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            app:startIconDrawable="@drawable/ic_description"
+            app:startIconDrawable="@drawable/ic_category"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCategory"
@@ -151,7 +154,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:textColor="#505050"
-                tools:ignore="LabelFor" />
+                tools:ignore="LabelFor"
+                android:backgroundTint="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -162,7 +166,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            app:startIconDrawable="@drawable/ic_description"
+            app:startIconDrawable="@drawable/ic_subcategory"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultSubCategory"
@@ -174,6 +178,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:textColor="#505050"
+                android:backgroundTint="#FFFFFF"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,7 +198,9 @@
                 android:id="@+id/edit_itemPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="#FFFFFF"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -215,7 +222,9 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                android:inputType="none"/>
+                android:inputType="none"
+                android:background="#FFFFFF"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -235,7 +244,9 @@
                 android:id="@+id/edit_itemLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="64" />
+                android:maxLength="64"
+                android:background="#FFFFFF"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

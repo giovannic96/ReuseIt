@@ -2,7 +2,6 @@ package it.polito.mad.mhackeroni
 
 import android.Manifest
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,7 +16,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
-import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -100,17 +98,19 @@ class ItemEditFragment: Fragment() {
         val conditions = resources.getStringArray(R.array.conditions)
         var selectedCat = categories
 
-        val adapterCat = ArrayAdapter(requireContext(),
-            android.R.layout.simple_spinner_item, categories)
+        val adapterCat: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            categories
+        )
         edit_itemCategory.setAdapter(adapterCat)
 
-        var adapterSubcat = ArrayAdapter(requireContext(),
-            android.R.layout.simple_spinner_item, subcategories)
-        edit_itemSubCategory.setAdapter(adapterSubcat)
+        var adapterSubcat: ArrayAdapter<String>
 
         val adapterCond = ArrayAdapter(requireContext(),
             android.R.layout.simple_spinner_item, conditions)
         edit_itemCondition.setAdapter(adapterCond)
+
 
         edit_itemCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -122,45 +122,38 @@ class ItemEditFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
+
                 when(position){
                     0-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, arts)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = arts
                     }
                     1-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, sports)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = sports
                     }
                     2-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, babies)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = babies
                     }
                     3-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, womens)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = womens
                     }
                     4-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, mens)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = mens
                     }
                     5-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, electronics)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = electronics
                     }
                     6-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, games)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = games
                     }
                     7-> {adapterSubcat = ArrayAdapter(requireContext(),
                         android.R.layout.simple_spinner_item, automotives)
-                        edit_itemSubCategory.setAdapter(adapterSubcat)
                         selectedCat = automotives
                     }
                 }
@@ -645,19 +638,10 @@ class ItemEditFragment: Fragment() {
         }
     }
 
-
     private fun getPermissionOnUri(uri:Uri){
         val contentResolver = requireActivity().contentResolver
         val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         contentResolver.takePersistableUriPermission(uri, takeFlags)
-    }
-
-    fun setSpinText(spin: Spinner, text: String?) {
-        for (i in 0 until spin.getAdapter().getCount()) {
-            if (text?.let { spin.getAdapter().getItem(i).toString().contains(it) }!!) {
-                spin.setSelection(i)
-            }
-        }
     }
 }
