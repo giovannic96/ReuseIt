@@ -77,8 +77,6 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
                 listenerRef?.get()?.itemViewOnClick(item)
             }
 
-            Log.d("MAG", "Item ${item.id} image: ${item.image}")
-
             if(item.image.isNullOrEmpty()){
                 image.setImageResource(R.drawable.ic_box)
             } else if(item.image?.let { ImageUtils.canDisplayBitmap(it, context) }!!){
