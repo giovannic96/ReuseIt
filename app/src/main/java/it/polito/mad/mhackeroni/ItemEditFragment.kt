@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
 import android.view.*
@@ -29,7 +30,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
-import kotlinx.android.synthetic.main.item.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -51,7 +51,6 @@ class ItemEditFragment: Fragment() {
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
     private var pickerShowing = false
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -227,7 +226,7 @@ class ItemEditFragment: Fragment() {
             }
         }
 
-
+        edit_itemPrice.filters = arrayOf<InputFilter>(Validation.DecimalDigitsInputFilter(5, 2))
 
         if(item.value?.category!=null){
             edit_itemCategory.setText(item.value?.category)
@@ -277,20 +276,11 @@ class ItemEditFragment: Fragment() {
             }
         }
 
-        /*
-        edit_itemExpiryDate.setOnClickListener(){
-            val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                edit_itemExpiryDate.setText("$year/$monthOfYear/$dayOfMonth")
-            }, year, month, day)
-            dpd.show()
-        }
-         */
-
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(item.value != null){
                 edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
                 edit_itemPrice.setText(
-                    item.value?.price.toString() ?: resources.getString(R.string.defaultPrice)
+                    item.value?.price.toString()
                 )
                 edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultTitle))
                 edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
@@ -405,9 +395,6 @@ class ItemEditFragment: Fragment() {
                 }else {
                     item.value!!.id = oldItem?.id ?: -1
                     val fromList = arguments?.getBoolean("fromList", false)
-
-                    Log.d("MAG", Item.toJSON(item?.value!!).toString())
-                    Log.d("MAG old", oldItem?.let { Item.toJSON(it).toString() })
 
                     if(fromList!!){
                         val bundle =
@@ -551,8 +538,6 @@ class ItemEditFragment: Fragment() {
              */
             val price = 1.0
 
-            Log.d("MAG", "SAVING")
-
             if (::currentItemPhotoPath.isInitialized)
                 item.value = cat?.let {
                     cond?.let { it1 ->
@@ -613,7 +598,6 @@ class ItemEditFragment: Fragment() {
 
             if(savedItem != null){
                 item.value = savedItem
-                Log.d("MAG", "Restoring")
             }
 
         }
