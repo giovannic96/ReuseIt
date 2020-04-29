@@ -58,6 +58,7 @@ class ItemEditFragment: Fragment() {
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
     private var pickerShowing = false
+    private var startCamera = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -296,6 +297,7 @@ class ItemEditFragment: Fragment() {
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.fromCamera -> {
+                        startCamera = true
                         dispatchTakePictureIntent()
                     }
                     R.id.fromGallery -> {
@@ -311,6 +313,7 @@ class ItemEditFragment: Fragment() {
         }
 
         btn_rotate_imageItem.setOnClickListener {
+            startCamera = false
           if(::currentItemPhotoPath.isInitialized && currentItemPhotoPath.isNullOrEmpty()){
               Snackbar
                   .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
@@ -329,6 +332,9 @@ class ItemEditFragment: Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.edit_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -338,6 +344,8 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
+
+                item.removeObservers(viewLifecycleOwner)
 
                 if(isAddingItem){
                     item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
@@ -423,7 +431,8 @@ class ItemEditFragment: Fragment() {
 
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Permission granted
-                    dispatchTakePictureIntent()
+                    if(startCamera)
+                        dispatchTakePictureIntent()
                 } else {
                     this.view?.let {
                         Snackbar.make(it, resources.getString(R.string.permission_err), Snackbar.LENGTH_SHORT)
@@ -440,7 +449,6 @@ class ItemEditFragment: Fragment() {
 
     override fun onActivityResult(requestCode:Int, resultCode:Int, data:Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == REQUEST_CREATEIMAGE && resultCode == AppCompatActivity.RESULT_OK) {
             if(::currentItemPhotoPath.isInitialized){
                 val oldPhoto = currentItemPhotoPath
@@ -464,6 +472,12 @@ class ItemEditFragment: Fragment() {
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
             rotationCount.value = 0
+        } else if((requestCode == REQUEST_CREATEIMAGE || requestCode == REQUEST_PICKIMAGE) && resultCode == AppCompatActivity.RESULT_CANCELED){
+            currentItemPhotoPath = oldItem?.image ?: ""
+            item.value = oldItem
+        } else {
+            currentItemPhotoPath = oldItem?.image ?: ""
+            item.value = oldItem
         }
     }
 
