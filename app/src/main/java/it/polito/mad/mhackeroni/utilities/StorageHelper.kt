@@ -1,9 +1,12 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.beust.klaxon.Klaxon
+import it.polito.mad.mhackeroni.Item
+import it.polito.mad.mhackeroni.Profile
+import it.polito.mad.mhackeroni.R
 
 class StorageHelper(context: Context?) {
 
@@ -40,7 +43,9 @@ class StorageHelper(context: Context?) {
                 for(i in 0..items.size){
                     if(items[i].id == item.id){
                         items[i] = item
-                        Log.d("MAG", Item.toJSON(item).toString())
+                        Log.d("MAG", Item.toJSON(
+                            item
+                        ).toString())
                         saveItemList(s, items)
                         return
                     }
@@ -53,15 +58,21 @@ class StorageHelper(context: Context?) {
         }
     }
 
-    fun saveProfile(s: SharedPreferences, p:Profile) {
+    fun saveProfile(s: SharedPreferences, p: Profile) {
         with (s.edit()) {
-            putString(myContext?.getString(R.string.profile_sharedPref), Profile.toJSON(p).toString())
+            putString(myContext?.getString(R.string.profile_sharedPref), Profile.toJSON(
+                p
+            ).toString())
             apply()
         }
     }
 
-    fun loadProfile(s: SharedPreferences):Profile? {
+    fun loadProfile(s: SharedPreferences): Profile? {
         val jSONString : String? = s.getString(myContext?.getString(R.string.profile_sharedPref), "")
-        return jSONString?.let { Profile.fromStringJSON(it) }
+        return jSONString?.let {
+            Profile.fromStringJSON(
+                it
+            )
+        }
     }
 }

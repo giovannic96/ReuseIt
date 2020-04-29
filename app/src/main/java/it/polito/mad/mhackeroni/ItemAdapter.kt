@@ -1,12 +1,12 @@
 package it.polito.mad.mhackeroni
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import it.polito.mad.mhackeroni.utilities.ImageUtils
 import java.lang.ref.WeakReference
 
 class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):

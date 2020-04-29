@@ -1,9 +1,8 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.utilities
 
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -11,7 +10,7 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore.Images
-import android.util.Log
+import it.polito.mad.mhackeroni.R
 import java.io.*
 
 
@@ -31,7 +30,9 @@ class ImageUtils {
                 } catch (e1: FileNotFoundException){
                     bitmap = BitmapFactory.decodeFile(path)
                 } catch (e: Exception) {
-                    return getPlaceholder(context)
+                    return getPlaceholder(
+                        context
+                    )
                 } finally {
                     if(input != null)
                         input.close()
@@ -42,7 +43,11 @@ class ImageUtils {
 
 
         fun rotateImageFromUri(uri: Uri, angle: Float, context: Context): Bitmap? {
-            val source = getBitmap(uri.toString(), context)
+            val source =
+                getBitmap(
+                    uri.toString(),
+                    context
+                )
             val matrix = Matrix()
 
             matrix.postRotate(angle)
@@ -69,7 +74,7 @@ class ImageUtils {
                 } else {
                     bitmap = BitmapFactory.decodeResource(
                             context.resources,
-                            R.drawable.ic_avatar
+                        R.drawable.ic_avatar
                     )
                 }
 
@@ -103,9 +108,15 @@ class ImageUtils {
             ): String? {
                 val values = ContentValues()
 
-                values.put(Images.Media.TITLE, PIC_TITLE)
-                values.put(Images.Media.DISPLAY_NAME, PIC_TITLE)
-                values.put(Images.Media.DESCRIPTION, PIC_DESCRIPTION)
+                values.put(Images.Media.TITLE,
+                    PIC_TITLE
+                )
+                values.put(Images.Media.DISPLAY_NAME,
+                    PIC_TITLE
+                )
+                values.put(Images.Media.DESCRIPTION,
+                    PIC_DESCRIPTION
+                )
                 values.put(Images.Media.MIME_TYPE, "image/jpeg")
                 values.put(Images.Media.DATE_ADDED, System.currentTimeMillis())
                 // values.put(Images.Media.SIZE,  source.rowBytes* source.height)

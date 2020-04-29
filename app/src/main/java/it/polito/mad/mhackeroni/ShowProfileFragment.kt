@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
+import it.polito.mad.mhackeroni.utilities.ImageUtils
+import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_show_profile.*
 
 
 class ShowProfileFragment : Fragment() {
     var profile: MutableLiveData<Profile> = MutableLiveData()
-    private lateinit var storageHelper:StorageHelper
+    private lateinit var storageHelper: StorageHelper
     private var mListener: OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,7 +28,8 @@ class ShowProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
-        storageHelper = StorageHelper(requireContext())
+        storageHelper =
+            StorageHelper(requireContext())
         profile.value = storageHelper.loadProfile(sharedPref)
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {

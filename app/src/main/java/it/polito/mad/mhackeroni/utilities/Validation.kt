@@ -1,4 +1,4 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.utilities
 
 import android.text.InputFilter
 import android.text.Spanned

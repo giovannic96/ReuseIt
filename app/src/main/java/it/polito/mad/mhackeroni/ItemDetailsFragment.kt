@@ -3,12 +3,13 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
+import it.polito.mad.mhackeroni.utilities.ImageUtils
+import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment() {
@@ -132,7 +133,8 @@ class ItemDetailsFragment: Fragment() {
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
-        val storageHelper = StorageHelper(requireContext())
+        val storageHelper =
+            StorageHelper(requireContext())
         val sharedPref:SharedPreferences = requireContext()
             .getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 

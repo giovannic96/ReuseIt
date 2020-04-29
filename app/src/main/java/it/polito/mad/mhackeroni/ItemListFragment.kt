@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.utilities.StorageHelper
 
 class ItemListFragment: Fragment() {
 
@@ -32,7 +31,8 @@ class ItemListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        storageHelper = StorageHelper(requireContext())
+        storageHelper =
+            StorageHelper(requireContext())
         sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 
         val itemList:RecyclerView = view.findViewById(R.id.item_list)
@@ -108,7 +108,8 @@ class ItemListFragment: Fragment() {
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
-        val storageHelper = StorageHelper(requireContext())
+        val storageHelper =
+            StorageHelper(requireContext())
         val sharedPref:SharedPreferences = requireContext()
             .getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
 

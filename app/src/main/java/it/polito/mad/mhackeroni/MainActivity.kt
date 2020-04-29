@@ -15,6 +15,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import it.polito.mad.mhackeroni.utilities.ImageUtils
+import it.polito.mad.mhackeroni.utilities.StorageHelper
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
@@ -56,7 +58,8 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
 
     private fun updateHeader(context: Context) {
         val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        val storageHelper = StorageHelper(context)
+        val storageHelper =
+            StorageHelper(context)
         val profile = storageHelper.loadProfile(sharedPref)
 
         val headerView = navView.getHeaderView(0)
