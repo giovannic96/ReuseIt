@@ -18,10 +18,7 @@ import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -262,9 +259,11 @@ class ItemEditFragment: Fragment() {
 
                 try {
                     if(item.value?.image.isNullOrEmpty()){
-                        edit_itemImage.setImageResource(R.drawable.ic_itemimage)
-
+                        edit_itemImage.setImageResource(android.R.color.transparent)
+                        edit_itemImage.setBackgroundResource(R.drawable.ic_itemimage)
                     } else {
+
+                        edit_itemImage.setBackgroundResource(android.R.color.transparent)
                         edit_itemImage.setBackgroundResource(android.R.color.transparent)
                         edit_itemImage.setImageBitmap(item.value?.image?.let {
                                 it1 -> ImageUtils.getBitmap(it1, requireContext())
@@ -441,12 +440,14 @@ class ItemEditFragment: Fragment() {
                 }.toString()
                 File(oldPhoto).delete()
 
+                edit_itemImage.setBackgroundResource(android.R.color.transparent)
                 edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
                 rotationCount.value = 0
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
 
+            edit_itemImage.setBackgroundResource(android.R.color.transparent)
             edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
