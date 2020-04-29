@@ -249,6 +249,8 @@ class ItemEditFragment: Fragment() {
         handleDatePicker()
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            Log.d("MAG", "IMPAZZIRE ${item?.value?.image}")
+
             if(item.value != null){
                 edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
                 edit_itemPrice.setText(
@@ -322,6 +324,9 @@ class ItemEditFragment: Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.edit_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -331,6 +336,8 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
+
+                item.removeObservers(viewLifecycleOwner)
 
                 if(isAddingItem){
                     item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
