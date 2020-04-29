@@ -34,9 +34,13 @@ class ShowProfileFragment : Fragment() {
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
-                imageProfile.setImageBitmap(profile.value?.image?.let {
-                    it1 -> ImageUtils.getBitmap(it1, requireContext())
-                })
+                if(profile.value?.image.isNullOrEmpty()){
+                    imageProfile.setImageResource(R.drawable.ic_avatar)
+                } else {
+                    imageProfile.setImageBitmap(profile.value?.image?.let { it1 ->
+                        ImageUtils.getBitmap(it1, requireContext())
+                    })
+                }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
