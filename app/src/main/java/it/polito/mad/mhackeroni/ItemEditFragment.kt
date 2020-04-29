@@ -58,6 +58,7 @@ class ItemEditFragment: Fragment() {
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
     private var pickerShowing = false
+    private var startCamera = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -289,6 +290,7 @@ class ItemEditFragment: Fragment() {
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.fromCamera -> {
+                        startCamera = true
                         dispatchTakePictureIntent()
                     }
                     R.id.fromGallery -> {
@@ -304,6 +306,7 @@ class ItemEditFragment: Fragment() {
         }
 
         btn_rotate_imageItem.setOnClickListener {
+            startCamera = false
           if(::currentItemPhotoPath.isInitialized && currentItemPhotoPath.isNullOrEmpty()){
               Snackbar
                   .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
@@ -421,7 +424,8 @@ class ItemEditFragment: Fragment() {
 
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Permission granted
-                    dispatchTakePictureIntent()
+                    if(startCamera)
+                        dispatchTakePictureIntent()
                 } else {
                     this.view?.let {
                         Snackbar.make(it, resources.getString(R.string.permission_err), Snackbar.LENGTH_SHORT)
