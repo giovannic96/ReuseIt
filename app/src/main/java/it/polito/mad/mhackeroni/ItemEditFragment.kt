@@ -304,7 +304,11 @@ class ItemEditFragment: Fragment() {
         }
 
         btn_rotate_imageItem.setOnClickListener {
-            if(::currentItemPhotoPath.isInitialized
+          if(::currentItemPhotoPath.isInitialized && currentItemPhotoPath.isNullOrEmpty()){
+              Snackbar
+                  .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
+                  .show()
+          } else  if(::currentItemPhotoPath.isInitialized
                 && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())
                 && hasExStoragePermission()){
                 rotationCount.value = rotationCount.value?.plus(1)
@@ -312,7 +316,7 @@ class ItemEditFragment: Fragment() {
                 checkExStoragePermission()
             } else{
                 Snackbar
-                    .make(edit_item_container, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
+                    .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
                     .show()
             }
         }
