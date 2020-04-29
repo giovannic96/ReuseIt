@@ -462,33 +462,17 @@ class ItemEditFragment: Fragment() {
 
                 picker.addOnCancelListener {
                     pickerShowing = false
+                    Log.d("DatePicker Activity", "Dialog was cancelled")
                 }
                 picker.addOnNegativeButtonClickListener {
                     pickerShowing = false
+                    Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
                 }
                 picker.addOnPositiveButtonClickListener {
-                    val date = Date(it)
-                    val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
-                    format.timeZone = TimeZone.getTimeZone("Etc/UTC")
-                    val formatted: String = format.format(date)
-                    edit_itemExpiryDate.setText(formatted)
-                    pickerShowing = false
-                }
-            }
-        }
-
-        edit_itemExpiryDate.setOnClickListener {
-            if(!pickerShowing) {
-                picker.show(parentFragmentManager, picker.toString())
-                pickerShowing = true
-
-                picker.addOnCancelListener {
-                    pickerShowing = false
-                }
-                picker.addOnNegativeButtonClickListener {
-                    pickerShowing = false
-                }
-                picker.addOnPositiveButtonClickListener {
+                    Log.d(
+                        "DatePicker Activity",
+                        "Date String = ${picker.headerText}:: Date epoch value = $it"
+                    )
                     val date = Date(it)
                     val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
                     format.timeZone = TimeZone.getTimeZone("Etc/UTC")
