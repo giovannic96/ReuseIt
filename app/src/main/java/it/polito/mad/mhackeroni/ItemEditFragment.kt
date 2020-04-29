@@ -321,18 +321,15 @@ class ItemEditFragment: Fragment() {
                         edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
                         edit_itemLocation.text.toString(), cond ?: "", null)
                 } else {
-                    item.value?.name = edit_itemTitle.text.toString()
-                    item.value?.condition = cond ?: item.value!!.condition
-                    item.value?.desc = edit_itemDesc.text.toString()
-                    item.value?.location = edit_itemLocation.text.toString()
-                    item.value?.price = edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0
-                    item.value?.expiryDate = edit_itemExpiryDate.text.toString()
-                    item.value?.category = cat ?: item.value!!.category
-                    item.value?.subcategory = subCat ?: item.value!!.subcategory
+                    item.value = Item(
+                        oldItem?.id ?: -1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
+                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null)
                 }
 
 
                 val nRotation = rotationCount.value
+
                 if(::currentItemPhotoPath.isInitialized){
                     if (nRotation != null) {
                         if(nRotation != 0 && nRotation.rem(4) != 0
@@ -361,6 +358,7 @@ class ItemEditFragment: Fragment() {
                         ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
 
                 }else {
+
                     item.value!!.id = oldItem?.id ?: -1
                     val fromList = arguments?.getBoolean("fromList", false)
 
@@ -441,6 +439,7 @@ class ItemEditFragment: Fragment() {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun handleDatePicker() {
         val builder = MaterialDatePicker.Builder.datePicker()
 
@@ -452,8 +451,14 @@ class ItemEditFragment: Fragment() {
         //build date picker and add callbacks
         val picker = builder.build()
         edit_itemExpiryDate.inputType = InputType.TYPE_NULL
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            edit_itemExpiryDate.focusable = View.NOT_FOCUSABLE
+        } else {
+            edit_itemExpiryDate.isFocusable = false
+        }
 
-        edit_itemExpiryDate.setOnFocusChangeListener { _, _ ->
+
+        edit_itemExpiryDate.setOnClickListener {
             if(!pickerShowing) {
                 picker.show(parentFragmentManager, picker.toString())
                 pickerShowing = true
@@ -471,19 +476,15 @@ class ItemEditFragment: Fragment() {
                         "DatePicker Activity",
                         "Date String = ${picker.headerText}:: Date epoch value = $it"
                     )
-                    edit_itemExpiryDate.setText(formatDate(it))
+                    val date = Date(it)
+                    val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
+                    format.timeZone = TimeZone.getTimeZone("Etc/UTC")
+                    val formatted: String = format.format(date)
+                    edit_itemExpiryDate.setText(formatted)
                     pickerShowing = false
                 }
             }
         }
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private fun formatDate(myDate:Long?): String {
-        val date = myDate?.let { Date(it) }
-        val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
-        format.timeZone = TimeZone.getTimeZone("Etc/UTC")
-        return format.format(date)
     }
 
     private fun dispatchPickImageIntent() {
