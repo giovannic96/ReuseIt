@@ -19,6 +19,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -259,7 +260,8 @@ class ItemEditFragment: Fragment() {
 
                 try {
                     if(item.value?.image.isNullOrEmpty()){
-                        edit_itemImage.setBackgroundResource(R.drawable.ic_itemimage)
+                        edit_itemImage.setImageResource(R.drawable.ic_itemimage)
+                        Toast.makeText(requireContext(), "NO PHOTO", Toast.LENGTH_LONG).show()
                     } else {
                         edit_itemImage.setImageBitmap(item.value?.image?.let {
                                 it1 -> ImageUtils.getBitmap(it1, requireContext())
