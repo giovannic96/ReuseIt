@@ -1,6 +1,7 @@
 package it.polito.mad.mhackeroni
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -27,11 +28,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ItemEditFragment: Fragment() {
@@ -238,43 +242,7 @@ class ItemEditFragment: Fragment() {
             edit_itemSubCategory.setText(item.value?.subcategory)
         }
 
-        val builder = MaterialDatePicker.Builder.datePicker()
-
-        //Define date constraints
-        val constraintsBuilder = CalendarConstraints.Builder()
-        val calendar = Calendar.getInstance()
-        constraintsBuilder.setStart(calendar.timeInMillis)
-        calendar.roll(Calendar.YEAR, 1)
-        constraintsBuilder.setEnd(calendar.timeInMillis)
-        builder.setCalendarConstraints(constraintsBuilder.build())
-
-        //build date picker and add callbacks
-        val picker = builder.build()
-        edit_itemExpiryDate.inputType = InputType.TYPE_NULL
-
-        edit_itemExpiryDate.setOnFocusChangeListener { v, hasFocus ->
-            if(!pickerShowing) {
-                picker.show(parentFragmentManager, picker.toString())
-                pickerShowing = true
-
-                picker.addOnCancelListener {
-                    pickerShowing = false
-                    Log.d("DatePicker Activity", "Dialog was cancelled")
-                }
-                picker.addOnNegativeButtonClickListener {
-                    pickerShowing = false
-                    Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
-                }
-                picker.addOnPositiveButtonClickListener {
-                    Log.d(
-                        "DatePicker Activity",
-                        "Date String = ${picker.headerText}:: Date epoch value = $it"
-                    )
-                    edit_itemExpiryDate.setText("$it")
-                    pickerShowing = false
-                }
-            }
-        }
+        handleDatePicker()
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(item.value != null){
@@ -471,6 +439,48 @@ class ItemEditFragment: Fragment() {
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
             rotationCount.value = 0
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun handleDatePicker() {
+        val builder = MaterialDatePicker.Builder.datePicker()
+
+        //Define date constraints
+        val constraintsBuilder = CalendarConstraints.Builder()
+        constraintsBuilder.setValidator(DateValidatorPointForward.now())
+        builder.setCalendarConstraints(constraintsBuilder.build())
+
+        //build date picker and add callbacks
+        val picker = builder.build()
+        edit_itemExpiryDate.inputType = InputType.TYPE_NULL
+
+        edit_itemExpiryDate.setOnFocusChangeListener { _, _ ->
+            if(!pickerShowing) {
+                picker.show(parentFragmentManager, picker.toString())
+                pickerShowing = true
+
+                picker.addOnCancelListener {
+                    pickerShowing = false
+                    Log.d("DatePicker Activity", "Dialog was cancelled")
+                }
+                picker.addOnNegativeButtonClickListener {
+                    pickerShowing = false
+                    Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
+                }
+                picker.addOnPositiveButtonClickListener {
+                    Log.d(
+                        "DatePicker Activity",
+                        "Date String = ${picker.headerText}:: Date epoch value = $it"
+                    )
+                    val date = Date(it)
+                    val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
+                    format.timeZone = TimeZone.getTimeZone("Etc/UTC")
+                    val formatted: String = format.format(date)
+                    edit_itemExpiryDate.setText(formatted)
+                    pickerShowing = false
+                }
+            }
         }
     }
 

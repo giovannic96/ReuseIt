@@ -46,6 +46,7 @@
     <string name="profile_nav">Profilo</string>
     <string name="items_nav">Oggetti in vendita</string>
     <string name="edit_item">Modifica</string>
+    <string name="date_format">dd-MM-yyyy</string>
     <string name="no_data_available">Nessun item presente nella lista</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
