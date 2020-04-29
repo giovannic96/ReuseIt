@@ -5,23 +5,30 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.utilities.ImageUtils
+import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import java.io.File
 import java.io.IOException
@@ -86,6 +93,8 @@ class EditProfileFragment : Fragment() {
             edit_showImageProfile.animate().rotation(deg).interpolator =
                     AccelerateDecelerateInterpolator()
         })
+
+        setupValidationListener()
 
         edit_imageProfile.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), edit_imageProfile)
@@ -240,6 +249,22 @@ class EditProfileFragment : Fragment() {
         if(::currentPhotoPath.isInitialized){
             edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(currentPhotoPath, requireContext()))
         }
+
+        //(re)set editLineColor when rotate device, according to current backgroundTintList of editText
+        val detectColor = { v:TextView ->
+            if(v.hasFocus())
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    v.backgroundTintList
+                } else {
+                    ColorStateList.valueOf(Color.GRAY)
+                }
+            else
+                ColorStateList.valueOf(Color.GRAY)
+        }
+        ViewCompat.setBackgroundTintList(edit_nickname, detectColor(edit_nickname))
+        ViewCompat.setBackgroundTintList(edit_mail, detectColor(edit_mail))
+        ViewCompat.setBackgroundTintList(edit_phoneNumber, detectColor(edit_phoneNumber))
+        ViewCompat.setBackgroundTintList(edit_location, detectColor(edit_location))
     }
 
     private fun dispatchPickImageIntent() {
@@ -347,6 +372,140 @@ class EditProfileFragment : Fragment() {
         val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         contentResolver.takePersistableUriPermission(uri, takeFlags)
+    }
+
+    private fun setupValidationListener() {
+        edit_mail.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                val c:Int = checkColor(s.toString(), Validation.isValidEmail)
+                changeEditViewLineColor(edit_mail, c)
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        edit_mail.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            val s:String = edit_mail.text.toString()
+            val c:Int
+
+            c = checkColor(s, Validation.isValidEmail)
+
+            if (!hasFocus) {
+                changeEditViewLineColor(edit_mail, Color.GRAY)
+                if(s.isEmpty() || !Validation.isValidEmail(s))
+                    edit_mail.error = resources.getString(R.string.mail_error)
+            } else {
+                changeEditViewLineColor(edit_mail, c)
+            }
+        }
+
+        edit_nickname.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                val c:Int = checkColor(s.toString(), Validation.isValidNickname)
+                changeEditViewLineColor(edit_nickname, c)
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        edit_nickname.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            val s:String = edit_nickname.text.toString()
+            val c:Int
+
+            c = checkColor(s, Validation.isValidNickname)
+
+            if (!hasFocus) {
+                changeEditViewLineColor(edit_nickname, Color.GRAY)
+                if(s.isEmpty() || !Validation.isValidNickname(s))
+                    edit_nickname.error = resources.getString(R.string.nickname_error)
+            } else {
+                changeEditViewLineColor(edit_nickname, c)
+            }
+        }
+
+        edit_phoneNumber.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if(s.isNullOrEmpty()) {
+                    val defaultColor:Int = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+                    changeEditViewLineColor(edit_phoneNumber, defaultColor)
+                } else {
+                    val c:Int = checkColor(s.toString(), Validation.isValidPhoneNumber)
+                    changeEditViewLineColor(edit_phoneNumber, c)
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        edit_phoneNumber.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            val s:String = edit_phoneNumber.text.toString()
+            val c:Int
+            val defaultColor:Int = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+
+            c = checkColor(s, Validation.isValidPhoneNumber)
+
+            if (!hasFocus) {
+                changeEditViewLineColor(edit_phoneNumber, Color.GRAY)
+                if(s.isNotEmpty() && !Validation.isValidPhoneNumber(s)) {
+                    edit_phoneNumber.error = resources.getString(R.string.phoneNumber_error)
+                }
+            } else {
+                if(s.isEmpty()) {
+                    changeEditViewLineColor(edit_phoneNumber, defaultColor)
+                }
+                else {
+                    changeEditViewLineColor(edit_phoneNumber, c)
+                }
+            }
+        }
+
+        edit_location.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                val c:Int = checkColor(s.toString(), Validation.isValidLocation)
+                changeEditViewLineColor(edit_location, c)
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        edit_location.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            val s:String = edit_location.text.toString()
+            val c:Int
+
+            c = checkColor(s, Validation.isValidLocation)
+
+            if (!hasFocus) {
+                changeEditViewLineColor(edit_location, Color.GRAY)
+                if(s.isEmpty() || !Validation.isValidLocation(s))
+                    edit_location.error = resources.getString(R.string.location_error)
+            } else {
+                changeEditViewLineColor(edit_location, c)
+            }
+        }
+    }
+
+    private fun checkColor(s:String?, f: (CharSequence?) -> Boolean): Int { //HOF
+        return if(s.isNullOrEmpty() || !f(s)) {
+            Color.RED
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.colorAccent)
+        }
+    }
+
+    private fun changeEditViewLineColor(editText: TextView, color:Int) {
+        val colorStateList = ColorStateList.valueOf(color)
+        ViewCompat.setBackgroundTintList(editText, colorStateList)
     }
 }
 

@@ -242,7 +242,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_location"
-            app:errorEnabled="true"
             android:hint="@string/defaultItemLocation" >
 
             <com.google.android.material.textfield.TextInputEditText
