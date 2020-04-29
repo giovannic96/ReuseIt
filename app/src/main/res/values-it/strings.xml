@@ -17,7 +17,7 @@
     <string name="defaultDesc">Descrizione articolo</string>
     <string name="defaultCategory">Categoria</string>
     <string name="defaultSubCategory">Sotto Categoria</string>
-    <string name="defaultPrice">Price</string>
+    <string name="defaultPrice">Prezzo</string>
     <string name="defaultCondition">Condizione</string>
     <string name="defaultItemLocation">Località</string>
     <string name="defaultExpire">Data di scadenza</string>
