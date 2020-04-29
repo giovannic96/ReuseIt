@@ -16,11 +16,11 @@
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:contentDescription="@string/photo"
+            android:src="@drawable/ic_itemimage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_itemimage" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/itemTitle"
@@ -88,15 +88,15 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImage" />
 
         <TextView
-        android:id="@+id/itemCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:hint="@string/defaultCategory"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="#505050"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
+            android:id="@+id/itemCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:hint="@string/defaultCategory"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#505050"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
 
         <TextView
             android:id="@+id/itemSubCategory"
@@ -150,6 +150,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/mapImage" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

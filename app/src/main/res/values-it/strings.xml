@@ -14,7 +14,7 @@
     <string name="defaultBio">Aggiorna la tua biografia!</string>
     <string name="defaultPhoneNumber">Numero di telefono (opz.)</string>
     <string name="defaultTitle">Titolo articolo</string>
-    <string name="defaultDesc">Descrizione articolo</string>
+    <string name="defaultDesc">Descrizione</string>
     <string name="defaultCategory">Categoria</string>
     <string name="defaultSubCategory">Sotto Categoria</string>
     <string name="defaultPrice">Prezzo</string>
@@ -38,7 +38,7 @@
     <string name="warning_dialog">Attenzione</string>
     <string name="image_not_found">Immagine del profilo non trovata</string>
     <string name="item_name">Nome Item</string>
-    <string name="item_price">Prezzo Item</string>
+    <string name="item_price">Prezzo</string>
     <string name="profile_update">Profilo aggiornato</string>
     <string name="item_update">Item aggiornato</string>
     <string name="undo">Annulla</string>
@@ -48,6 +48,9 @@
     <string name="edit_item">Modifica</string>
     <string name="date_format">dd-MM-yyyy</string>
     <string name="no_data_available">Nessun item presente nella lista</string>
+    <string name="frag_list_title">Oggetti in vendita</string>
+    <string name="frag_item_title">Articolo</string>
+    <string name="frag_profile_title">Profilo</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

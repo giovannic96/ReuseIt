@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/nav_showProfile"
         android:name="it.polito.mad.mhackeroni.ShowProfileFragment"
-        android:label="ShowProfileFragment">
+        android:label="@string/frag_profile_title">
         <action
             android:id="@+id/action_nav_showProfile_to_nav_editProfile"
             app:destination="@id/nav_editProfile" />
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/nav_editProfile"
         android:name="it.polito.mad.mhackeroni.EditProfileFragment"
-        android:label="EditProfileFragment" >
+        android:label="@string/frag_profile_title" >
         <action
             android:id="@+id/action_nav_editProfile_to_nav_showProfile"
             app:destination="@id/nav_showProfile"
@@ -30,7 +30,7 @@
     <fragment
         android:id="@+id/nav_ItemDetail"
         android:name="it.polito.mad.mhackeroni.ItemDetailsFragment"
-        android:label="ItemDetailsFragment" >
+        android:label="@string/frag_item_title" >
         <action
             android:id="@+id/action_nav_ItemDetail_to_nav_ItemDetailEdit"
             app:destination="@id/nav_ItemDetailEdit"
@@ -48,7 +48,7 @@
     <fragment
         android:id="@+id/nav_ItemDetailEdit"
         android:name="it.polito.mad.mhackeroni.ItemEditFragment"
-        android:label="ItemEditFragment" >
+        android:label="@string/frag_item_title" >
         <action
             android:id="@+id/action_nav_ItemDetailEdit_to_nav_ItemDetail"
             app:destination="@id/nav_ItemDetail"
@@ -64,7 +64,7 @@
     <fragment
         android:id="@+id/nav_itemList"
         android:name="it.polito.mad.mhackeroni.ItemListFragment"
-        android:label="ItemListFragment" >
+        android:label="@string/frag_list_title" >
         <action
             android:id="@+id/action_nav_itemList_to_nav_ItemDetail"
             app:destination="@id/nav_ItemDetail"/>
