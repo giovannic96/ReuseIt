@@ -208,6 +208,7 @@ class ItemEditFragment: Fragment() {
                 id: Long
             ) {
                 subCat = selectedCat[position]
+                edit_itemSubCategory_wrapper?.isHelperTextEnabled = false
             }
         }
 

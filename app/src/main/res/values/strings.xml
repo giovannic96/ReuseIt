@@ -50,6 +50,7 @@
     <string name="frag_list_title">Items for sale</string>
     <string name="frag_item_title">Item</string>
     <string name="frag_profile_title">Profile</string>
+    <string name="helper_subcat">Remember to enter a category</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>
