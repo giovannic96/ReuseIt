@@ -3,6 +3,7 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -150,6 +151,9 @@ class ItemDetailsFragment: Fragment() {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     item.value = Item.fromStringJSON(oldItem)
 
+                    if(item.value?.image.isNullOrEmpty()) {
+                        itemImage.setImageResource(R.drawable.ic_itemimage)
+                    }
                     item.value?.let { storageHelper.editItem(sharedPref, it) }
 
                 })

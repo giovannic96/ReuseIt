@@ -258,9 +258,13 @@ class ItemEditFragment: Fragment() {
                 edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
 
                 try {
-                    edit_itemImage.setImageBitmap(item.value?.image?.let {
-                            it1 -> ImageUtils.getBitmap(it1, requireContext())
-                    })
+                    if(item.value?.image.isNullOrEmpty()){
+                        edit_itemImage.setBackgroundResource(R.drawable.ic_itemimage)
+                    } else {
+                        edit_itemImage.setImageBitmap(item.value?.image?.let {
+                                it1 -> ImageUtils.getBitmap(it1, requireContext())
+                        })
+                    }
                 } catch (e: Exception) {
                     Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                 }

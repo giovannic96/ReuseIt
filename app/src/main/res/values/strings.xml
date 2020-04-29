@@ -13,7 +13,7 @@
     <string name="defaultBio">Update your bio!</string>
     <string name="defaultPhoneNumber">Phone number (opt.)</string>
     <string name="defaultTitle">Item title</string>
-    <string name="defaultDesc">Item description</string>
+    <string name="defaultDesc">Description</string>
     <string name="defaultCategory">Category</string>
     <string name="defaultSubCategory">SubCategory</string>
     <string name="defaultPrice">Price</string>
@@ -37,7 +37,7 @@
     <string name="warning_dialog">Warning</string>
     <string name="image_not_found">Cannot find profile image</string>
     <string name="item_name">Item name</string>
-    <string name="item_price">Item price</string>
+    <string name="item_price">Price</string>
     <string name="profile_update">Profile updated</string>
     <string name="item_update">Item updated</string>
     <string name="undo">Undo</string>
@@ -47,6 +47,9 @@
     <string name="date_format">yyyy-MM-dd</string>
     <string name="selectSubcat">Select a subcategory</string>
     <string name="no_data_available">No data available</string>
+    <string name="frag_list_title">Items for sale</string>
+    <string name="frag_item_title">Item</string>
+    <string name="frag_profile_title">Profile</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>
