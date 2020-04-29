@@ -6,6 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -261,8 +263,9 @@ class ItemEditFragment: Fragment() {
                 try {
                     if(item.value?.image.isNullOrEmpty()){
                         edit_itemImage.setImageResource(R.drawable.ic_itemimage)
-                        Toast.makeText(requireContext(), "NO PHOTO", Toast.LENGTH_LONG).show()
+
                     } else {
+                        edit_itemImage.setBackgroundResource(android.R.color.transparent)
                         edit_itemImage.setImageBitmap(item.value?.image?.let {
                                 it1 -> ImageUtils.getBitmap(it1, requireContext())
                         })
@@ -411,8 +414,10 @@ class ItemEditFragment: Fragment() {
                     // Permission granted
                     dispatchTakePictureIntent()
                 } else {
-                    Snackbar.make(edit_item_container, resources.getString(R.string.permission_err), Snackbar.LENGTH_SHORT)
-                        .show()
+                    this.view?.let {
+                        Snackbar.make(it, resources.getString(R.string.permission_err), Snackbar.LENGTH_SHORT)
+                            .show()
+                    }
                 }
                 return
             }
@@ -441,6 +446,7 @@ class ItemEditFragment: Fragment() {
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
+
             edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
