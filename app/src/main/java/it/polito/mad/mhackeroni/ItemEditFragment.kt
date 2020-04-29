@@ -442,7 +442,6 @@ class ItemEditFragment: Fragment() {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     private fun handleDatePicker() {
         val builder = MaterialDatePicker.Builder.datePicker()
 
@@ -473,15 +472,19 @@ class ItemEditFragment: Fragment() {
                         "DatePicker Activity",
                         "Date String = ${picker.headerText}:: Date epoch value = $it"
                     )
-                    val date = Date(it)
-                    val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
-                    format.timeZone = TimeZone.getTimeZone("Etc/UTC")
-                    val formatted: String = format.format(date)
-                    edit_itemExpiryDate.setText(formatted)
+                    edit_itemExpiryDate.setText(formatDate(it))
                     pickerShowing = false
                 }
             }
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun formatDate(myDate:Long?): String {
+        val date = myDate?.let { Date(it) }
+        val format: DateFormat = SimpleDateFormat(resources.getString(R.string.date_format))
+        format.timeZone = TimeZone.getTimeZone("Etc/UTC")
+        return format.format(date)
     }
 
     private fun dispatchPickImageIntent() {
