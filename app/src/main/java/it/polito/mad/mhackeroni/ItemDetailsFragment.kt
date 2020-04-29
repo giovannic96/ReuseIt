@@ -50,15 +50,48 @@ class ItemDetailsFragment: Fragment() {
                 Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
-            itemDesc.text = item?.value?.desc ?: resources.getString(R.string.defaultDesc)
-            cat = item?.value?.category ?: resources.getString(R.string.defaultCategory)
-            itemCategory.text = "$cat  -"
-            itemSubCategory.text = item?.value?.subcategory ?: resources.getString(R.string.defaultSubCategory)
-            itemExpiryDate.text = item?.value?.expiryDate ?: resources.getString(R.string.defaultExpire)
-            itemLocation.text = item?.value?.location ?: resources.getString(R.string.defaultLocation)
-            cond = item?.value?.condition ?: resources.getString(R.string.defaultCondition)
-            var defCond = resources.getString(R.string.defaultCondition)
-            itemCondition.text = "$defCond: $cond"
+            if (!item?.value?.desc.isNullOrEmpty()){
+                itemDesc.text = item?.value?.desc
+            }
+            else{
+                itemDesc.text = resources.getString(R.string.notSpecified)
+            }
+
+            if (!item?.value?.category.isNullOrEmpty()){
+                itemCategory.text = item?.value?.category
+            }
+            else{
+                itemCategory.text = resources.getString(R.string.notSpecified)
+            }
+
+            if (!item?.value?.subcategory.isNullOrEmpty()){
+                itemSubCategory.text = item?.value?.subcategory
+            }
+            else{
+                itemSubCategory.text = resources.getString(R.string.notSpecified)
+            }
+
+            if (!item?.value?.condition.isNullOrEmpty()){
+                itemCondition.text = item?.value?.condition
+            }
+            else{
+                itemCondition.text = resources.getString(R.string.notSpecified)
+            }
+
+            if (!item?.value?.expiryDate.isNullOrEmpty()){
+                itemExpiryDate.text = item?.value?.expiryDate
+            }
+            else{
+                itemExpiryDate.text = resources.getString(R.string.notSpecified)
+            }
+
+            if (!item?.value?.location.isNullOrEmpty()){
+                itemLocation.text = item?.value?.location
+            }
+            else{
+                itemLocation.text = resources.getString(R.string.notSpecified)
+            }
+
         })
 
         getResult(view)

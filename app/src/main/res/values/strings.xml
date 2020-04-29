@@ -21,6 +21,8 @@
     <string name="defaultCondition">Condition</string>
     <string name="defaultExpire">Expiry date</string>
     <string name="defaultLastUpdate">Last Update</string>
+    <string name="itemExpire">This item will expire on</string>
+    <string name="notSpecified">Not specified</string>
     <string name="save">Save</string>
     <string name="picFromGallery">Select from gallery</string>
     <string name="picFromCamera">Take from camera</string>

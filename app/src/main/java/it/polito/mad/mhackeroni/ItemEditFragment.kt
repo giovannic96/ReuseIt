@@ -120,13 +120,17 @@ class ItemEditFragment: Fragment() {
             subcategories
         )
 
-        val adapterCond = ArrayAdapter(requireContext(),
-            android.R.layout.simple_spinner_item, conditions)
+        val adapterCond = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            conditions
+        )
         edit_itemCondition.setAdapter(adapterCond)
 
 
         edit_itemCategory.onItemClickListener = object : AdapterView.OnItemSelectedListener,
             AdapterView.OnItemClickListener {
+
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -236,14 +240,17 @@ class ItemEditFragment: Fragment() {
 
         edit_itemPrice.filters = arrayOf<InputFilter>(Validation.DecimalDigitsInputFilter(5, 2))
 
-        if(item.value?.category!=null){
-            edit_itemCategory.setText(item.value?.category)
+        if(!item.value?.category.isNullOrEmpty()){
+            val value = item.value?.category
+            edit_itemCategory.setHint("\n$value")
         }
-        if(item.value?.condition!=null){
-            edit_itemCondition.setText(item.value?.condition)
+        if(!item.value?.condition.isNullOrEmpty()){
+            val value = item.value?.condition
+            edit_itemCondition.setHint("\n$value")
         }
-        if(item.value?.subcategory!=null){
-            edit_itemSubCategory.setText(item.value?.subcategory)
+        if(!item.value?.subcategory.isNullOrEmpty()){
+            val value = item.value?.subcategory
+            edit_itemSubCategory.setHint("\n$value")
         }
 
         handleDatePicker()
@@ -254,7 +261,7 @@ class ItemEditFragment: Fragment() {
                 edit_itemPrice.setText(
                     item.value?.price.toString()
                 )
-                edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultTitle))
+                edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultDesc))
                 edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
                 edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
 

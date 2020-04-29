@@ -14,54 +14,52 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/edit_itemImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="200dp"
+            android:contentDescription="@string/photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_itemimage" />
 
-            <ImageView
-                android:id="@+id/edit_itemImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:contentDescription="@string/photo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_itemimage" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/edit_itemCamera"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_below="@+id/btn_rotate_imageItem"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_camera_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_camera"
                 app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="13dp" />
+                app:civ_border_width="13dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_rotate_imageItem"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/btn_rotate_imageItem"
                 android:layout_width="63dp"
                 android:layout_height="63dp"
-                android:layout_alignTop="@+id/edit_itemImage"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
                 android:background="@drawable/ic_camera_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_rotate"
                 app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="13dp" />
+                app:civ_border_width="13dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/edit_itemCamera" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -99,14 +97,14 @@
             app:startIconDrawable="@drawable/ic_description"
             app:endIconMode="clear_text"
             app:counterEnabled="true"
-            app:counterMaxLength="120"
+            app:counterMaxLength="300"
             android:hint="@string/defaultDesc" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_itemDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="512"
+                android:maxLength="300"
                 android:inputType="textMultiLine"
                 android:textColor="#000000"
                 android:background="#FFFFFF" />
