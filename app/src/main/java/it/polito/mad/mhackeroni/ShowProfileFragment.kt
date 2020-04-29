@@ -54,20 +54,23 @@ class ShowProfileFragment : Fragment() {
         imageProfile.setOnClickListener {
             val bundle=Bundle()
             try {
-                if (profile.value?.image?.let { it1 ->
-                        ImageUtils.canDisplayBitmap(
-                            it1,
-                            requireContext()
-                        )
-                    }!!) {
+                if(!profile.value?.image.isNullOrEmpty()) {
+                    if (profile.value?.image?.let { it1 ->
+                            ImageUtils.canDisplayBitmap(
+                                it1,
+                                requireContext()
+                            )
+                        }!!) {
 
-                    bundle.putString("uri", profile.value?.image.toString())
-                    view.findNavController()
-                        .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
+                        bundle.putString("uri", profile.value?.image.toString())
+                        view.findNavController()
+                            .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
+                    }
                 }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
+
         }
     }
 
