@@ -104,7 +104,7 @@ class ItemEditFragment: Fragment() {
         val mens = resources.getStringArray(R.array.mens)
         val electronics = resources.getStringArray(R.array.electronics)
         val games = resources.getStringArray(R.array.games)
-        val automotives = resources.getStringArray(R.array.electronics)
+        val automotives = resources.getStringArray(R.array.automotives)
         val conditions = resources.getStringArray(R.array.conditions)
         var selectedCat = categories
 
