@@ -51,6 +51,7 @@
     <string name="frag_list_title">Oggetti in vendita</string>
     <string name="frag_item_title">Articolo</string>
     <string name="frag_profile_title">Profilo</string>
+    <string name="helper_subcat">Ricordati di inserire una categoria</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>
