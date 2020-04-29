@@ -249,8 +249,6 @@ class ItemEditFragment: Fragment() {
         handleDatePicker()
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            Log.d("MAG", "IMPAZZIRE ${item?.value?.image}")
-
             if(item.value != null){
                 edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
                 edit_itemPrice.setText(
@@ -440,7 +438,6 @@ class ItemEditFragment: Fragment() {
 
     override fun onActivityResult(requestCode:Int, resultCode:Int, data:Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == REQUEST_CREATEIMAGE && resultCode == AppCompatActivity.RESULT_OK) {
             if(::currentItemPhotoPath.isInitialized){
                 val oldPhoto = currentItemPhotoPath
@@ -464,6 +461,12 @@ class ItemEditFragment: Fragment() {
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
             rotationCount.value = 0
+        } else if((requestCode == REQUEST_CREATEIMAGE || requestCode == REQUEST_PICKIMAGE) && resultCode == AppCompatActivity.RESULT_CANCELED){
+            currentItemPhotoPath = oldItem?.image ?: ""
+            item.value = oldItem
+        } else {
+            currentItemPhotoPath = oldItem?.image ?: ""
+            item.value = oldItem
         }
     }
 
