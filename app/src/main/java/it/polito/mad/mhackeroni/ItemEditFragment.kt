@@ -151,7 +151,7 @@ class ItemEditFragment: Fragment() {
         })
 
         edit_itemCamera.setOnClickListener {
-            val popupMenu=PopupMenu(requireContext(), edit_itemImage)
+            val popupMenu=PopupMenu(requireContext(), edit_itemCamera)
             popupMenu.menuInflater.inflate(R.menu.context_menu_image, popupMenu.menu)
 
             popupMenu.setOnMenuItemClickListener {
