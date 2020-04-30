@@ -131,6 +131,7 @@
                 android:inputType="none"
                 android:textColor="#505050"
                 android:backgroundTint="#FFFFFF"
+                android:saveEnabled="false"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -155,6 +156,7 @@
                 android:inputType="none"
                 android:textColor="#505050"
                 android:backgroundTint="#FFFFFF"
+                android:saveEnabled="false"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -182,6 +184,7 @@
                 android:inputType="none"
                 android:textColor="#505050"
                 android:backgroundTint="#FFFFFF"
+                android:saveEnabled="false"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 

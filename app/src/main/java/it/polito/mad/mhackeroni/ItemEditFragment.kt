@@ -3,12 +3,10 @@ package it.polito.mad.mhackeroni
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -40,9 +38,7 @@ import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
-import java.io.InputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -126,6 +122,8 @@ class ItemEditFragment: Fragment() {
             android.R.layout.simple_spinner_item,
             subcategories
         )
+
+        edit_itemSubCategory.setAdapter(adapterSubcat)
 
         val adapterCond = ArrayAdapter(
             requireContext(),
@@ -249,15 +247,21 @@ class ItemEditFragment: Fragment() {
 
         if(!item.value?.category.isNullOrEmpty()){
             val value = item.value?.category
-            edit_itemCategory.setHint("\n$value")
+            val pos = adapterCat.getPosition(value)
+
+            // edit_itemCategory.setSelection(pos)
         }
         if(!item.value?.condition.isNullOrEmpty()){
             val value = item.value?.condition
-            edit_itemCondition.setHint("\n$value")
+            val pos = adapterCond.getPosition(value)
+
+            // edit_itemCondition.setSelection(pos)
         }
         if(!item.value?.subcategory.isNullOrEmpty()){
             val value = item.value?.subcategory
-            edit_itemSubCategory.setHint("\n$value")
+            val pos = adapterSubcat.getPosition(value)
+
+            // edit_itemSubCategory.setSelection(pos)
         }
 
         handleDatePicker()
@@ -274,13 +278,9 @@ class ItemEditFragment: Fragment() {
 
                 try {
                     if(item.value?.image.isNullOrEmpty()){
-                        edit_itemImage.setImageResource(android.R.color.transparent)
-                        edit_itemImage.setBackgroundResource(R.drawable.ic_box)
+                        edit_itemImage.setImageResource(R.drawable.ic_box)
 
                     } else {
-
-                        edit_itemImage.setBackgroundResource(android.R.color.transparent)
-                        edit_itemImage.setBackgroundResource(android.R.color.transparent)
                         edit_itemImage.setImageBitmap(item.value?.image?.let {
                                 it1 -> ImageUtils.getBitmap(it1, requireContext())
                         })
@@ -423,7 +423,7 @@ class ItemEditFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         // Used to solve lazy update issue
-        if(::currentItemPhotoPath.isInitialized){
+        if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty()){
             edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
         }
     }
@@ -467,14 +467,12 @@ class ItemEditFragment: Fragment() {
                 }.toString()
                 File(oldPhoto).delete()
 
-                edit_itemImage.setBackgroundResource(android.R.color.transparent)
                 edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
                 rotationCount.value = 0
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
 
-            edit_itemImage.setBackgroundResource(android.R.color.transparent)
             edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
