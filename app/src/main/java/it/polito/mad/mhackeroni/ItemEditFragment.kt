@@ -428,7 +428,11 @@ class ItemEditFragment: Fragment() {
 
             edit_itemCategory.setHint("\n${value}")
             adapterCat.notifyDataSetChanged()
-            edit_itemCategory.setSelection(pos, pos)
+            try {
+                edit_itemCategory.setSelection(pos)
+            } catch(e: IndexOutOfBoundsException){
+                // Not valid selection
+            }
         }
         if(!item.value?.condition.isNullOrEmpty()){
             val value = item.value?.condition
@@ -436,7 +440,12 @@ class ItemEditFragment: Fragment() {
 
             edit_itemCondition.setHint("\n${value}")
             adapterCond.notifyDataSetChanged()
-            edit_itemCondition.setSelection(pos, pos)
+         try{
+            edit_itemCondition.setSelection(pos)
+            } catch(e: IndexOutOfBoundsException){
+                // Not valid selection
+            }
+
         }
         if(!item.value?.subcategory.isNullOrEmpty()){
             val value = item.value?.subcategory
