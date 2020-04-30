@@ -16,11 +16,12 @@
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:contentDescription="@string/photo"
-            android:src="@drawable/ic_itemimage"
+            android:src="@drawable/ic_box"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/itemTitle"

@@ -6,7 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -18,7 +19,10 @@ import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -36,7 +40,9 @@ import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
+import java.io.InputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -269,7 +275,8 @@ class ItemEditFragment: Fragment() {
                 try {
                     if(item.value?.image.isNullOrEmpty()){
                         edit_itemImage.setImageResource(android.R.color.transparent)
-                        edit_itemImage.setBackgroundResource(R.drawable.ic_itemimage)
+                        edit_itemImage.setBackgroundResource(R.drawable.ic_box)
+
                     } else {
 
                         edit_itemImage.setBackgroundResource(android.R.color.transparent)

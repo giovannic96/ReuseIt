@@ -19,11 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:contentDescription="@string/photo"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_itemimage" />
+            android:src="@drawable/ic_box"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -31,8 +32,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/edit_itemCamera"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="63dp"
+                android:layout_height="63dp"
                 android:background="@drawable/ic_camera_background"
                 android:clickable="true"
                 android:focusable="true"
