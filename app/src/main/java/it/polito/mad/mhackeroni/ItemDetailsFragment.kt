@@ -30,9 +30,13 @@ class ItemDetailsFragment: Fragment() {
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
                 if(!item?.value?.image.isNullOrEmpty())
-                    itemImage.setImageBitmap(item?.value?.image?.let { it1 ->
-                        ImageUtils.getBitmap(it1, requireContext())
-                })
+                    if(item?.value?.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) } == null){
+                        itemImage.setImageResource(R.drawable.ic_box)
+                    } else {
+                        itemImage.setImageBitmap(item?.value?.image?.let { it1 ->
+                            ImageUtils.getBitmap(it1, requireContext())
+                        })
+                    }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }

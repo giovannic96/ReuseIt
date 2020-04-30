@@ -123,9 +123,13 @@ class ItemEditFragment: Fragment() {
                         edit_itemImage.setImageResource(R.drawable.ic_box)
 
                     } else {
-                        edit_itemImage.setImageBitmap(item.value?.image?.let {
-                                it1 -> ImageUtils.getBitmap(it1, requireContext())
-                        })
+                        if(item.value?.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) } == null){
+                            edit_itemImage.setImageResource(R.drawable.ic_box)
+                        } else {
+                            edit_itemImage.setImageBitmap(item.value?.image?.let { it1 ->
+                                ImageUtils.getBitmap(it1, requireContext())
+                            })
+                        }
                     }
                 } catch (e: Exception) {
                     Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
@@ -270,8 +274,22 @@ class ItemEditFragment: Fragment() {
         super.onResume()
 
         // Used to solve lazy update issue
+        if(item?.value?.image?.let { ImageUtils.getBitmap(it, requireContext()) } == null){
+            edit_itemImage.setImageResource(R.drawable.ic_box)
+        }
+
         if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty()){
-            edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
+
+            if(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()) == null){
+                edit_itemImage.setImageResource(R.drawable.ic_box)
+            } else {
+                edit_itemImage.setImageBitmap(
+                    ImageUtils.getBitmap(
+                        currentItemPhotoPath,
+                        requireContext()
+                    )
+                )
+            }
         }
 
         val categories = resources.getStringArray(R.array.categories)

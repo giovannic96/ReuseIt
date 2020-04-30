@@ -1,5 +1,6 @@
 package it.polito.mad.mhackeroni
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,7 +81,12 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
             if(item.image.isNullOrEmpty()){
                 image.setImageResource(R.drawable.ic_box)
             } else if(item.image?.let { ImageUtils.canDisplayBitmap(it, context) }!!){
-                image.setImageBitmap(ImageUtils.getBitmap(item.image!!, context))
+
+                if(ImageUtils.getBitmap(item.image!!, context) == null){
+                    image.setImageResource(R.drawable.ic_box)
+                } else {
+                    image.setImageBitmap(ImageUtils.getBitmap(item.image!!, context))
+                }
             }
         }
     }
