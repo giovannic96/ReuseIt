@@ -121,7 +121,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCondition"
-            android:saveEnabled="false"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
             <AutoCompleteTextView
@@ -146,7 +145,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCategory"
-            android:saveEnabled="false"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
             <AutoCompleteTextView
@@ -171,7 +169,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultSubCategory"
-            android:saveEnabled="false"
             app:helperTextEnabled="true"
             app:helperText="@string/helper_subcat"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">

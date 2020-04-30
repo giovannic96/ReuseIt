@@ -408,21 +408,21 @@ class ItemEditFragment: Fragment() {
 
         if(!item.value?.category.isNullOrEmpty()){
             val value = item.value?.category
-            val pos = adapterCat.getPosition(value)
+            // val pos = adapterCat.getPosition(value)
 
-            // edit_itemCategory.setSelection(pos)
+            edit_itemCategory.setHint(value)
         }
         if(!item.value?.condition.isNullOrEmpty()){
             val value = item.value?.condition
-            val pos = adapterCond.getPosition(value)
+            // val pos = adapterCond.getPosition(value)
 
-            // edit_itemCondition.setSelection(pos)
             edit_itemCondition.setHint(value.toString())
         }
         if(!item.value?.subcategory.isNullOrEmpty()){
             val value = item.value?.subcategory
-            val pos = adapterSubcat.getPosition(value)
+            // val pos = adapterSubcat.getPosition(value)
 
+            edit_itemSubCategory.setHint(value.toString())
             // edit_itemSubCategory.setSelection(pos)
 
         }
