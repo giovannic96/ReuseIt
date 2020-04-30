@@ -199,6 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            android:paddingBottom="12dp"
             android:hint="@string/defaultExpire"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
