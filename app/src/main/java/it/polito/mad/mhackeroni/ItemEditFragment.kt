@@ -652,50 +652,41 @@ class ItemEditFragment: Fragment() {
         super.onSaveInstanceState(outState)
 
         if(this.isVisible) {
+            var price: Double
 
-            val price = 1.0
-            if (::currentItemPhotoPath.isInitialized)
-                item.value = cat?.let {
-                    cond?.let { it1 ->
-                        subCat?.let { it2 ->
-                            item.value?.id?.let { it3 ->
-                                Item(
-                                    it3,
-                                    edit_itemTitle.text.toString(),
-                                    price,
-                                    edit_itemDesc.text.toString(),
-                                    it,
-                                    it2,
-                                    edit_itemExpiryDate.text.toString(),
-                                    edit_itemLocation.text.toString(),
-                                    it1,
-                                    currentItemPhotoPath
-                                )
-                            }
-                        }
-                    }
-                }
-            else
-                item.value = cat?.let {
-                    cond?.let { it1 ->
-                        subCat?.let { it2 ->
-                            item.value?.id?.let { it3 ->
-                                Item(
-                                    it3,
-                                    edit_itemTitle.text.toString(),
-                                    price,
-                                    edit_itemDesc.text.toString(),
-                                    it,
-                                    it2,
-                                    edit_itemExpiryDate.text.toString(),
-                                    edit_itemLocation.text.toString(),
-                                    it1,
-                                    item.value?.image
-                                )
-                            }
-                        }
-                    }
-                }
+            try {
+                price = edit_itemPrice.text.toString().toDouble() ?: 1.0
+            } catch (e: Exception){
+                price = 1.0
+            }
+
+            if (::currentItemPhotoPath.isInitialized) {
+                item.value?.name = edit_itemTitle.text.toString()
+                item.value?.price = price
+                item.value?.desc = edit_itemDesc.text.toString()
+                item.value?.expiryDate = edit_itemExpiryDate.text.toString()
+                item.value?.location = edit_itemLocation.text.toString()
+
+                if (!cat.isNullOrEmpty())
+                    item.value?.category = cat ?: ""
+
+                if(!subCat.isNullOrEmpty())
+                    item.value?.subcategory = subCat ?: ""
+
+                if(!cond.isNullOrEmpty())
+                    item.value?.condition = cond ?: ""
+
+                item.value?.image = currentItemPhotoPath
+            } else {
+                item.value?.name = edit_itemTitle.text.toString()
+                item.value?.price = price
+                item.value?.desc = edit_itemDesc.text.toString()
+                item.value?.expiryDate = edit_itemExpiryDate.text.toString()
+                item.value?.location = edit_itemLocation.text.toString()
+                item.value?.category = cat ?: ""
+                item.value?.subcategory = subCat ?: ""
+                item.value?.condition = cond ?: ""
+            }
 
             outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
             rotationCount.value?.let { outState.putInt("rotation", it) }
