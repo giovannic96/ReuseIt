@@ -250,6 +250,11 @@ class EditProfileFragment : Fragment() {
         } else if((requestCode == REQUEST_CREATEIMAGE || requestCode == REQUEST_PICKIMAGE) && resultCode == AppCompatActivity.RESULT_CANCELED){
             currentPhotoPath = originalPhotPath ?: ""
             profile.value?.image = originalPhotPath
+
+            if(profile.value?.image.equals("")){
+                edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+            }
+
         } else {
             currentPhotoPath = originalPhotPath ?: ""
             profile.value?.image = originalPhotPath
