@@ -410,19 +410,20 @@ class ItemEditFragment: Fragment() {
             val value = item.value?.category
             // val pos = adapterCat.getPosition(value)
 
-            edit_itemCategory.setHint(value)
+            edit_itemCategory.setHint("\n${value}")
+            // edit_itemCategory.setSelection(pos)s
         }
         if(!item.value?.condition.isNullOrEmpty()){
             val value = item.value?.condition
             // val pos = adapterCond.getPosition(value)
 
-            edit_itemCondition.setHint(value.toString())
+            edit_itemCondition.setHint("\n${value}")
         }
         if(!item.value?.subcategory.isNullOrEmpty()){
             val value = item.value?.subcategory
             // val pos = adapterSubcat.getPosition(value)
 
-            edit_itemSubCategory.setHint(value.toString())
+            edit_itemSubCategory.setHint("\n${value}\n")
             // edit_itemSubCategory.setSelection(pos)
 
         }
