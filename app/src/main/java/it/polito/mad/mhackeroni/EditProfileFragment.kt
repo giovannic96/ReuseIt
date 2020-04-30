@@ -41,6 +41,8 @@ class EditProfileFragment : Fragment() {
     private val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 9002
     private lateinit var currentPhotoPath: String
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
+    private var startCamera = false
+    private var originalPhotPath = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_edit_profile, container, false)
@@ -63,12 +65,14 @@ class EditProfileFragment : Fragment() {
         if(!profileJSON.isNullOrEmpty()){
             profile.value = Profile.fromStringJSON(profileJSON)
             currentPhotoPath = profile.value?.image.toString()
+            originalPhotPath = currentPhotoPath
         }
 
         // Get saved value
         if(savedProfile != null) {
             profile.value = savedProfile
             currentPhotoPath = savedProfile.image.toString()
+            originalPhotPath = currentPhotoPath
         }
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -103,9 +107,11 @@ class EditProfileFragment : Fragment() {
             popupMenu.setOnMenuItemClickListener {
                 when(it.itemId) {
                     R.id.fromCamera -> {
+                        startCamera = true
                         dispatchTakePictureIntent()
                     }
                     R.id.fromGallery -> {
+                        startCamera = false
                         dispatchPickImageIntent()
                     }
                     else -> {
@@ -204,7 +210,8 @@ class EditProfileFragment : Fragment() {
 
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Permission granted
-                    dispatchTakePictureIntent()
+                    if(startCamera)
+                        dispatchTakePictureIntent()
                 } else {
                     Snackbar.make(edit_main_container, resources.getString(R.string.permission_err), Snackbar.LENGTH_SHORT)
                             .show()
@@ -240,6 +247,12 @@ class EditProfileFragment : Fragment() {
             currentPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentPhotoPath))
             rotationCount.value = 0
+        } else if((requestCode == REQUEST_CREATEIMAGE || requestCode == REQUEST_PICKIMAGE) && resultCode == AppCompatActivity.RESULT_CANCELED){
+            currentPhotoPath = originalPhotPath ?: ""
+            profile.value?.image = originalPhotPath
+        } else {
+            currentPhotoPath = originalPhotPath ?: ""
+            profile.value?.image = originalPhotPath
         }
     }
 
