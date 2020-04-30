@@ -205,10 +205,14 @@ class ItemEditFragment: Fragment() {
                 item.removeObservers(viewLifecycleOwner)
 
                 if(isAddingItem){
+                    if(cat.isNullOrEmpty())
+                        subCat = ""
                     item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
                         edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
                         edit_itemLocation.text.toString(), cond ?: "", null)
                 } else {
+                    if(cat.isNullOrEmpty())
+                        subCat = ""
                     item.value = Item(
                         oldItem?.id ?: -1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
                         edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
@@ -467,6 +471,11 @@ class ItemEditFragment: Fragment() {
         }
         if(!item.value?.subcategory.isNullOrEmpty()){
             val value = item.value?.subcategory
+
+
+           if (item.value?.category.isNullOrEmpty())
+            return
+
             // val pos = adapterSubcat.getPosition(value)
 
             adapterSubcat.notifyDataSetChanged()
