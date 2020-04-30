@@ -97,6 +97,167 @@ class ItemEditFragment: Fragment() {
             }
         }
 
+
+        handleDatePicker()
+
+        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if(item.value != null){
+                edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
+                edit_itemPrice.setText(
+                    item.value?.price.toString()
+                )
+                edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultDesc))
+                edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
+                edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
+
+                try {
+                    if(item.value?.image.isNullOrEmpty()){
+                        edit_itemImage.setImageResource(R.drawable.ic_box)
+
+                    } else {
+                        edit_itemImage.setImageBitmap(item.value?.image?.let {
+                                it1 -> ImageUtils.getBitmap(it1, requireContext())
+                        })
+                    }
+                } catch (e: Exception) {
+                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
+            val deg: Float = 90f * it
+            edit_itemImage.animate().rotation(deg).interpolator =
+                AccelerateDecelerateInterpolator()
+        })
+
+        edit_itemCamera.setOnClickListener {
+            val popupMenu=PopupMenu(requireContext(), edit_itemImage)
+            popupMenu.menuInflater.inflate(R.menu.context_menu_image, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.fromCamera -> {
+                        startCamera = true
+                        dispatchTakePictureIntent()
+                    }
+                    R.id.fromGallery -> {
+                        dispatchPickImageIntent()
+                    }
+                    else -> {
+                        // Nothing to do
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        }
+
+        btn_rotate_imageItem.setOnClickListener {
+            startCamera = false
+          if(::currentItemPhotoPath.isInitialized && currentItemPhotoPath.isNullOrEmpty()){
+              Snackbar
+                  .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
+                  .show()
+          } else  if(::currentItemPhotoPath.isInitialized
+                && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())
+                && hasExStoragePermission()){
+                rotationCount.value = rotationCount.value?.plus(1)
+            } else if(!hasExStoragePermission()) {
+                checkExStoragePermission()
+            } else{
+                Snackbar
+                    .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.edit_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
+        // Handle menu item selection
+        return when (menuItem.itemId) {
+            R.id.menu_save -> {
+
+                item.removeObservers(viewLifecycleOwner)
+
+                if(isAddingItem){
+                    item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
+                        edit_itemLocation.text.toString(), cond ?: "", null)
+                } else {
+                    item.value = Item(
+                        oldItem?.id ?: -1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
+                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null)
+                }
+
+
+                val nRotation = rotationCount.value
+
+                if(::currentItemPhotoPath.isInitialized){
+                    if (nRotation != null) {
+                        if(nRotation != 0 && nRotation.rem(4) != 0
+                            && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())){ // Save the edited photo
+                            ImageUtils.rotateImageFromUri(
+                                Uri.parse(currentItemPhotoPath),
+                                90.0F* nRotation,
+                                requireContext()
+                            )?.let {
+                                currentItemPhotoPath = ImageUtils.insertImage(requireActivity().contentResolver,
+                                    it
+                                ).toString()
+                            }
+                        }
+                    }
+                    item.value?.image = currentItemPhotoPath
+                }
+
+                if(isAddingItem) {
+                    item.value!!.id = IDGenerator.getNextID(requireContext())
+
+                    val bundle =
+                        bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
+
+                    view?.findNavController()
+                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+
+                }else {
+
+                    item.value!!.id = oldItem?.id ?: -1
+                    val fromList = arguments?.getBoolean("fromList", false)
+
+                    if(fromList!!){
+                        val bundle =
+                            bundleOf("edited_item" to item.value?.let { Item.toJSON(it).toString()},
+                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+                        view?.findNavController()
+                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                    } else {
+                        val bundle =
+                            bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString()},
+                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+                        view?.findNavController()
+                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
+                    }
+                }
+                return true
+            }
+            else -> super.onOptionsItemSelected(menuItem)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Used to solve lazy update issue
+        if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty()){
+            edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
+        }
+
         val categories = resources.getStringArray(R.array.categories)
         val subcategories = resources.getStringArray(R.array.subcategories)
         val arts = resources.getStringArray(R.array.arts)
@@ -256,176 +417,16 @@ class ItemEditFragment: Fragment() {
             val pos = adapterCond.getPosition(value)
 
             // edit_itemCondition.setSelection(pos)
+            edit_itemCondition.setHint(value.toString())
         }
         if(!item.value?.subcategory.isNullOrEmpty()){
             val value = item.value?.subcategory
             val pos = adapterSubcat.getPosition(value)
 
             // edit_itemSubCategory.setSelection(pos)
+
         }
 
-        handleDatePicker()
-
-        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if(item.value != null){
-                edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
-                edit_itemPrice.setText(
-                    item.value?.price.toString()
-                )
-                edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultDesc))
-                edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
-                edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
-
-                try {
-                    if(item.value?.image.isNullOrEmpty()){
-                        edit_itemImage.setImageResource(R.drawable.ic_box)
-
-                    } else {
-                        edit_itemImage.setImageBitmap(item.value?.image?.let {
-                                it1 -> ImageUtils.getBitmap(it1, requireContext())
-                        })
-                    }
-                } catch (e: Exception) {
-                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
-                }
-            }
-        })
-
-        rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
-            val deg: Float = 90f * it
-            edit_itemImage.animate().rotation(deg).interpolator =
-                AccelerateDecelerateInterpolator()
-        })
-
-        edit_itemCamera.setOnClickListener {
-            val popupMenu=PopupMenu(requireContext(), edit_itemImage)
-            popupMenu.menuInflater.inflate(R.menu.context_menu_image, popupMenu.menu)
-
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.fromCamera -> {
-                        startCamera = true
-                        dispatchTakePictureIntent()
-                    }
-                    R.id.fromGallery -> {
-                        dispatchPickImageIntent()
-                    }
-                    else -> {
-                        // Nothing to do
-                    }
-                }
-                true
-            }
-            popupMenu.show()
-        }
-
-        btn_rotate_imageItem.setOnClickListener {
-            startCamera = false
-          if(::currentItemPhotoPath.isInitialized && currentItemPhotoPath.isNullOrEmpty()){
-              Snackbar
-                  .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
-                  .show()
-          } else  if(::currentItemPhotoPath.isInitialized
-                && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())
-                && hasExStoragePermission()){
-                rotationCount.value = rotationCount.value?.plus(1)
-            } else if(!hasExStoragePermission()) {
-                checkExStoragePermission()
-            } else{
-                Snackbar
-                    .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.edit_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
-        // Handle menu item selection
-        return when (menuItem.itemId) {
-            R.id.menu_save -> {
-
-                item.removeObservers(viewLifecycleOwner)
-
-                if(isAddingItem){
-                    item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
-                        edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
-                        edit_itemLocation.text.toString(), cond ?: "", null)
-                } else {
-                    item.value = Item(
-                        oldItem?.id ?: -1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
-                        edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
-                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null)
-                }
-
-
-                val nRotation = rotationCount.value
-
-                if(::currentItemPhotoPath.isInitialized){
-                    if (nRotation != null) {
-                        if(nRotation != 0 && nRotation.rem(4) != 0
-                            && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())){ // Save the edited photo
-                            ImageUtils.rotateImageFromUri(
-                                Uri.parse(currentItemPhotoPath),
-                                90.0F* nRotation,
-                                requireContext()
-                            )?.let {
-                                currentItemPhotoPath = ImageUtils.insertImage(requireActivity().contentResolver,
-                                    it
-                                ).toString()
-                            }
-                        }
-                    }
-                    item.value?.image = currentItemPhotoPath
-                }
-
-                if(isAddingItem) {
-                    item.value!!.id = IDGenerator.getNextID(requireContext())
-
-                    val bundle =
-                        bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
-
-                    view?.findNavController()
-                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-
-                }else {
-
-                    item.value!!.id = oldItem?.id ?: -1
-                    val fromList = arguments?.getBoolean("fromList", false)
-
-                    if(fromList!!){
-                        val bundle =
-                            bundleOf("edited_item" to item.value?.let { Item.toJSON(it).toString()},
-                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
-                        view?.findNavController()
-                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-                    } else {
-                        val bundle =
-                            bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString()},
-                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
-                        view?.findNavController()
-                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
-                    }
-                }
-                return true
-            }
-            else -> super.onOptionsItemSelected(menuItem)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Used to solve lazy update issue
-        if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty()){
-            edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
