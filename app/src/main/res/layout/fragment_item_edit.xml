@@ -11,51 +11,50 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/edit_itemImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:contentDescription="@string/photo"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_box"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
+                android:id="@+id/edit_itemImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:contentDescription="@string/photo"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_box"/>
+
+            <ImageView
                 android:id="@+id/edit_itemCamera"
-                android:layout_width="63dp"
-                android:layout_height="63dp"
-                android:background="@drawable/ic_camera_background"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:clickable="true"
-                android:focusable="true"
+                android:contentDescription="@string/photo"
                 android:src="@drawable/ic_camera"
-                app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="13dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_rotate_imageItem"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@+id/edit_itemImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/btn_rotate_imageItem"
                 android:layout_width="63dp"
                 android:layout_height="63dp"
+                android:layout_marginTop="125dp"
+                android:layout_marginEnd="25dp"
                 android:background="@drawable/ic_camera_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_rotate"
                 app:civ_border_color="@color/colorPrimaryDark"
                 app:civ_border_width="13dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/edit_itemCamera" />
+                app:layout_constraintTop_toTopOf="@+id/edit_itemImage" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
