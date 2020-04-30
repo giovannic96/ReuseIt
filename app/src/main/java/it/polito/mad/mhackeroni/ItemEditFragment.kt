@@ -33,6 +33,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
@@ -48,6 +49,7 @@ class ItemEditFragment: Fragment() {
     private var oldItem: Item? = null
     private lateinit var currentItemPhotoPath: String
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
+    private val helperTextVisible: MutableLiveData<Boolean> = MutableLiveData()
     private val REQUEST_PICKIMAGE=9002
     private val REQUEST_CREATEIMAGE=9001
     private val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE=9002
@@ -76,6 +78,12 @@ class ItemEditFragment: Fragment() {
             rotationCount.value = rotationSaved
         else
             rotationCount.value = 0
+
+        val helperTextSaved = savedInstanceState?.getBoolean("helperText")
+        if(helperTextSaved != null)
+            helperTextVisible.value = helperTextSaved
+        else
+            helperTextVisible.value = true
 
         var itemJSON= arguments?.getString("item", "")
 
@@ -129,6 +137,13 @@ class ItemEditFragment: Fragment() {
             val deg: Float = 90f * it
             edit_itemImage.animate().rotation(deg).interpolator =
                 AccelerateDecelerateInterpolator()
+        })
+
+        helperTextVisible.observe(requireActivity(), androidx.lifecycle.Observer {
+            if(helperTextVisible.value == false)
+                edit_itemSubCategory_wrapper?.helperText = ""
+            else
+                edit_itemSubCategory_wrapper?.helperText = resources.getString(R.string.helper_subcat)
         })
 
         edit_itemCamera.setOnClickListener {
@@ -253,6 +268,7 @@ class ItemEditFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         // Used to solve lazy update issue
         if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty()){
             edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
@@ -377,7 +393,7 @@ class ItemEditFragment: Fragment() {
                 id: Long
             ) {
                 subCat = selectedCat[position]
-                edit_itemSubCategory_wrapper?.isHelperTextEnabled = false
+                helperTextVisible.value = false
             }
         }
 
@@ -594,14 +610,7 @@ class ItemEditFragment: Fragment() {
 
         if(this.isVisible) {
 
-            /*
-            val price: Double = if (edit_itemPrice.text.toString().isEmpty() || edit_itemPrice.text == null)
-                0.0
-            else
-                edit_itemPrice.text.toString().toDouble()
-             */
             val price = 1.0
-
             if (::currentItemPhotoPath.isInitialized)
                 item.value = cat?.let {
                     cond?.let { it1 ->
@@ -647,6 +656,7 @@ class ItemEditFragment: Fragment() {
 
             outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
             rotationCount.value?.let { outState.putInt("rotation", it) }
+            helperTextVisible.value?.let { outState.putBoolean("helperText", it) }
         }
     }
 
@@ -657,8 +667,10 @@ class ItemEditFragment: Fragment() {
         if (savedInstanceState != null) {
             val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
             val rotation = savedInstanceState.getInt("rotation")
+            val helperText = savedInstanceState.getBoolean("helperText")
 
             rotationCount.value = rotation
+            helperTextVisible.value = helperText
 
             if(savedItem != null){
                 item.value = savedItem

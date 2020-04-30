@@ -170,8 +170,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultSubCategory"
-            app:helperTextEnabled="true"
-            app:helperText="@string/helper_subcat"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
             <AutoCompleteTextView
