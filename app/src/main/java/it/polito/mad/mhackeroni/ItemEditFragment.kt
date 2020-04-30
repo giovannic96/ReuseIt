@@ -651,6 +651,9 @@ class ItemEditFragment: Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
+        if(isAddingItem && ::currentItemPhotoPath.isInitialized)
+            item.value?.image = currentItemPhotoPath ?: ""
+
         if(this.isVisible) {
             var price: Double
 
