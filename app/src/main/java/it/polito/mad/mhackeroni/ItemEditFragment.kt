@@ -651,8 +651,13 @@ class ItemEditFragment: Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        if(isAddingItem && ::currentItemPhotoPath.isInitialized)
+        if(item.value == null)
+            item.value = Item(-1,"",0.0,"","","","","","","")
+
+
+        if(isAddingItem && ::currentItemPhotoPath.isInitialized) {
             item.value?.image = currentItemPhotoPath ?: ""
+        }
 
         if(this.isVisible) {
             var price: Double
@@ -680,6 +685,7 @@ class ItemEditFragment: Fragment() {
                     item.value?.condition = cond ?: ""
 
                 item.value?.image = currentItemPhotoPath
+
             } else {
                 item.value?.name = edit_itemTitle.text.toString()
                 item.value?.price = price

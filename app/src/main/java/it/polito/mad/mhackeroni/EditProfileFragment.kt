@@ -156,6 +156,9 @@ class EditProfileFragment : Fragment() {
                     edit_mail.text.toString(), edit_location.text.toString(),
                     profile.value?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
 
+        if(profile.value?.image.isNullOrEmpty() )
+            profile.value!!.image = ""
+
 
         outState.putString("profile", profile.value?.let { Profile.toJSON(it).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }
