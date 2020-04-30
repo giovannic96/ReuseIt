@@ -189,7 +189,7 @@ class ItemDetailsFragment: Fragment() {
                     item.value = Item.fromStringJSON(oldItem)
 
                     if(item.value?.image.isNullOrEmpty()) {
-                        itemImage.setImageResource(R.drawable.ic_itemimage)
+                        itemImage.setImageResource(R.drawable.ic_box)
                     }
                     item.value?.let { storageHelper.editItem(sharedPref, it) }
 
