@@ -90,6 +90,10 @@ class ItemEditFragment: Fragment() {
         //NEW ITEM
         if(itemJSON.isNullOrEmpty()) {
             isAddingItem = true
+
+            val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
+            if(!savedItem?.image.isNullOrEmpty())
+                currentItemPhotoPath = savedItem?.image ?: ""
         }
         //EDIT ITEM
         else {
@@ -98,6 +102,8 @@ class ItemEditFragment: Fragment() {
             item.value = Item.fromStringJSON(itemJSON)
             oldItem = Item.fromStringJSON(itemJSON)
             currentItemPhotoPath = item.value?.image.toString()
+
+            Log.d("ULT2", currentItemPhotoPath)
 
             if (savedItem != null) {
                 item.value = savedItem // Get saved value
@@ -239,6 +245,7 @@ class ItemEditFragment: Fragment() {
                     }
                     item.value?.image = currentItemPhotoPath
                 }
+
 
                 if(isAddingItem) {
                     item.value!!.id = IDGenerator.getNextID(requireContext())
