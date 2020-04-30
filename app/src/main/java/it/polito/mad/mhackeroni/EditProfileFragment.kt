@@ -244,12 +244,22 @@ class EditProfileFragment : Fragment() {
                 }.toString()
                 File(oldPhoto).delete()
 
-                edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(currentPhotoPath, requireContext()))
+                val drawable = ImageUtils.getBitmap(currentPhotoPath, requireContext())
+                if(drawable != null)
+                    edit_showImageProfile.setImageBitmap(drawable)
+                else
+                    edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+
                 rotationCount.value = 0
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
-            edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
+            val drawable = ImageUtils.getBitmap(data?.data.toString(), requireContext())
+            if(drawable != null)
+                edit_showImageProfile.setImageBitmap(drawable)
+            else
+                edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+
             currentPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentPhotoPath))
             rotationCount.value = 0
