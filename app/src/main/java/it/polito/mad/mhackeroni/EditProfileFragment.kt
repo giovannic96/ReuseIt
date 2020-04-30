@@ -251,20 +251,25 @@ class EditProfileFragment : Fragment() {
             currentPhotoPath = originalPhotPath ?: ""
             profile.value?.image = originalPhotPath
 
-            if(profile.value?.image.equals("")){
+            if(originalPhotPath.isNullOrEmpty()){
                 edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
             }
 
         } else {
             currentPhotoPath = originalPhotPath ?: ""
             profile.value?.image = originalPhotPath
+
+
+            if(originalPhotPath.isNullOrEmpty()){
+                edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         // Used to solve lazy update issue
-        if(::currentPhotoPath.isInitialized){
+        if(::currentPhotoPath.isInitialized && !currentPhotoPath.isNullOrEmpty()){
             edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(currentPhotoPath, requireContext()))
         }
 
