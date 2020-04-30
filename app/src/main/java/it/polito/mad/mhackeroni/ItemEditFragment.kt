@@ -545,6 +545,7 @@ class ItemEditFragment: Fragment() {
         //build date picker and add callbacks
         val picker = builder.build()
         edit_itemExpiryDate.inputType = InputType.TYPE_NULL
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             edit_itemExpiryDate.focusable = View.NOT_FOCUSABLE
         } else {
@@ -552,6 +553,8 @@ class ItemEditFragment: Fragment() {
         }
 
         edit_itemExpiryDate.setOnClickListener {
+            edit_item_container.clearFocus()
+
             if(!pickerShowing) {
                 picker.show(parentFragmentManager, picker.toString())
                 pickerShowing = true
