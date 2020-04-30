@@ -36,6 +36,8 @@
         <action
             android:id="@+id/action_nav_ItemDetail_to_nav_ItemDetailEdit"
             app:destination="@id/nav_ItemDetailEdit"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@id/nav_ItemDetail"
             app:popUpToInclusive="true" />
         <action
@@ -55,7 +57,7 @@
             android:id="@+id/action_nav_ItemDetailEdit_to_nav_ItemDetail"
             app:destination="@id/nav_ItemDetail"
             app:popUpTo="@id/nav_ItemDetailEdit"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
         <action
             android:id="@+id/action_nav_ItemDetailEdit_to_nav_itemList"

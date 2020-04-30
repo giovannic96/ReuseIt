@@ -388,6 +388,7 @@ class ItemEditFragment: Fragment() {
                         android.R.layout.simple_spinner_item, automotives)
                         selectedCat = automotives
                     }
+
                 }
 
                 edit_itemSubCategory.setAdapter(adapterSubcat)
