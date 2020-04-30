@@ -79,10 +79,13 @@ class EditProfileFragment : Fragment() {
             try {
                 val draw = profile.value?.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) }
 
-                if(draw != null)
-                    edit_showImageProfile.setImageBitmap(profile.value?.image?.let {
-                        it1 -> ImageUtils.getBitmap(it1, requireContext())
-                })
+                if(draw != null) {
+                    edit_showImageProfile.setImageBitmap(profile.value?.image?.let { it1 ->
+                        ImageUtils.getBitmap(it1, requireContext())
+                    })
+                } else {
+                    edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+                }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
