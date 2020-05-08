@@ -3,6 +3,7 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,17 +16,22 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.StorageHelper
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
 
+    private val USER_ID = "user_id"
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
+    private lateinit var db: FirebaseFirestore
+    private lateinit var uid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        uid = intent.extras?.getString(USER_ID)!!
         setContentView(R.layout.activity_main)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -57,10 +63,13 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     }
 
     private fun updateHeader(context: Context) {
-        val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        val storageHelper =
-            StorageHelper(context)
-        val profile = storageHelper.loadProfile(sharedPref)
+        //val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        db = FirebaseFirestore.getInstance()
+
+        val storageHelper = StorageHelper(context)
+        val profile = storageHelper.loadProfile(db, uid)
+
+        Log.d("KKK", "PROFILE: " + profile.toString())
 
         val headerView = navView.getHeaderView(0)
         val navUsername = headerView.findViewById(R.id.drawable_name) as TextView
@@ -68,9 +77,6 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         val navImage = headerView.findViewById(R.id.drawable_pic) as ImageView
 
         if(profile != null) {
-
-
-
             if(profile.fullName.isNullOrEmpty())
                 navUsername.text = resources.getString(R.string.defaultFullName)
             else
@@ -80,7 +86,6 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
                 navEmail.text = resources.getString(R.string.defaultEmail)
             else
                 navEmail.text = profile.email
-
 
             navImage.setImageBitmap(profile.image?.let { ImageUtils.getBitmap(it, this) })
         } else {

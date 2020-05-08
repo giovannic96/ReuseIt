@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "321032157840",
+    "firebase_url": "https://reuseit-b2043.firebaseio.com",
+    "project_id": "reuseit-b2043",
+    "storage_bucket": "reuseit-b2043.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321032157840:android:88f82ce0b137561b0cb615",
+        "android_client_info": {
+          "package_name": "it.polito.mad.marketapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321032157840-km4jmeld0f8r2i8p1vmg9976p3594u4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYZ22DpnUuKnh-hFfXsqOZ7Z8_yul4XyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321032157840-km4jmeld0f8r2i8p1vmg9976p3594u4p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

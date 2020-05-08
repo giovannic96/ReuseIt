@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_show_profile.*
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_show_profile.*
 class ShowProfileFragment : Fragment() {
     var profile: MutableLiveData<Profile> = MutableLiveData()
     private lateinit var storageHelper: StorageHelper
+    private lateinit var db: FirebaseFirestore
     private var mListener: OnCompleteListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,15 +28,15 @@ class ShowProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        //val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        db = FirebaseFirestore.getInstance()
 
-        storageHelper =
-            StorageHelper(requireContext())
-        profile.value = storageHelper.loadProfile(sharedPref)
+        storageHelper = StorageHelper(requireContext())
+        profile.value = storageHelper.loadProfile(db, uid)
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
-                if(profile.value?.image.isNullOrEmpty()){
+                if(profile.value?.image.isNullOrEmpty()) {
                     imageProfile.setImageResource(R.drawable.ic_avatar)
                 } else {
                     imageProfile.setImageBitmap(profile.value?.image?.let { it1 ->
@@ -49,7 +51,7 @@ class ShowProfileFragment : Fragment() {
             bio.text = profile.value?.bio ?: resources.getString(R.string.defaultBio)
             nickname.text = profile.value?.nickname ?: resources.getString(R.string.defaultNickname)
             mail.text = profile.value?.email ?: resources.getString(R.string.defaultEmail)
-            phone_number.text = profile.value?.phoneNumber ?: resources.getString(R.string.defaultLocation)
+            phone_number.text = profile.value?.phoneNumber ?: resources.getString(R.string.defaultPhoneNumber)
             location.text = profile.value?.location ?: resources.getString(R.string.defaultLocation)
         })
 
@@ -102,7 +104,8 @@ class ShowProfileFragment : Fragment() {
 
     private fun getResult() {
         val newProfileJSON = arguments?.getString("new_profile", "")
-        val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        //val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        db = FirebaseFirestore.getInstance()
 
         val oldProfile = profile.value
 
@@ -115,14 +118,14 @@ class ShowProfileFragment : Fragment() {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     profile.value = oldProfile
                     if (oldProfile != null) {
-                        storageHelper.saveProfile(sharedPref, oldProfile)
+                        storageHelper.saveProfile(db, oldProfile)
                         mListener?.onComplete()
                     }
                 })
                 snackbar.show()
             }
         }
-        profile.value?.let { storageHelper.saveProfile(sharedPref, it) }
+        profile.value?.let { storageHelper.saveProfile(db, it) }
         mListener?.onComplete()
         arguments?.clear() // Clear arguments
     }
