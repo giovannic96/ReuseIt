@@ -5,6 +5,7 @@
     <string name="profile_sharedPref">profileSharedPref</string>
     <string name="item_sharedPref">itemSharedPref</string>
     <string name="itemList_sharedPref">itemListSharedPref</string>
+    <string name="defaultWelcome">Welcome to ReuseIt!</string>
     <string name="defaultFullName">Full name</string>
     <string name="defaultNickname">nickname</string>
     <string name="defaultEmail">email@address</string>
