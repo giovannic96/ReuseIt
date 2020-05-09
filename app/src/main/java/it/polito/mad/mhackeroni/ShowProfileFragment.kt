@@ -32,7 +32,7 @@ class ShowProfileFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
 
         storageHelper = StorageHelper(requireContext())
-        profile.value = storageHelper.loadProfile(db, uid)
+        //TODO OOOOOOOO profile.value = storageHelper.loadProfile(db, uid)
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
