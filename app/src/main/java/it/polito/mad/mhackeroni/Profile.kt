@@ -11,6 +11,8 @@ import java.util.*
 class Profile(var fullName:String, var nickname:String,
               var email:String, var location:String, var image: String?, var bio:String, var phoneNumber:String) : Serializable {
 
+    constructor() : this("", "", "", "", "", "", "")
+
     companion object Factory {
 
         fun fromStringJSON(jsonString:String) : Profile? {

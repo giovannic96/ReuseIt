@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "321032157840-8cf3gek78rcmgv0hupoao0fql6cdtom3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.polito.mad.marketapp",
+            "certificate_hash": "3c58554c6990e211ab250fef92c8f406fa1487cb"
+          }
+        },
+        {
+          "client_id": "321032157840-ic725kt8ssuu0s57dv8lbiun2tbuofin.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.polito.mad.marketapp",
+            "certificate_hash": "74029b7734ddd76387d05db862e5ec2088ded306"
+          }
+        },
+        {
           "client_id": "321032157840-km4jmeld0f8r2i8p1vmg9976p3594u4p.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "321032157840-km4jmeld0f8r2i8p1vmg9976p3594u4p.apps.googleusercontent.com",
+              "client_id": "321032157840-ip3is399f2egch3le1h5m9ddcbl28g3q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

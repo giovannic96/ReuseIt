@@ -116,7 +116,11 @@ class StorageHelper(context: Context?) {
                     val document = task.result
                     Log.d("KKK", document.toString())
                     if (document != null && document.exists()) {
-                        Log.d("KKK", document.id + " => " + document.data)
+                        val profile = document.toObject(Profile::class.java)
+                        Log.d("KKK", profile?.fullName)
+                        if(profile != null)
+                            retProfile = profile
+                        /*
                         if(!document.data.isNullOrEmpty()) {
                             retProfile = Profile(
                                 document.data!!["fullName"] as String,
@@ -126,7 +130,7 @@ class StorageHelper(context: Context?) {
                                 document.data!!["image"] as String,
                                 document.data!!["bio"] as String,
                                 document.data!!["phoneNumber"] as String)
-                        }
+                        }*/
                     }
                     else {
                         Log.w("KKK", "No such document. Now the document will be created")

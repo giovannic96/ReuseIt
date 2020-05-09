@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         val storageHelper = StorageHelper(context)
         val profile = storageHelper.loadProfile(db, uid)
 
+
         Log.d("KKK", "PROFILE: " + profile.toString())
 
         val headerView = navView.getHeaderView(0)
