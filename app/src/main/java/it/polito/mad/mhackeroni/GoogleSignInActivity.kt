@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import it.polito.mad.mhackeroni.utilities.DAO
 import kotlinx.android.synthetic.main.google_signin.*
 
 
@@ -33,6 +34,7 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
 
         sign_in_button.setSize(SignInButton.SIZE_STANDARD)
         sign_in_button.setOnClickListener(this)
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.

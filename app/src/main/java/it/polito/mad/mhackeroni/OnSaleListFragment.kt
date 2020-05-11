@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class ItemListFragment: Fragment() {
+class OnSaleListFragment: Fragment() {
 
     private var items: MutableList<Item> = mutableListOf()
     private lateinit var myAdapter:ItemAdapter
@@ -40,7 +39,7 @@ class ItemListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val vm : OnSaleListFragmentViewModel = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
-
+        
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
         })

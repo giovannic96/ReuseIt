@@ -51,12 +51,20 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         abstract fun bind(item: Item)
     }
 
+    // TODO: Delete this
     fun refresh(newItems: MutableList<Item>) {
         items.clear()
         // newItems.sort()
         items.addAll(newItems)
         notifyDataSetChanged()
     }
+
+    fun reload(newList : List<Item>){
+        items.clear()
+        items.addAll(newList)
+        notifyDataSetChanged()
+    }
+
 
     //class that handles list with items
     class ItemViewHolder(v: View, listener: MyAdapterListener): ViewHolder(v) {
