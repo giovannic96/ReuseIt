@@ -1,11 +1,13 @@
 package it.polito.mad.mhackeroni
 
+import android.app.Dialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.SearchView
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuItemCompat
@@ -120,6 +122,14 @@ class OnSaleListFragment: Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId){
+            R.id.menu_filter -> {
+                showFilterDialog()
+                return true
+            }
+        }
+
         return super.onOptionsItemSelected(item)
 
     }
@@ -206,5 +216,31 @@ class OnSaleListFragment: Fragment() {
 
             myAdapter.reload(it.filter { item -> searchFilter.match(item) })
         })
+    }
+
+    private fun showFilterDialog() {
+        val dialog = Dialog(requireActivity())
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.filter_dialog_box)
+
+        val okBtn = dialog.findViewById<Button>(R.id.filter_ok_btn)
+        val cancelBtn = dialog.findViewById<Button>(R.id.filter_cancel_btn)
+
+        okBtn.setOnClickListener {
+            dialog.dismiss()
+
+            // updateFilter()
+        }
+
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        // TODO: Handle the selected values - fix the layout
+
+        dialog.show()
+
     }
 }

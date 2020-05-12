@@ -22,4 +22,5 @@
         <item name="android:maxLines">1</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
+
 </resources>
