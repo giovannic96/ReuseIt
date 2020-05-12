@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.SearchView
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuItemCompat
@@ -220,25 +221,23 @@ class OnSaleListFragment: Fragment() {
 
     private fun showFilterDialog() {
         val dialog = Dialog(requireActivity())
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.filter_dialog_box)
-
         val okBtn = dialog.findViewById<Button>(R.id.filter_ok_btn)
         val cancelBtn = dialog.findViewById<Button>(R.id.filter_cancel_btn)
 
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.filter_dialog_box)
+
+        // TODO: Handle the selected values - fix the layout
+
         okBtn.setOnClickListener {
             dialog.dismiss()
-
             // updateFilter()
         }
 
         cancelBtn.setOnClickListener {
             dialog.dismiss()
         }
-
-        // TODO: Handle the selected values - fix the layout
 
         dialog.show()
 
