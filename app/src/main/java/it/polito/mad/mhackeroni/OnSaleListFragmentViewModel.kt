@@ -29,7 +29,7 @@ class OnSaleListFragmentViewModel : ViewModel() {
         return items
     }
 
-    private suspend fun getDataFromDAO() = withContext(Dispatchers.IO){
+    private suspend fun getDataFromDAO()  = withContext(Dispatchers.IO){
         val dao : DAO = DAO.instance
         val data = async { dao.getItems()}
 
