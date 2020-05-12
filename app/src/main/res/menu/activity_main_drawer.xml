@@ -7,9 +7,20 @@
             android:id="@id/nav_showProfile"
             android:icon="@drawable/ic_person_solid"
             android:title="@string/profile_nav" />
+
         <item
             android:id="@id/nav_itemList"
             android:icon="@drawable/ic_list_24dp"
+            android:title="@string/my_items_nav" />
+
+        <item
+            android:id="@id/nav_itemListSale"
+            android:icon="@drawable/ic_shopping_cart"
             android:title="@string/items_nav" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_exit"
+            android:title="@string/logout_title" />
     </group>
 </menu>

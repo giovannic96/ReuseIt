@@ -1,21 +1,20 @@
 package it.polito.mad.mhackeroni
 
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.StorageHelper
@@ -43,23 +42,35 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_showProfile, R.id.nav_itemList), drawerLayout)
+                R.id.nav_showProfile, R.id.nav_itemList, R.id.nav_itemListSale), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        updateHeader(this)
-    }
+        navView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
+            val id = menuItem.itemId
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //TODO:
-        // menuInflater.inflate(R.menu., menu)
-        return true
+            if (id == R.id.nav_logout) {
+                logout()
+            }
+
+            NavigationUI.onNavDestinationSelected(menuItem, navController)
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        })
+        updateHeader(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun logout(){
+        val auth = FirebaseAuth.getInstance()
+        auth.signOut()
+
+        val i = Intent(this, GoogleSignInActivity::class.java)
+        startActivity(i)
     }
 
     private fun updateHeader(context: Context) {

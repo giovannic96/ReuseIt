@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -18,21 +15,18 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
-import it.polito.mad.mhackeroni.utilities.DAO
+
 import it.polito.mad.mhackeroni.utilities.StorageHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 class OnSaleListFragment: Fragment() {
 
     private var items: MutableList<Item> = mutableListOf()
     private lateinit var myAdapter:ItemAdapter
-    private lateinit var viewModel: OnSaleListFragmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_itemlist, container, false)
+        val v = inflater.inflate(R.layout.fragment_itemlist_sale, container, false)
+        setHasOptionsMenu(true)
+        return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,20 +38,22 @@ class OnSaleListFragment: Fragment() {
             myAdapter.reload(it)
         })
 
-        val itemList:RecyclerView = view.findViewById(R.id.item_list)
+        val itemList:RecyclerView = view.findViewById(R.id.item_list_sale)
 
-        val fab:FloatingActionButton = view.findViewById(R.id.fab)
+        val fab:FloatingActionButton = view.findViewById(R.id.fab_sale)
         fab.setOnClickListener {
             navigateWithoutInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit)
         }
 
         myAdapter = ItemAdapter(items, object : MyAdapterListener {
+
             override fun editItemViewOnClick(item: Item) {
-                navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit, item)
+                // TODO: REMOVE ALL EDIT REFERENCES
+                // navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit, item)
             }
 
             override fun itemViewOnClick(item: Item) {
-                navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetail, item)
+                navigateWithInfo(R.id.action_nav_itemListSale_to_nav_ItemDetail, item)
             }
         })
         itemList.adapter = myAdapter
@@ -78,9 +74,18 @@ class OnSaleListFragment: Fragment() {
         // myAdapter.refresh(storageHelper.loadItemList(sharedPref));
 
     }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.fragment_filter_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+
+        // TODO: Handle search - filters
+    }
 
     private fun navigateWithInfo(layoutId: Int, item: Item) {
         val bundle = Bundle()
+
+        // TODO pass whole item or just document ID
+
         bundle.putString("item", item.let { Item.toJSON(it).toString()})
         bundle.putBoolean("fromList", true)
         view?.findNavController()?.navigate(layoutId, bundle)
@@ -93,6 +98,9 @@ class OnSaleListFragment: Fragment() {
     }
 
     private fun getResultAndUpdateList(recyclerView: RecyclerView) {
+
+        // TODO: Check this
+
         val newItemJSON = arguments?.getString("new_item", "")
         if(!newItemJSON.isNullOrEmpty()) {
             insertSingleItem(newItemJSON.let { Item.fromStringJSON(it) }) //update list
@@ -116,6 +124,8 @@ class OnSaleListFragment: Fragment() {
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
+
+        // TODO: not necessary
         val storageHelper =
             StorageHelper(requireContext())
         val sharedPref:SharedPreferences = requireContext()

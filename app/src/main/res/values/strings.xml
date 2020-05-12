@@ -54,6 +54,11 @@
     <string name="frag_item_title">Item</string>
     <string name="frag_profile_title">Profile</string>
     <string name="helper_subcat">Remember to enter a category</string>
+    <string name="search_title">Search...</string>
+    <string name="filter_title">Filters</string>
+    <string name="logout_title">Logout</string>
+    <string name="my_items_nav">My adverts</string>
+    <string name="on_sale_title">Ads</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

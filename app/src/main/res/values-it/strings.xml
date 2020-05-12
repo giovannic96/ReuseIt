@@ -55,6 +55,11 @@
     <string name="frag_item_title">Articolo</string>
     <string name="frag_profile_title">Profilo</string>
     <string name="helper_subcat">Ricordati di inserire una categoria</string>
+    <string name="search_title">Cerca...</string>
+    <string name="filter_title">Filtri</string>
+    <string name="logout_title">Logout</string>
+    <string name="my_items_nav">Le mie inserzioni</string>
+    <string name="on_sale_title">Annunci</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>
