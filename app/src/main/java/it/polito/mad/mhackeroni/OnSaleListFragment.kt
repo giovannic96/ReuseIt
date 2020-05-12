@@ -221,8 +221,6 @@ class OnSaleListFragment: Fragment() {
 
     private fun showFilterDialog() {
         val dialog = Dialog(requireActivity())
-        val okBtn = dialog.findViewById<Button>(R.id.filter_ok_btn)
-        val cancelBtn = dialog.findViewById<Button>(R.id.filter_cancel_btn)
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -230,6 +228,8 @@ class OnSaleListFragment: Fragment() {
 
         // TODO: Handle the selected values - fix the layout
 
+        val okBtn = dialog.findViewById<Button>(R.id.filter_ok_btn)
+        val cancelBtn = dialog.findViewById<Button>(R.id.filter_cancel_btn)
         okBtn.setOnClickListener {
             dialog.dismiss()
             // updateFilter()
