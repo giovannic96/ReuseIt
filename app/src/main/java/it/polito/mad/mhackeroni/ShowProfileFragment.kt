@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,6 +20,8 @@ class ShowProfileFragment : Fragment() {
     private lateinit var storageHelper: StorageHelper
     private lateinit var db: FirebaseFirestore
     private var mListener: OnCompleteListener? = null
+    private lateinit var vm : OnSaleListFragmentViewModel
+    private lateinit var uid: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -28,11 +31,15 @@ class ShowProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         db = FirebaseFirestore.getInstance()
-
+        uid = arguments?.getString("uid")!!
+        vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
+        vm.uid = uid
         storageHelper = StorageHelper(requireContext())
-        //TODO OOOOOOOO profile.value = storageHelper.loadProfile(db, uid)
+
+        vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            profile.value = it
+        })
 
         profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
@@ -119,14 +126,14 @@ class ShowProfileFragment : Fragment() {
                     profile.value = oldProfile
                     if (oldProfile != null) {
                         storageHelper.saveProfile(db, oldProfile)
-                        mListener?.onComplete()
+                        mListener?.onComplete(oldProfile)
                     }
                 })
                 snackbar.show()
             }
         }
         profile.value?.let { storageHelper.saveProfile(db, it) }
-        mListener?.onComplete()
+        profile.value?.let { mListener?.onComplete(it) }
         arguments?.clear() // Clear arguments
     }
 
@@ -140,6 +147,6 @@ class ShowProfileFragment : Fragment() {
     }
 
     interface OnCompleteListener {
-        fun onComplete()
+        fun onComplete(profile: Profile)
     }
 }

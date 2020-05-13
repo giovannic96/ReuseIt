@@ -43,6 +43,7 @@ class EditProfileFragment : Fragment() {
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
     private var startCamera = false
     private var originalPhotPath = ""
+    private lateinit var uid: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_edit_profile, container, false)
@@ -52,6 +53,7 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        uid = arguments?.getString("uid")!!
 
         val profileJSON = arguments?.getString("profile", "")
         val savedProfile = savedInstanceState?.getString("profile")?.let { Profile.fromStringJSON(it) }
@@ -203,7 +205,10 @@ class EditProfileFragment : Fragment() {
                     profile.value!!.image = currentPhotoPath
                 }
 
-                val bundle = bundleOf("new_profile" to profile.value?.let { Profile.toJSON(it).toString() })
+                val bundle = bundleOf(
+                    "new_profile" to profile.value?.let { Profile.toJSON(it).toString() },
+                    "uid" to uid
+                )
                 view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
 
                 return true

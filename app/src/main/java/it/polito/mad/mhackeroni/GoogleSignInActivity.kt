@@ -79,7 +79,6 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
                 // FirebaseUser.getToken() instead.
                 uid = user.uid
             }
-            Log.d("KKK", "$name $email $photoUrl $emailVerified $uid")
             val i = Intent(this, MainActivity::class.java)
             i.putExtra(USER_ID, uid)
             startActivity(i)

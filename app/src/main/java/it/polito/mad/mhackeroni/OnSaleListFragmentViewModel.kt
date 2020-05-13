@@ -6,22 +6,37 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.mhackeroni.utilities.DAO
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
+enum class DataTypes {
+    PROFILE, ITEMS
+}
 
 class OnSaleListFragmentViewModel : ViewModel() {
-   private val items : MutableLiveData<List<Item>> by lazy{
-       MutableLiveData<List<Item>>().also {
-           loadItems()
-       }
-   }
 
-    private fun loadItems(){
+    var uid: String = "" //id of the logged user
+
+    private val items : MutableLiveData<List<Item>> by lazy {
+        MutableLiveData<List<Item>>().also {
+            loadItems()
+        }
+    }
+
+    private val profile : MutableLiveData<Profile> by lazy {
+        MutableLiveData<Profile>().also {
+            loadProfile()
+        }
+    }
+
+    private fun loadItems() {
         viewModelScope.launch {
-            getDataFromDAO()
+            getDataFromDAO(DataTypes.ITEMS)
+        }
+    }
+
+    private fun loadProfile() {
+        viewModelScope.launch {
+            getDataFromDAO(DataTypes.PROFILE)
         }
     }
 
@@ -29,16 +44,29 @@ class OnSaleListFragmentViewModel : ViewModel() {
         return items
     }
 
-    private suspend fun getDataFromDAO()  = withContext(Dispatchers.IO){
+    fun getProfile() :LiveData<Profile> {
+        return profile
+    }
+
+    private suspend fun getDataFromDAO(type:DataTypes)  = withContext(Dispatchers.IO) {
         val dao : DAO = DAO.instance
-        val data = async { dao.getItems()}
 
-        try {
-            items.postValue(data.await())
-        } catch (e : Exception)  {
-            items.postValue(listOf())
+        if(type == DataTypes.ITEMS) {
+            val data = async { dao.getItems() }
+            try {
+                items.postValue(data.await())
+            } catch (e : Exception)  {
+                items.postValue(listOf())
+            }
         }
-
+        else {
+            val data = async { dao.getProfileById(uid) }
+            try {
+                profile.postValue(data.await())
+            } catch (e : Exception)  {
+                profile.postValue(Profile())
+            }
+        }
     }
 }
 

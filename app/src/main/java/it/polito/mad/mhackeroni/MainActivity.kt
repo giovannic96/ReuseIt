@@ -9,8 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
@@ -27,10 +30,14 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     private lateinit var navView: NavigationView
     private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
+    private lateinit var vm : OnSaleListFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         uid = intent.extras?.getString(USER_ID)!!
+        vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
+        vm.uid = uid
+
         setContentView(R.layout.activity_main)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -47,17 +54,21 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         navView.setupWithNavController(navController)
 
         navView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
-            val id = menuItem.itemId
-
-            if (id == R.id.nav_logout) {
-                logout()
+            when(menuItem.itemId) {
+                R.id.nav_logout -> logout()
+                R.id.nav_showProfile -> {
+                    val bundle = bundleOf("uid" to uid)
+                    navController.navigate(R.id.nav_showProfile, bundle)
+                }
             }
-
             NavigationUI.onNavDestinationSelected(menuItem, navController)
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         })
-        updateHeader(this)
+        initialHeader()
+        vm.getProfile().observe(this, Observer {
+            updateHeader(it)
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -73,40 +84,36 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         startActivity(i)
     }
 
-    private fun updateHeader(context: Context) {
-        //val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+    private fun updateHeader(profile: Profile) {
         db = FirebaseFirestore.getInstance()
-
-        val storageHelper = StorageHelper(context)
-        val profile = storageHelper.loadProfile(db, uid)
-
-
-        Log.d("KKK", "PROFILE: " + profile.toString())
 
         val headerView = navView.getHeaderView(0)
         val navUsername = headerView.findViewById(R.id.drawable_name) as TextView
         val navEmail = headerView.findViewById(R.id.drawable_mail) as TextView
         val navImage = headerView.findViewById(R.id.drawable_pic) as ImageView
 
-        if(profile != null) {
-            if(profile.fullName.isNullOrEmpty())
-                navUsername.text = resources.getString(R.string.defaultFullName)
-            else
-                navUsername.text = profile.fullName
-
-            if(profile.email.isNullOrEmpty())
-                navEmail.text = resources.getString(R.string.defaultEmail)
-            else
-                navEmail.text = profile.email
-
-            navImage.setImageBitmap(profile.image?.let { ImageUtils.getBitmap(it, this) })
-        } else {
+        if(profile.fullName.isNullOrEmpty())
             navUsername.text = resources.getString(R.string.defaultFullName)
+        else
+            navUsername.text = profile.fullName
+
+        if(profile.email.isNullOrEmpty())
             navEmail.text = resources.getString(R.string.defaultEmail)
-        }
+        else
+            navEmail.text = profile.email
+
+        navImage.setImageBitmap(profile.image?.let { ImageUtils.getBitmap(it, this) })
     }
 
-    override fun onComplete() {
-        updateHeader(this)
+    private fun initialHeader() {
+        val headerView = navView.getHeaderView(0)
+        val navUsername = headerView.findViewById(R.id.drawable_name) as TextView
+        val navEmail = headerView.findViewById(R.id.drawable_mail) as TextView
+        navUsername.text = resources.getString(R.string.defaultFullName)
+        navEmail.text = resources.getString(R.string.defaultEmail)
+    }
+
+    override fun onComplete(profile: Profile) {
+        updateHeader(profile)
     }
 }
