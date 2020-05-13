@@ -61,6 +61,17 @@
     <string name="logout_title">Logout</string>
     <string name="my_items_nav">Le mie inserzioni</string>
     <string name="on_sale_title">Annunci</string>
+    <string name="price_min">Prezzo minimo</string>
+    <string name="price_max">Prezzo massimo</string>
+
+    <string name="filter_tv">Applica filtri</string>
+
+    <string name="cond_new">Nuovo</string>
+    <string name="cond_as_new">Come nuovo</string>
+    <string name="cond_opt">Ottimo</string>
+    <string name="cond_good">Buono</string>
+    <string name="cond_acc">Accettabile</string>
+
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>
@@ -72,11 +83,11 @@
         <item>Automobilistica</item>
     </string-array>
     <string-array name="conditions">
-        <item>Nuovo</item>
-        <item>Come nuovo</item>
-        <item>Ottimo</item>
-        <item>Buono</item>
-        <item>Accettabile</item>
+        <item>@string/cond_new</item>
+        <item>@string/cond_as_new</item>
+        <item>@string/cond_opt</item>
+        <item>@string/cond_good</item>
+        <item>@string/cond_acc</item>
     </string-array>
     <string-array name="arts">
         <item>Pittura, Disegno &amp; Accessori</item>
