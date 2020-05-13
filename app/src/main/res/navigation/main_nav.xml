@@ -7,6 +7,10 @@
         android:id="@+id/nav_showProfile"
         android:name="it.polito.mad.mhackeroni.ShowProfileFragment"
         android:label="@string/frag_profile_title">
+        <argument
+            android:name="uid"
+            app:argType="string"
+            android:defaultValue="null" />
         <action
             android:id="@+id/action_nav_showProfile_to_nav_editProfile"
             app:destination="@id/nav_editProfile"

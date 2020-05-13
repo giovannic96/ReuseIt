@@ -3,11 +3,14 @@ package it.polito.mad.mhackeroni
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.app.Person.fromBundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.mhackeroni.utilities.ImageUtils
@@ -106,6 +109,7 @@ class ShowProfileFragment : Fragment() {
     private fun editProfile() {
         val bundle = Bundle()
         bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
+        bundle.putString("uid", uid)
         view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
     }
 

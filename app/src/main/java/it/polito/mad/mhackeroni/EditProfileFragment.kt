@@ -14,6 +14,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
@@ -209,6 +210,7 @@ class EditProfileFragment : Fragment() {
                     "new_profile" to profile.value?.let { Profile.toJSON(it).toString() },
                     "uid" to uid
                 )
+                Log.d("KKK", "UID: $uid")
                 view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
 
                 return true

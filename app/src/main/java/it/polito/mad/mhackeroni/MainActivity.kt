@@ -1,12 +1,9 @@
 package it.polito.mad.mhackeroni
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -20,7 +17,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.mhackeroni.utilities.ImageUtils
-import it.polito.mad.mhackeroni.utilities.StorageHelper
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
@@ -49,14 +45,14 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_showProfile, R.id.nav_itemList, R.id.nav_itemListSale), drawerLayout)
+                R.id.nav_itemList, R.id.nav_itemListSale), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         navView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.nav_logout -> logout()
-                R.id.nav_showProfile -> {
+                R.id.nav_show_profile -> {
                     val bundle = bundleOf("uid" to uid)
                     navController.navigate(R.id.nav_showProfile, bundle)
                 }
