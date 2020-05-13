@@ -7,6 +7,8 @@ import java.io.Serializable
 import java.util.*
 
 class Item(var id: Int, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var user : String = "null") : Serializable {
+    constructor() : this(0, "", 0.0, "", "", "", "", "", "", "", "")
+
     companion object Factory {
 
         fun fromStringJSON(jsonString: String): Item? {
@@ -22,6 +24,7 @@ class Item(var id: Int, var name:String, var price:Double, var desc:String, var 
                     null
             }
         }
+
 
         private fun fromJSON(jsonObject: JSONObject): Item {
             return Item(

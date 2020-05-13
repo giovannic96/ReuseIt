@@ -2,10 +2,8 @@ package it.polito.mad.mhackeroni.utilities
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
 import it.polito.mad.mhackeroni.Item
 import it.polito.mad.mhackeroni.Profile
-import java.sql.Timestamp
 
 // DAO singleton class
 public class DAO private constructor() {
@@ -25,25 +23,12 @@ public class DAO private constructor() {
 
         db.collection("items")
             .get()
-            .addOnCompleteListener{
-                if (it.isSuccessful) {
-                    for (document in it.result!!) {
-                        Log.d("MAD2020", document.id + " => " + document.data)
-
-                        items.add(Item(
-                            (document.get("id") as Long).toInt(),
-                            document.get("name") as String,
-                            document.get("price") as Double,
-                            document.get("description") as String,
-                            document.get("category") as String,
-                            document.get("subcategory") as String,
-                            (document.get("expire_date") as com.google.firebase.Timestamp).toString(),
-                            (document.get("location") as GeoPoint).toString(),
-                            document.get("condition") as String,
-                            null))
+            .addOnSuccessListener{
+                for (document in it.documents) {
+                    val item = document.toObject(Item::class.java)
+                    if (item != null) {
+                        items.add(item)
                     }
-                } else {
-                  throw it.exception!!
                 }
             }
             return items
@@ -76,7 +61,7 @@ public class DAO private constructor() {
     }
 
     private fun createUserDocument(docName: String) {
-        val profileDetails = hashMapOf (
+        val profileDetails = hashMapOf(
             "fullName" to "",
             "nickname" to "",
             "email" to "",
@@ -89,5 +74,17 @@ public class DAO private constructor() {
             .set(profileDetails)
             .addOnSuccessListener { Log.d("KKK", "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w("KKK", "Error writing document", e) }
+    }
+
+    fun insertItem(item: Item) {
+        db.collection("items")
+            .add(item)
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    Log.d("KKK","Add item: ${item.name}")
+                } else {
+                    throw it.exception!!
+                }
+            }
     }
 }

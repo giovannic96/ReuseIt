@@ -60,6 +60,17 @@
     <string name="logout_title">Logout</string>
     <string name="my_items_nav">My adverts</string>
     <string name="on_sale_title">Ads</string>
+    <string name="price_min">Minimun price</string>
+    <string name="price_max">Maximum price</string>
+
+    <string name="filter_tv">Apply filters</string>
+
+    <string name="cond_new">New</string>
+    <string name="cond_as_new">As new</string>
+    <string name="cond_opt">Optimal</string>
+    <string name="cond_good">Good</string>
+    <string name="cond_acc">Acceptable</string>
+
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>
@@ -71,11 +82,11 @@
         <item>Automotive</item>
     </string-array>
     <string-array name="conditions">
-        <item>New</item>
-        <item>As new</item>
-        <item>Optimal</item>
-        <item>Good</item>
-        <item>Acceptable</item>
+        <item>@string/cond_new</item>
+        <item>@string/cond_as_new</item>
+        <item>@string/cond_opt</item>
+        <item>@string/cond_good</item>
+        <item>@string/cond_acc</item>
     </string-array>
     <string-array name="arts">
         <item>Painting, Drawing &amp; Art Supplies</item>
