@@ -26,7 +26,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
@@ -44,7 +46,6 @@ class EditProfileFragment : Fragment() {
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
     private var startCamera = false
     private var originalPhotPath = ""
-    private lateinit var uid: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_edit_profile, container, false)
@@ -54,7 +55,6 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        uid = arguments?.getString("uid")!!
 
         val profileJSON = arguments?.getString("profile", "")
         val savedProfile = savedInstanceState?.getString("profile")?.let { Profile.fromStringJSON(it) }
@@ -207,10 +207,8 @@ class EditProfileFragment : Fragment() {
                 }
 
                 val bundle = bundleOf(
-                    "new_profile" to profile.value?.let { Profile.toJSON(it).toString() },
-                    "uid" to uid
+                    "new_profile" to profile.value?.let { Profile.toJSON(it).toString() }
                 )
-                Log.d("KKK", "UID: $uid")
                 view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
 
                 return true

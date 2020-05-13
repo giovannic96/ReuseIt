@@ -1,6 +1,8 @@
 package it.polito.mad.mhackeroni
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,16 +23,17 @@ import it.polito.mad.mhackeroni.utilities.ImageUtils
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
 
-    private val USER_ID = "user_id"
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
     private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
     private lateinit var vm : OnSaleListFragmentViewModel
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        uid = intent.extras?.getString(USER_ID)!!
+        sharedPref = applicationContext.getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        uid = sharedPref.getString(getString(R.string.uid), "")!!
         vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
         vm.uid = uid
 
@@ -45,17 +48,13 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_itemList, R.id.nav_itemListSale), drawerLayout)
+                R.id.nav_showProfile, R.id.nav_itemList, R.id.nav_itemListSale), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         navView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.nav_logout -> logout()
-                R.id.nav_show_profile -> {
-                    val bundle = bundleOf("uid" to uid)
-                    navController.navigate(R.id.nav_showProfile, bundle)
-                }
             }
             NavigationUI.onNavDestinationSelected(menuItem, navController)
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -72,10 +71,13 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    private fun logout(){
+    private fun logout() {
         val auth = FirebaseAuth.getInstance()
         auth.signOut()
-
+        with (sharedPref.edit()) {
+            putString(getString(R.string.uid), "")
+            commit()
+        }
         val i = Intent(this, GoogleSignInActivity::class.java)
         startActivity(i)
     }

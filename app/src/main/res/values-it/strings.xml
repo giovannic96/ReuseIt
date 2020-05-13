@@ -63,9 +63,8 @@
     <string name="on_sale_title">Annunci</string>
     <string name="price_min">Prezzo minimo</string>
     <string name="price_max">Prezzo massimo</string>
-
+    <string name="uid">uid</string>
     <string name="filter_tv">Applica filtri</string>
-
     <string name="cond_new">Nuovo</string>
     <string name="cond_as_new">Come nuovo</string>
     <string name="cond_opt">Ottimo</string>

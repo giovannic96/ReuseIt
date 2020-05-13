@@ -1,6 +1,8 @@
 package it.polito.mad.mhackeroni
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -24,9 +26,9 @@ import kotlinx.android.synthetic.main.google_signin.*
 class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
 
     private val RC_SIGN_IN = 9010
-    private val USER_ID = "user_id"
     private lateinit var mGoogleSignInClient:GoogleSignInClient
     private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,6 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
 
         sign_in_button.setSize(SignInButton.SIZE_STANDARD)
         sign_in_button.setOnClickListener(this)
-
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -79,8 +80,12 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
                 // FirebaseUser.getToken() instead.
                 uid = user.uid
             }
+            sharedPref = applicationContext.getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+            with (sharedPref.edit()) {
+                putString(getString(R.string.uid), uid)
+                commit()
+            }
             val i = Intent(this, MainActivity::class.java)
-            i.putExtra(USER_ID, uid)
             startActivity(i)
             finish()
         }

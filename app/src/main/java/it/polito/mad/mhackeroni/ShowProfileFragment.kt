@@ -25,6 +25,7 @@ class ShowProfileFragment : Fragment() {
     private var mListener: OnCompleteListener? = null
     private lateinit var vm : OnSaleListFragmentViewModel
     private lateinit var uid: String
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -35,9 +36,11 @@ class ShowProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         db = FirebaseFirestore.getInstance()
-        uid = arguments?.getString("uid")!!
+        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        uid = sharedPref.getString(getString(R.string.uid), "")!!
         vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
         vm.uid = uid
+        Log.d("KKK", "UID: ${vm.uid}")
         storageHelper = StorageHelper(requireContext())
 
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -109,13 +112,11 @@ class ShowProfileFragment : Fragment() {
     private fun editProfile() {
         val bundle = Bundle()
         bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
-        bundle.putString("uid", uid)
         view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
     }
 
     private fun getResult() {
         val newProfileJSON = arguments?.getString("new_profile", "")
-        //val sharedPref:SharedPreferences = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         db = FirebaseFirestore.getInstance()
 
         val oldProfile = profile.value
