@@ -31,10 +31,14 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import it.polito.mad.mhackeroni.utilities.DAO
 import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_item_edit.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.text.DateFormat
@@ -246,6 +250,16 @@ class ItemEditFragment: Fragment() {
 
                 if(isAddingItem) {
                     item.value!!.id = IDGenerator.getNextID(requireContext())
+
+                    // TEST
+                    runBlocking {
+                        val entry = item.value
+                        if (entry != null) {
+                            // TODO: -> item.value.user = ""
+                            addItem(entry)
+                        }
+                    }
+                    // TEST
 
                     val bundle =
                         bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
@@ -772,6 +786,14 @@ class ItemEditFragment: Fragment() {
         } else {
             // Permission has already been granted
             return true
+        }
+    }
+
+    suspend fun addItem(item : Item){
+        val dao : DAO = DAO.instance
+
+        withContext(Dispatchers.IO){
+            dao.insertItem(item)
         }
     }
 

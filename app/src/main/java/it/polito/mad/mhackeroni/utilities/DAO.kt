@@ -24,29 +24,29 @@ public class DAO private constructor() {
 
         db.collection("items")
             .get()
-            .addOnCompleteListener{
-                if (it.isSuccessful) {
-                    for (document in it.result!!) {
-                        Log.d("MAD2020", document.id + " => " + document.data)
+            .addOnSuccessListener{
 
-                        items.add(Item(
-                            (document.get("id") as Long).toInt(),
-                            document.get("name") as String,
-                            document.get("price") as Double,
-                            document.get("description") as String,
-                            document.get("category") as String,
-                            document.get("subcategory") as String,
-                            (document.get("expire_date") as com.google.firebase.Timestamp).toString(),
-                            (document.get("location") as GeoPoint).toString(),
-                            document.get("condition") as String,
-                            null))
+                for (document in it.documents) {
+                    val item = document.toObject(Item::class.java)
 
+                    if (item != null) {
+                        items.add(item)
                     }
-                } else {
-                  throw it.exception!!
                 }
             }
 
             return items
+    }
+
+    fun insertItem(item: Item){
+        db.collection("items")
+            .add(item)
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    Log.d("MAG","Add item: ${item.name}")
+                } else {
+                    throw it.exception!!
+                }
+            }
     }
 }
