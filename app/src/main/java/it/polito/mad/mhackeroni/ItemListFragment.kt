@@ -20,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.StorageHelper
-
+import kotlinx.android.synthetic.main.fragment_itemlist.*
 
 
 class ItemListFragment: Fragment() {
@@ -54,6 +54,10 @@ class ItemListFragment: Fragment() {
                 navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetail, item)
             }
         })
+
+        fab.setOnClickListener {
+            navigateWithoutInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit)
+        }
 
         myAdapter.allow_modify = true
 

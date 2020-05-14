@@ -22,50 +22,6 @@ public class FirebaseRepo private constructor() {
         val INSTANCE: FirebaseRepo by lazy { GetInstance.INSTANCE }
     }
 
-
-    fun getProfileById(id: String): Profile {
-        var retProfile = Profile()
-
-        // get profile data from db
-        db.collection("users")
-            .document(id)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document != null && document.exists()) {
-                        val profile = document.toObject(Profile::class.java)
-                        if(profile != null) {
-                            retProfile = profile
-                        }
-                    }
-                    else {
-                        createUserDocument(id)
-                    }
-                } else {
-                    throw task.exception!!
-                }
-            }
-
-        return retProfile
-    }
-
-    private fun createUserDocument(docName: String) {
-        val profileDetails = hashMapOf(
-            "fullName" to "",
-            "nickname" to "",
-            "email" to "",
-            "location" to "",
-            "image" to "",
-            "bio" to "",
-            "phoneNumber" to ""
-        )
-        db.collection("users").document(docName)
-            .set(profileDetails)
-            .addOnSuccessListener { Log.d("KKK", "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w("KKK", "Error writing document", e) }
-    }
-
     fun updateProfile(profile: Profile, userID: String){
         db.collection("users")
             .document(userID)
@@ -77,21 +33,28 @@ public class FirebaseRepo private constructor() {
                 "image" to profile.image,
                 "bio" to profile.bio,
                 "phoneNumber" to profile.phoneNumber
-        ) as Map<String, Any>)
+        ) as Map<String, Any>).addOnCompleteListener{
+                if(it.isSuccessful){
+                    if(!profile.image.isNullOrEmpty()){
+                        val ref = uploadProfileImage(Uri.parse(profile.image), userID)
+                        db.collection("users").document(userID).update(
+                            hashMapOf("image" to ref) as Map<String, Any>
+                        )
+                    }
+                }
+            }
     }
 
     fun insertItem(item: Item) {
-        val documentId : String? = null
-
         db.collection("items")
             .add(item)
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     if(!item.image.isNullOrEmpty()){
                         it.result?.id?.let { it1 ->
-                            val ref = uploadItemImage(Uri.parse(item.image), it1)
+                            val refImage = uploadItemImage(Uri.parse(item.image), it1)
                             db.collection("items").document(it.result!!.id).update(
-                                hashMapOf("image" to ref) as Map<String, Any>
+                                hashMapOf("image" to refImage) as Map<String, Any>
                             )
                         }
                     }
@@ -99,6 +62,22 @@ public class FirebaseRepo private constructor() {
                     throw it.exception!!
                 }
             }
+    }
+
+    fun uploadProfileImage(uri : Uri, profileID : String) : String {
+        val storage = Firebase.storage
+        var storageRef = storage.reference
+
+        var ref = storageRef.child("profiles_images/${profileID}.jpg")
+        ref.putFile(uri).addOnCompleteListener {
+            if(it.isSuccessful){
+                Log.d("MAD2020","Succes")
+            } else {
+                Log.d("MAD2020", "Error")
+            }
+        }
+
+        return ref.name
     }
 
     fun uploadItemImage(uri : Uri, documentId : String) : String {

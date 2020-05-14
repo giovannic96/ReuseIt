@@ -4,25 +4,28 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.StorageHelper
+import kotlinx.android.synthetic.main.fragment_item_details.*
 import kotlinx.android.synthetic.main.fragment_show_profile.*
 
 
 class ShowProfileFragment : Fragment() {
-    var profile: MutableLiveData<Profile> = MutableLiveData()
-    private lateinit var storageHelper: StorageHelper
-    private lateinit var db: FirebaseFirestore
     private var mListener: OnCompleteListener? = null
     private lateinit var vm : ProfileFragmentViewModel
     private var canEdit = true
+    private var profile : Profile = Profile()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -36,15 +39,12 @@ class ShowProfileFragment : Fragment() {
         lateinit var uid : String
 
         var passingUID= arguments?.getString(getString(R.string.uid), "")
-
         arguments?.clear()
-
-        Log.d("MAD2020", passingUID)
 
         // Show personal profile
         if(passingUID.isNullOrEmpty() || passingUID.equals("null")) {
-            val dao = FirebaseRepo.INSTANCE
-            uid = dao.getID(requireContext())
+            val repo = FirebaseRepo.INSTANCE
+            uid = repo.getID(requireContext())
         } else { // Show another profile
             uid = passingUID
 
@@ -57,50 +57,49 @@ class ShowProfileFragment : Fragment() {
             vm.uid = uid
         }
 
-        storageHelper = StorageHelper(requireContext())
-
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            profile.value = it
-        })
-
-        profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            profile = it
             try {
-                if(profile.value?.image.isNullOrEmpty()) {
+                if(it.image.isNullOrEmpty()) {
                     imageProfile.setImageResource(R.drawable.ic_avatar)
                 } else {
-                    imageProfile.setImageBitmap(profile.value?.image?.let { it1 ->
-                        ImageUtils.getBitmap(it1, requireContext())
-                    })
+                    detail_progressbar.visibility = View.VISIBLE
+                    val imagePath: String = it.image!!
+
+                    val ref = Firebase.storage.reference
+                        .child("profiles_images")
+                        .child(imagePath)
+
+
+                    ref.downloadUrl.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            Glide.with(requireContext())
+                                .load(it.result)
+                                .into(imageProfile)
+                        }
+
+                        detail_progressbar.visibility = View.INVISIBLE
+                    }
                 }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            fullname.text = profile.value?.fullName ?: resources.getString(R.string.defaultFullName)
-            bio.text = profile.value?.bio ?: resources.getString(R.string.defaultBio)
-            nickname.text = profile.value?.nickname ?: resources.getString(R.string.defaultNickname)
-            mail.text = profile.value?.email ?: resources.getString(R.string.defaultEmail)
-            phone_number.text = profile.value?.phoneNumber ?: resources.getString(R.string.defaultPhoneNumber)
-            location.text = profile.value?.location ?: resources.getString(R.string.defaultLocation)
+            fullname.text = it?.fullName ?: resources.getString(R.string.defaultFullName)
+            bio.text = it?.bio ?: resources.getString(R.string.defaultBio)
+            nickname.text = it?.nickname ?: resources.getString(R.string.defaultNickname)
+            mail.text = it?.email ?: resources.getString(R.string.defaultEmail)
+            phone_number.text = it?.phoneNumber ?: resources.getString(R.string.defaultPhoneNumber)
+            location.text = it?.location ?: resources.getString(R.string.defaultLocation)
         })
-
-        getResult()
 
         imageProfile.setOnClickListener {
             val bundle=Bundle()
             try {
-                if(!profile.value?.image.isNullOrEmpty()) {
-                    if (profile.value?.image?.let { it1 ->
-                            ImageUtils.canDisplayBitmap(
-                                it1,
-                                requireContext()
-                            )
-                        }!!) {
-
-                        bundle.putString("uri", profile.value?.image.toString())
-                        view.findNavController()
-                            .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
-                    }
+                if(!profile.image.isNullOrEmpty()) {
+                    bundle.putString("uri", profile.image.toString())
+                    view.findNavController()
+                        .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
                 }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
@@ -128,24 +127,25 @@ class ShowProfileFragment : Fragment() {
 
     private fun editProfile() {
         val bundle = Bundle()
-        bundle.putString("profile", profile.value?.let { Profile.toJSON(it).toString()})
+        bundle.putString("profile", profile.let { Profile.toJSON(it).toString()})
         view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
     }
 
+    /*
     private fun getResult() {
         val newProfileJSON = arguments?.getString("new_profile", "")
         db = FirebaseFirestore.getInstance()
 
-        val oldProfile = profile.value
+        val oldProfile = profile
 
         if(!newProfileJSON.isNullOrEmpty() && newProfileJSON != oldProfile?.let { Profile.toJSON(it).toString() }){
 
-            profile.value = newProfileJSON.let { Profile.fromStringJSON(it) }
+            profile = newProfileJSON.let { Profile.fromStringJSON(it) ?: profile}
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-                    profile.value = oldProfile
+                    profile = oldProfile
                     if (oldProfile != null) {
                         storageHelper.saveProfile(db, oldProfile)
                         mListener?.onComplete(oldProfile)
@@ -154,11 +154,12 @@ class ShowProfileFragment : Fragment() {
                 snackbar.show()
             }
         }
-        profile.value?.let { storageHelper.saveProfile(db, it) }
-        profile.value?.let { mListener?.onComplete(it) }
+        profile.let { storageHelper.saveProfile(db, it) }
+        profile.let { mListener?.onComplete(it) }
         arguments?.clear() // Clear arguments
     }
 
+     */
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
