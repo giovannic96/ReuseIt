@@ -6,7 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -17,10 +18,10 @@ import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_item_details.*
 
 class ItemDetailsFragment: Fragment() {
-    var item: MutableLiveData<Item> = MutableLiveData()
     var price: Double? = null
-    var cat: String = ""
-    var cond: String = ""
+    lateinit var vm : ItemDetailsFragmentViewModel
+    var item : Item? = Item()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
         setHasOptionsMenu(true)
@@ -30,12 +31,20 @@ class ItemDetailsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
+        getResult(view)
+
+        vm.itemId = item?.id ?: ""
+
+
+        vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            item = it
+
             try {
-                if(!item?.value?.image.isNullOrEmpty()) {
+                if(!it.image.isNullOrEmpty()) {
                     detail_progressbar.visibility = View.VISIBLE
 
-                    val imageRef = item.value!!.image
+                    val imageRef = it.image
                     val ref = Firebase.storage.reference
                         .child("items_images")
                         .child(imageRef!!)
@@ -53,9 +62,9 @@ class ItemDetailsFragment: Fragment() {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            itemTitle.text = item?.value?.name ?: resources.getString(R.string.defaultTitle)
+            itemTitle.text = it.name ?: resources.getString(R.string.defaultTitle)
             try {
-                price = item?.value?.price;
+                price = it.price;
                 if (price == null)
                     itemPrice.text = resources.getString(R.string.defaultPrice)
                 else
@@ -65,63 +74,80 @@ class ItemDetailsFragment: Fragment() {
                 Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
-            if (!item?.value?.desc.isNullOrEmpty()){
-                itemDesc.text = item?.value?.desc
+            if (!it.desc.isNullOrEmpty()){
+                itemDesc.text =it.desc
             }
             else{
                 itemDesc.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!item?.value?.category.isNullOrEmpty()){
-                itemCategory.text = item?.value?.category
+            if (!it?.category.isNullOrEmpty()){
+                itemCategory.text = it.category
             }
             else{
                 itemCategory.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!item?.value?.subcategory.isNullOrEmpty()){
-                itemSubCategory.text = item?.value?.subcategory
+            if (!it.subcategory.isNullOrEmpty()){
+                itemSubCategory.text = it?.subcategory
             }
             else{
                 itemSubCategory.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!item?.value?.condition.isNullOrEmpty()){
-                itemCondition.text = item?.value?.condition
+            if (!it.condition.isNullOrEmpty()){
+                itemCondition.text = it?.condition
             }
             else{
                 itemCondition.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!item?.value?.expiryDate.isNullOrEmpty()){
-                itemExpiryDate.text = item?.value?.expiryDate
+            if (!it.expiryDate.isNullOrEmpty()){
+                itemExpiryDate.text = it.expiryDate
             }
             else{
                 itemExpiryDate.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!item?.value?.location.isNullOrEmpty()){
-                itemLocation.text = item?.value?.location
+            if (!it.location.isNullOrEmpty()){
+                itemLocation.text = it.location
             }
             else{
                 itemLocation.text = resources.getString(R.string.notSpecified)
             }
 
-        })
+            itemSeller.setOnClickListener { listener ->
+                val bundle = Bundle()
+                bundle.putString(getString(R.string.uid), it.user)
+                view.findNavController()
+                    .navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
+            }
 
+            // TODO: Check this lines
+            if(!it.user.isNullOrEmpty()) {
+                vm.getProfile().removeObservers(viewLifecycleOwner)
+
+                vm.getProfile().observe(viewLifecycleOwner, Observer {
+                   itemSeller.text = it.nickname
+
+
+               })
+
+            }
+        })
         getResult(view)
 
         itemImage.setOnClickListener {
             val bundle=Bundle()
-            if (!item?.value?.image.isNullOrEmpty()) {
+            if (!item?.image.isNullOrEmpty()) {
                 try {
-                    if (item?.value?.image?.let { it1 ->
+                    if (item?.image?.let { it1 ->
                             ImageUtils.canDisplayBitmap(
                                 it1,
                                 requireContext())
                         }!!) {
 
-                        bundle.putString("uri", item?.value?.image.toString())
+                        bundle.putString("uri", item?.image.toString())
                         view.findNavController()
                             .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
                     }
@@ -150,7 +176,7 @@ class ItemDetailsFragment: Fragment() {
 
     private fun editItem() {
         val bundle = Bundle()
-        bundle.putString("item", item?.let { it.value?.let { it1 -> Item.toJSON(it1).toString() } })
+        bundle.putString("item", item?.let { it.let { it1 -> Item.toJSON(it1).toString() } })
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
@@ -166,7 +192,7 @@ class ItemDetailsFragment: Fragment() {
             val oldItem = arguments?.getString("old_item", "")
 
             if(oldItem.equals(editedItemJSON)){
-                handleSelectedItem(editedItemJSON, view)
+                handleSelectedItem(editedItemJSON)
             }
 
             if (oldItem != null) {
@@ -175,13 +201,14 @@ class ItemDetailsFragment: Fragment() {
         }
         //SELECTED ITEM
         else if (!selectedItemJSON.isNullOrEmpty()) {
-            handleSelectedItem(selectedItemJSON, view)
+            handleSelectedItem(selectedItemJSON)
         }
 
         arguments?.clear() // clear arguments
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
+        /*
         val storageHelper =
             StorageHelper(requireContext())
         val sharedPref:SharedPreferences = requireContext()
@@ -189,45 +216,53 @@ class ItemDetailsFragment: Fragment() {
 
         if(editedItemJSON != oldItem) {
 
-            item?.value = editedItemJSON.let { Item.fromStringJSON(it) }
+            item = editedItemJSON.let { Item.fromStringJSON(it) }
 
 
-            item.value?.let { storageHelper.editItem(sharedPref, it) }
+            item.let {
+                if (it != null) {
+                    storageHelper.editItem(sharedPref, it)
+                }
+            }
 
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-                    item.value = Item.fromStringJSON(oldItem)
+                    item = Item.fromStringJSON(oldItem)
 
-                    if(item.value?.image.isNullOrEmpty()) {
+                    if(item?.image.isNullOrEmpty()) {
                         itemImage.setImageResource(R.drawable.ic_box)
                     }
-                    item.value?.let { storageHelper.editItem(sharedPref, it) }
+                    item?.let { storageHelper.editItem(sharedPref, it) }
 
                 })
                 snackbar.show()
             }
         }
+         */
     }
 
 
-    private fun handleSelectedItem(selectedItemJSON: String, view:View) {
-        item?.value = selectedItemJSON.let { Item.fromStringJSON(it) }
+    private fun handleSelectedItem(selectedItemJSON: String) {
+      item = selectedItemJSON.let { Item.fromStringJSON(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("item", item?.let { Item.toJSON(item?.value!!).toString() })
+        outState.putString("item", item?.let { Item.toJSON(item!!).toString() })
 
     }
 
+    /*
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null) {
             val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
 
             if(savedItem != null)
-                item.value = savedItem
+                item = savedItem
         }
     }
+
+     */
 }

@@ -1,18 +1,16 @@
 package it.polito.mad.mhackeroni
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.core.app.Person.fromBundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_show_profile.*
@@ -23,9 +21,8 @@ class ShowProfileFragment : Fragment() {
     private lateinit var storageHelper: StorageHelper
     private lateinit var db: FirebaseFirestore
     private var mListener: OnCompleteListener? = null
-    private lateinit var vm : OnSaleListFragmentViewModel
-    private lateinit var uid: String
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var vm : ProfileFragmentViewModel
+    private var canEdit = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -35,12 +32,31 @@ class ShowProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        db = FirebaseFirestore.getInstance()
-        sharedPref = requireContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        uid = sharedPref.getString(getString(R.string.uid), "")!!
-        vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
-        vm.uid = uid
-        Log.d("KKK", "UID: ${vm.uid}")
+
+        lateinit var uid : String
+
+        var passingUID= arguments?.getString(getString(R.string.uid), "")
+
+        arguments?.clear()
+
+        Log.d("MAD2020", passingUID)
+
+        // Show personal profile
+        if(passingUID.isNullOrEmpty() || passingUID.equals("null")) {
+            val dao = FirebaseRepo.INSTANCE
+            uid = dao.getID(requireContext())
+        } else { // Show another profile
+            uid = passingUID
+
+            canEdit = false
+            requireActivity().invalidateOptionsMenu()
+        }
+
+        vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
+        if (uid != null) {
+            vm.uid = uid
+        }
+
         storageHelper = StorageHelper(requireContext())
 
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -94,7 +110,8 @@ class ShowProfileFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_menu, menu)
+        if(canEdit)
+            inflater.inflate(R.menu.main_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

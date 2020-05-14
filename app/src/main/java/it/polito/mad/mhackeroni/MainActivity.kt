@@ -27,14 +27,14 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     private lateinit var navView: NavigationView
     private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
-    private lateinit var vm : OnSaleListFragmentViewModel
+    private lateinit var vm : ProfileFragmentViewModel
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPref = applicationContext.getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
         uid = sharedPref.getString(getString(R.string.uid), "")!!
-        vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
+        vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
         vm.uid = uid
 
         setContentView(R.layout.activity_main)
@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
             true
         })
         initialHeader()
+
         vm.getProfile().observe(this, Observer {
             updateHeader(it)
         })

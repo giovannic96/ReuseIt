@@ -1,41 +1,34 @@
 package it.polito.mad.mhackeroni
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import it.polito.mad.mhackeroni.utilities.DAO
-import kotlinx.coroutines.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.QuerySnapshot
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 
 class ItemListFragmentViewModel : ViewModel() {
+    var items : MutableLiveData<List<Item>> = MutableLiveData()
+    var uid : String = ""
 
-    val userId : String = ""
+    fun getItems(): LiveData<List<Item>>{
+        val repo = FirebaseRepo.INSTANCE
+        repo.getItemsRef(uid).addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+            if (e != null) {
+                items.value = mutableListOf()
+                return@EventListener
+            }
 
-    private val items : MutableLiveData<List<Item>> by lazy {
-        MutableLiveData<List<Item>>().also {
-            loadItems()
-        }
-    }
+            var itemList : MutableList<Item> = mutableListOf()
+            for (doc in value!!) {
+                var addressItem = doc.toObject(Item::class.java)
+                addressItem.id = doc.id
+                itemList.add(addressItem)
+            }
+            items.value = itemList
+        })
 
-    private fun loadItems() {
-        viewModelScope.launch {
-            getDataFromDAO(DataTypes.ITEMS)
-        }
-    }
-    fun getItems() : LiveData<List<Item>> {
         return items
-    }
-
-    private suspend fun getDataFromDAO(type:DataTypes)  = withContext(Dispatchers.IO) {
-        val dao : DAO = DAO.instance
-
-        val data = async { dao.getUserItem(userId) }
-        try {
-            items.postValue(data.await())
-        } catch (e : Exception)  {
-            items.postValue(listOf())
-        }
     }
 }
 

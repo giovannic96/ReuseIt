@@ -21,6 +21,11 @@
             app:destination="@id/nav_showImage"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_nav_showProfile_to_nav_ItemDetail"
+            app:destination="@id/nav_ItemDetail"
+            app:popUpTo="@id/nav_ItemDetail"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
@@ -57,6 +62,9 @@
             app:destination="@id/nav_itemListSale"
             app:popUpTo="@id/nav_itemListSale"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_ItemDetail_to_nav_showProfile"
+            app:destination="@id/nav_showProfile" />
     </fragment>
     <fragment
         android:id="@+id/nav_ItemDetailEdit"

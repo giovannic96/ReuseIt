@@ -14,7 +14,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
@@ -26,19 +25,20 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.Navigation.findNavController
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.IOException
 import java.util.*
 
 class EditProfileFragment : Fragment() {
-    var profile: MutableLiveData<Profile> = MutableLiveData()
     private val REQUEST_PICKIMAGE = 9002
     private val REQUEST_CREATEIMAGE = 9001
     private val PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 9002
@@ -46,6 +46,8 @@ class EditProfileFragment : Fragment() {
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
     private var startCamera = false
     private var originalPhotPath = ""
+    private lateinit  var vm : ProfileFragmentViewModel
+    private lateinit var  profile : Profile
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_edit_profile, container, false)
@@ -59,31 +61,39 @@ class EditProfileFragment : Fragment() {
         val profileJSON = arguments?.getString("profile", "")
         val savedProfile = savedInstanceState?.getString("profile")?.let { Profile.fromStringJSON(it) }
         val rotationSaved = savedInstanceState?.getInt("rotation")
+        val dao = FirebaseRepo.INSTANCE
+
+        vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
+        vm.uid = dao.getID(requireContext())
 
         if(rotationSaved != null)
             rotationCount.value = rotationSaved
         else
             rotationCount.value = 0
 
+        // TODO: Handle two sources: local profile online profile
         if(!profileJSON.isNullOrEmpty()){
-            profile.value = Profile.fromStringJSON(profileJSON)
-            currentPhotoPath = profile.value?.image.toString()
+            profile = Profile()
+            profile = Profile.fromStringJSON(profileJSON)!!
+            currentPhotoPath = profile.image.toString()
             originalPhotPath = currentPhotoPath
         }
 
         // Get saved value
         if(savedProfile != null) {
-            profile.value = savedProfile
+            profile = Profile()
+            profile = savedProfile
             currentPhotoPath = savedProfile.image.toString()
             originalPhotPath = currentPhotoPath
         }
 
-        profile.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            profile = it
             try {
-                val draw = profile.value?.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) }
+                val draw = it.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) }
 
                 if(draw != null) {
-                    edit_showImageProfile.setImageBitmap(profile.value?.image?.let { it1 ->
+                    edit_showImageProfile.setImageBitmap(it.image?.let { it1 ->
                         ImageUtils.getBitmap(it1, requireContext())
                     })
                 } else {
@@ -93,12 +103,12 @@ class EditProfileFragment : Fragment() {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            edit_fullname.setText(profile.value?.fullName ?: resources.getString(R.string.defaultFullName))
-            edit_bio.setText(profile.value?.bio ?: resources.getString(R.string.defaultNickname))
-            edit_nickname.setText(profile.value?.nickname ?: resources.getString(R.string.defaultNickname))
-            edit_mail.setText(profile.value?.email ?: resources.getString(R.string.defaultEmail))
-            edit_phoneNumber.setText(profile.value?.phoneNumber ?: resources.getString(R.string.defaultLocation))
-            edit_location.setText(profile.value?.location ?: resources.getString(R.string.defaultLocation))
+            edit_fullname.setText(it.fullName ?: resources.getString(R.string.defaultFullName))
+            edit_bio.setText(it.bio ?: resources.getString(R.string.defaultNickname))
+            edit_nickname.setText(it.nickname ?: resources.getString(R.string.defaultNickname))
+            edit_mail.setText(it.email ?: resources.getString(R.string.defaultEmail))
+            edit_phoneNumber.setText(it.phoneNumber ?: resources.getString(R.string.defaultLocation))
+            edit_location.setText(it.location ?: resources.getString(R.string.defaultLocation))
         })
 
         rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
@@ -151,19 +161,19 @@ class EditProfileFragment : Fragment() {
         super.onSaveInstanceState(outState)
 
         if(::currentPhotoPath.isInitialized)
-            profile.value = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
+            profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
                     edit_mail.text.toString(), edit_location.text.toString(),
                     currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString())
         else
-            profile.value = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
+            profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
                     edit_mail.text.toString(), edit_location.text.toString(),
-                    profile.value?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                    profile.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
 
-        if(profile.value?.image.isNullOrEmpty() )
-            profile.value!!.image = ""
+        if(profile?.image.isNullOrEmpty() )
+            profile!!.image = ""
 
 
-        outState.putString("profile", profile.value?.let { Profile.toJSON(it).toString() })
+        outState.putString("profile", profile?.let { Profile.toJSON(it).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }
     }
 
@@ -177,14 +187,17 @@ class EditProfileFragment : Fragment() {
         return when (item.itemId) {
             R.id.menu_save -> {
 
+                if(!checkData())
+                    return false
+
                 if(::currentPhotoPath.isInitialized)
-                    profile.value = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
+                    profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
                             edit_mail.text.toString(), edit_location.text.toString(),
                             currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString())
                 else
-                    profile.value = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
+                    profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
                             edit_mail.text.toString(), edit_location.text.toString(),
-                            profile.value?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                            profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
 
 
                 val nRotation = rotationCount.value
@@ -203,14 +216,29 @@ class EditProfileFragment : Fragment() {
                             }
                         }
                     }
-                    profile.value!!.image = currentPhotoPath
+                    profile!!.image = currentPhotoPath
                 }
 
                 val bundle = bundleOf(
-                    "new_profile" to profile.value?.let { Profile.toJSON(it).toString() }
+                    "new_profile" to profile?.let { Profile.toJSON(it).toString() }
                 )
                 view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
 
+                // TODO: Update profile
+                val dao = FirebaseRepo.INSTANCE
+                runBlocking {
+                    launch {
+                        val entry = profile
+                        val dao = FirebaseRepo.INSTANCE
+                        val uid = dao.getID(requireContext())
+
+                        if (entry != null) {
+                            dao.updateProfile(entry, uid)
+                        }
+                    }.invokeOnCompletion {
+                        // TODO: item_progressbar.visibility = View.INVISIBLE
+                    }
+                }
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -273,7 +301,7 @@ class EditProfileFragment : Fragment() {
             rotationCount.value = 0
         } else if((requestCode == REQUEST_CREATEIMAGE || requestCode == REQUEST_PICKIMAGE) && resultCode == AppCompatActivity.RESULT_CANCELED){
             currentPhotoPath = originalPhotPath ?: ""
-            profile.value?.image = originalPhotPath
+            profile?.image = originalPhotPath
 
             if(originalPhotPath.isNullOrEmpty()){
                 edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
@@ -281,7 +309,7 @@ class EditProfileFragment : Fragment() {
 
         } else {
             currentPhotoPath = originalPhotPath ?: ""
-            profile.value?.image = originalPhotPath
+            profile?.image = originalPhotPath
 
 
             if(originalPhotPath.isNullOrEmpty()){
@@ -312,6 +340,32 @@ class EditProfileFragment : Fragment() {
         ViewCompat.setBackgroundTintList(edit_mail, detectColor(edit_mail))
         ViewCompat.setBackgroundTintList(edit_phoneNumber, detectColor(edit_phoneNumber))
         ViewCompat.setBackgroundTintList(edit_location, detectColor(edit_location))
+    }
+
+    private fun checkData() : Boolean{
+        var retval = true
+
+        if(!edit_fullname.error.isNullOrEmpty()){
+            retval = false
+        } else if(edit_fullname.text.isNullOrEmpty()){
+            edit_fullname.setError(getString(R.string.required_field))
+            retval = false
+        }
+
+        if(!edit_mail.error.isNullOrEmpty()){
+            retval = false
+        } else if(edit_mail.text.isNullOrEmpty()){
+            edit_mail.setError(getString(R.string.required_field))
+        }
+
+        if(!edit_nickname.error.isNullOrEmpty()){
+            retval = false
+        } else if(edit_nickname.text.isNullOrEmpty()){
+            edit_nickname.setError(getString(R.string.required_field))
+        }
+
+        return retval
+
     }
 
     private fun dispatchPickImageIntent() {

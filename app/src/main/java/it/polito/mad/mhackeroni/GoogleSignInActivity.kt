@@ -19,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import it.polito.mad.mhackeroni.utilities.DAO
 import kotlinx.android.synthetic.main.google_signin.*
 
 
@@ -80,11 +79,13 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
                 // FirebaseUser.getToken() instead.
                 uid = user.uid
             }
+
             sharedPref = applicationContext.getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
             with (sharedPref.edit()) {
                 putString(getString(R.string.uid), uid)
                 commit()
             }
+
             val i = Intent(this, MainActivity::class.java)
             startActivity(i)
             finish()

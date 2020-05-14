@@ -3,12 +3,10 @@ package it.polito.mad.mhackeroni
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -33,7 +31,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import it.polito.mad.mhackeroni.utilities.DAO
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
@@ -210,14 +208,14 @@ class ItemEditFragment: Fragment() {
                 if(isAddingItem){
                     if(cat.isNullOrEmpty())
                         subCat = ""
-                    item.value = Item(-1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                    item.value = Item("", edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
                         edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
                         edit_itemLocation.text.toString(), cond ?: "", null)
                 } else {
                     if(cat.isNullOrEmpty())
                         subCat = ""
                     item.value = Item(
-                        oldItem?.id ?: -1, edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        oldItem?.id ?: "", edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
                         edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
                         edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null)
                 }
@@ -245,26 +243,28 @@ class ItemEditFragment: Fragment() {
 
 
                 if(isAddingItem) {
-                    item.value!!.id = IDGenerator.getNextID(requireContext())
+                    item.value!!.id = IDGenerator.getNextID(requireContext()).toString()
 
                     if(!checkData())
                         return false
 
-                    // TEST
+                    // TODO Check
                     item_progressbar.visibility = View.VISIBLE
 
-                      runBlocking {
-                          launch {
-                              delay(3000L)
-                              val entry = item.value
-                              if (entry != null) {
-                                  addItem(entry)
-                              }
-                          }
-                        }
+                    runBlocking {
+                        launch {
+                            val entry = item.value
+                            val dao = FirebaseRepo.INSTANCE
+                            val uid = dao.getID(requireContext())
 
-                    item_progressbar.visibility = View.INVISIBLE
-                    // TEST
+                            if (entry != null) {
+                                entry.user = uid
+                                addItem(entry)
+                            }
+                        }.invokeOnCompletion {
+                            item_progressbar.visibility = View.INVISIBLE
+                        }
+                    }
 
                     val bundle =
                         bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
@@ -277,8 +277,26 @@ class ItemEditFragment: Fragment() {
                     if(!checkData())
                         return false
 
-                    item.value!!.id = oldItem?.id ?: -1
+                    item.value!!.id = oldItem?.id ?: ""
                     val fromList = arguments?.getBoolean("fromList", false)
+
+                    // TODO Check
+                    item_progressbar.visibility = View.VISIBLE
+
+                    runBlocking {
+                        launch {
+                            val entry = item.value
+                            val dao = FirebaseRepo.INSTANCE
+                            val uid = dao.getID(requireContext())
+
+                            if (entry != null) {
+                                entry.user = uid
+                                updateItem(entry)
+                            }
+                        }.invokeOnCompletion {
+                            item_progressbar.visibility = View.INVISIBLE
+                        }
+                    }
 
                     if(fromList!!){
                         val bundle =
@@ -678,7 +696,7 @@ class ItemEditFragment: Fragment() {
         super.onSaveInstanceState(outState)
 
         if(item.value == null)
-            item.value = Item(-1,"",0.0,"","","","","","","")
+            item.value = Item("","",0.0,"","","","","","","")
 
 
         if(isAddingItem && ::currentItemPhotoPath.isInitialized) {
@@ -798,12 +816,18 @@ class ItemEditFragment: Fragment() {
     }
 
     suspend fun addItem(item : Item){
-        val dao : DAO = DAO.instance
-
-        // item.image = ImageUtils.getPathFromUri(requireContext(), Uri.parse(item.image))
+        val firebaseRepo : FirebaseRepo = FirebaseRepo.INSTANCE
 
         withContext(Dispatchers.IO){
-            dao.insertItem(item)
+            firebaseRepo.insertItem(item)
+        }
+    }
+
+    suspend fun updateItem(item : Item){
+        val firebaseRepo : FirebaseRepo = FirebaseRepo.INSTANCE
+
+        withContext(Dispatchers.IO){
+            firebaseRepo.updateItem(item.id, item)
         }
     }
 

@@ -165,6 +165,31 @@
             tools:layout_editor_absoluteX="310dp" />
 
         <TextView
+            android:id="@+id/itemSellerLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/itemSellerLabel"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="30dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#505050"
+            app:layout_constraintTop_toBottomOf="@+id/itemSubCategory"
+            tools:layout_editor_absoluteX="310dp" />
+
+        <TextView
+            android:id="@+id/itemSeller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/defaultSeller"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#505050"
+            app:layout_constraintTop_toBottomOf="@+id/itemSellerLabel"
+            tools:layout_editor_absoluteX="310dp" />
+
+        <TextView
             android:id="@+id/itemLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -176,7 +201,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemSubCategory"  />
+            app:layout_constraintTop_toBottomOf="@+id/itemSeller"  />
 
         <TextView
             android:id="@+id/itemExpireLabel"
