@@ -72,6 +72,8 @@
     <string name="cond_acc">Accettabile</string>
     <string name="error_data">Completa tutti i campi</string>
     <string name="required_field">Questo campo è obbligatorio</string>
+    <string name="sold">Contrassegna come venduto</string>
+    <string name="block">Blocca annuncio</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

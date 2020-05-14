@@ -71,6 +71,8 @@
     <string name="cond_acc">Acceptable</string>
     <string name="error_data">Please, fill all the fields</string>
     <string name="required_field">This field is required</string>
+    <string name="sold">Mark as sold</string>
+    <string name="block">Block ads</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

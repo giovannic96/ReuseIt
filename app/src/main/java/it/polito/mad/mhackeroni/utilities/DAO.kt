@@ -112,4 +112,8 @@ public class DAO private constructor() {
 
         return ref.name
     }
+
+    fun getUserItem(userID : String) : List<Item>{
+        TODO("Not finished")
+    }
 }

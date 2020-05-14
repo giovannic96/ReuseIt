@@ -256,6 +256,27 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_state">
+
+            <RadioButton
+                android:id="@+id/radio_sold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sold">
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/block">
+            </RadioButton>
+
+        </RadioGroup>
+
     </LinearLayout>
 
         <ProgressBar

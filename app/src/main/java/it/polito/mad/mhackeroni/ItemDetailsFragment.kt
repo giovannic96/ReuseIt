@@ -8,7 +8,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_item_details.*
@@ -29,20 +32,28 @@ class ItemDetailsFragment: Fragment() {
 
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             try {
-                if(!item?.value?.image.isNullOrEmpty())
-                    if(item?.value?.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) } == null){
-                        itemImage.setImageResource(R.drawable.ic_box)
-                    } else {
-                        itemImage.setImageBitmap(item?.value?.image?.let { it1 ->
-                            ImageUtils.getBitmap(it1, requireContext())
-                        })
+                if(!item?.value?.image.isNullOrEmpty()) {
+                    detail_progressbar.visibility = View.VISIBLE
+
+                    val imageRef = item.value!!.image
+                    val ref = Firebase.storage.reference
+                        .child("items_images")
+                        .child(imageRef!!)
+
+                    ref.downloadUrl.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            Glide.with(requireContext())
+                                .load(it.result)
+                                .into(itemImage)
+                        }
+                        detail_progressbar.visibility = View.INVISIBLE
                     }
+                }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             itemTitle.text = item?.value?.name ?: resources.getString(R.string.defaultTitle)
-
             try {
                 price = item?.value?.price;
                 if (price == null)
