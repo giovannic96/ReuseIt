@@ -21,25 +21,50 @@ class ShowImageFragment : Fragment() {
 
         load_image_progessbar.visibility = View.VISIBLE
 
-        val uri = arguments?.getString("uri")
-        val ref = uri?.let {
-            Firebase.storage.reference
-                .child("items_images")
-                .child(it)
-        }
+        val profilePic = arguments?.getBoolean("profile_image", false) ?: false
 
-        if (ref != null) {
-            ref.downloadUrl.addOnCompleteListener {
-                if(it.isSuccessful) {
-                    context?.let { it1 ->
-                        Glide.with(it1)
-                            .load(it.result)
-                            .into(imageFullscreen)
+        if(profilePic){
+            val uri = arguments?.getString("uri")
+            val ref = uri?.let {
+                Firebase.storage.reference
+                    .child("profiles_images")
+                    .child(it)
+            }
+
+            if (ref != null) {
+                ref.downloadUrl.addOnCompleteListener {
+                    if(it.isSuccessful) {
+                        context?.let { it1 ->
+                            Glide.with(it1)
+                                .load(it.result)
+                                .into(imageFullscreen)
+                        }
                     }
+                    load_image_progessbar.visibility = View.INVISIBLE
                 }
-                load_image_progessbar.visibility = View.INVISIBLE
+            }
+        } else {
+            val uri = arguments?.getString("uri")
+            val ref = uri?.let {
+                Firebase.storage.reference
+                    .child("items_images")
+                    .child(it)
+            }
+
+            if (ref != null) {
+                ref.downloadUrl.addOnCompleteListener {
+                    if(it.isSuccessful) {
+                        context?.let { it1 ->
+                            Glide.with(it1)
+                                .load(it.result)
+                                .into(imageFullscreen)
+                        }
+                    }
+                    load_image_progessbar.visibility = View.INVISIBLE
+                }
             }
         }
+
 
     }
 }

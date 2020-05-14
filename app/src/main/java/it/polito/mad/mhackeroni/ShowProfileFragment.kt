@@ -63,13 +63,13 @@ class ShowProfileFragment : Fragment() {
                 if(it.image.isNullOrEmpty()) {
                     imageProfile.setImageResource(R.drawable.ic_avatar)
                 } else {
-                    detail_progressbar.visibility = View.VISIBLE
+
+                    profile_progress_bar.visibility = View.VISIBLE
                     val imagePath: String = it.image!!
 
                     val ref = Firebase.storage.reference
                         .child("profiles_images")
                         .child(imagePath)
-
 
                     ref.downloadUrl.addOnCompleteListener {
                         if (it.isSuccessful) {
@@ -78,8 +78,8 @@ class ShowProfileFragment : Fragment() {
                                 .into(imageProfile)
                         }
 
-                        detail_progressbar.visibility = View.INVISIBLE
-                    }
+                        profile_progress_bar.visibility = View.INVISIBLE
+                     }
                 }
             } catch (e: Exception) {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
@@ -98,6 +98,9 @@ class ShowProfileFragment : Fragment() {
             try {
                 if(!profile.image.isNullOrEmpty()) {
                     bundle.putString("uri", profile.image.toString())
+                    bundle.putBoolean("profile_image", true)
+
+                    Log.d("MAD2020", profile.image)
                     view.findNavController()
                         .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
                 }

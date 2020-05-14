@@ -69,13 +69,7 @@ public class FirebaseRepo private constructor() {
         var storageRef = storage.reference
 
         var ref = storageRef.child("profiles_images/${profileID}.jpg")
-        ref.putFile(uri).addOnCompleteListener {
-            if(it.isSuccessful){
-                Log.d("MAD2020","Succes")
-            } else {
-                Log.d("MAD2020", "Error")
-            }
-        }
+        ref.putFile(uri)
 
         return ref.name
     }

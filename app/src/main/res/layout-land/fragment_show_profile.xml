@@ -12,25 +12,40 @@
         android:orientation="horizontal"
         android:padding="20dp">
 
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageProfile"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/image_background"
-            android:contentDescription="@string/photo"
-            android:foregroundGravity="center"
-            android:padding="10dp"
-            android:src="@drawable/ic_avatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="5dp"
+            android:foregroundGravity="center"
+            android:padding="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:background="@drawable/image_background"
+                android:contentDescription="@string/photo"
+                android:src="@drawable/ic_avatar" />
+
+            <ProgressBar
+                android:id="@+id/profile_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
+        </FrameLayout>
+
+
+
+
 
         <TextView
             android:id="@+id/fullname"
