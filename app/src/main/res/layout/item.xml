@@ -18,6 +18,11 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="8dp">
 
+        <FrameLayout
+            android:id="@+id/image_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/drawable_pic"
             android:layout_width="match_parent"
@@ -28,6 +33,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_box" />
+
+            <ProgressBar
+                android:id="@+id/item_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/item_name"
@@ -43,7 +57,7 @@
             android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/drawable_pic" />
+            app:layout_constraintTop_toBottomOf="@+id/image_wrapper" />
 
         <TextView
             android:id="@+id/item_price"

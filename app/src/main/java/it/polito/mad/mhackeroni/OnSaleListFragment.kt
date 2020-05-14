@@ -39,6 +39,7 @@ class OnSaleListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
+
         val itemList:RecyclerView = view.findViewById(R.id.item_list_sale)
 
         myAdapter = ItemAdapter(mutableListOf(), object : MyAdapterListener {
@@ -66,7 +67,6 @@ class OnSaleListFragment: Fragment() {
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
         })
-
 
         // getResultAndUpdateList(itemList)
     }

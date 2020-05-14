@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import it.polito.mad.mhackeroni.utilities.ImageUtils
+import com.bumptech.glide.Glide
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.lang.ref.WeakReference
 
 class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):
@@ -74,6 +77,7 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         private val listenerRef: WeakReference<MyAdapterListener>? = WeakReference(listener)
         private val image:ImageView = v.findViewById(R.id.drawable_pic)
         private val context = v.context
+        private val progressBar:ProgressBar = v.findViewById(R.id.item_progressbar)
 
         override fun bind(item:Item) {
             name.text = item.name
@@ -86,16 +90,35 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
                 listenerRef?.get()?.itemViewOnClick(item)
             }
 
-            if(item.image.isNullOrEmpty()){
+            if(item.image.isNullOrEmpty()) {
                 image.setImageResource(R.drawable.ic_box)
-            } else if(item.image?.let { ImageUtils.canDisplayBitmap(it, context) }!!){
+            }else {
+                progressBar.visibility = View.VISIBLE
 
-                if(ImageUtils.getBitmap(item.image!!, context) == null){
-                    image.setImageResource(R.drawable.ic_box)
-                } else {
-                    image.setImageBitmap(ImageUtils.getBitmap(item.image!!, context))
+                val imageRef = item.image
+                val ref = Firebase.storage.reference
+                    .child("items_images")
+                    .child(imageRef!!)
+
+                ref.downloadUrl.addOnCompleteListener {
+                    if(it.isSuccessful) {
+                        Glide.with(context)
+                            .load(it.result)
+                            .into(image)
+                    }
+                    progressBar.visibility = View.INVISIBLE
                 }
             }
+            /*
+        } else if(item.image?.let { ImageUtils.canDisplayBitmap(it, context) }!!){
+
+            if(ImageUtils.getBitmap(item.image!!, context) == null){
+                image.setImageResource(R.drawable.ic_box)
+            } else {
+                image.setImageBitmap(ImageUtils.getBitmap(item.image!!, context))
+            }
+        }
+        */
         }
     }
 

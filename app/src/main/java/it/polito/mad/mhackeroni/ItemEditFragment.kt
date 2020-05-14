@@ -3,10 +3,12 @@ package it.polito.mad.mhackeroni
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -36,9 +38,7 @@ import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_item_edit.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
 import java.text.DateFormat
@@ -251,14 +251,23 @@ class ItemEditFragment: Fragment() {
                 if(isAddingItem) {
                     item.value!!.id = IDGenerator.getNextID(requireContext())
 
+                    if(!checkData())
+                        return false
+
                     // TEST
-                    runBlocking {
-                        val entry = item.value
-                        if (entry != null) {
-                            // TODO: -> item.value.user = ""
-                            addItem(entry)
+                    item_progressbar.visibility = View.VISIBLE
+
+                      runBlocking {
+                          launch {
+                              delay(3000L)
+                              val entry = item.value
+                              if (entry != null) {
+                                  addItem(entry)
+                              }
+                          }
                         }
-                    }
+
+                    item_progressbar.visibility = View.INVISIBLE
                     // TEST
 
                     val bundle =
@@ -268,6 +277,9 @@ class ItemEditFragment: Fragment() {
                         ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
 
                 }else {
+
+                    if(!checkData())
+                        return false
 
                     item.value!!.id = oldItem?.id ?: -1
                     val fromList = arguments?.getBoolean("fromList", false)
@@ -792,6 +804,8 @@ class ItemEditFragment: Fragment() {
     suspend fun addItem(item : Item){
         val dao : DAO = DAO.instance
 
+        // item.image = ImageUtils.getPathFromUri(requireContext(), Uri.parse(item.image))
+
         withContext(Dispatchers.IO){
             dao.insertItem(item)
         }
@@ -802,5 +816,53 @@ class ItemEditFragment: Fragment() {
         val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         contentResolver.takePersistableUriPermission(uri, takeFlags)
+    }
+
+    private fun checkData(): Boolean{
+        var retVal = true
+
+        if(item.value?.name.isNullOrEmpty()){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemTitle.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        if(item.value?.condition.isNullOrEmpty()){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemCondition.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        if(item.value?.category.isNullOrEmpty()){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemCategory.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        if(item.value?.subcategory.isNullOrEmpty()){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemSubCategory.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        if(item.value?.price == null){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemPrice.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        if(item.value?.expiryDate.isNullOrEmpty()){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemExpiryDate.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        if(item.value?.location.isNullOrEmpty()){
+            view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
+            edit_itemLocation.error = getString(R.string.required_field)
+            retVal = false
+        }
+
+        return retVal
     }
 }

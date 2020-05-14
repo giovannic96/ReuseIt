@@ -1,9 +1,15 @@
 package it.polito.mad.mhackeroni.utilities
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.Item
 import it.polito.mad.mhackeroni.Profile
+import java.io.File
+import java.net.URI
 
 // DAO singleton class
 public class DAO private constructor() {
@@ -77,14 +83,33 @@ public class DAO private constructor() {
     }
 
     fun insertItem(item: Item) {
+        val documentId : String? = null
+
         db.collection("items")
             .add(item)
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    Log.d("KKK","Add item: ${item.name}")
+                    if(!item.image.isNullOrEmpty()){
+                        it.result?.id?.let { it1 ->
+                            val ref = uploadItemImage(Uri.parse(item.image), it1)
+                            db.collection("items").document(it.result!!.id).update(
+                                hashMapOf("image" to ref) as Map<String, Any>
+                            )
+                        }
+                    }
                 } else {
                     throw it.exception!!
                 }
             }
+    }
+
+    fun uploadItemImage(uri : Uri, documentId : String) : String {
+        val storage = Firebase.storage
+        var storageRef = storage.reference
+
+        var ref = storageRef.child("items_images/${documentId}.jpg")
+        ref.putFile(uri)
+
+        return ref.name
     }
 }

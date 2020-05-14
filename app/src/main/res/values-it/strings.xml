@@ -70,7 +70,8 @@
     <string name="cond_opt">Ottimo</string>
     <string name="cond_good">Buono</string>
     <string name="cond_acc">Accettabile</string>
-
+    <string name="error_data">Completa tutti i campi</string>
+    <string name="required_field">Questo campo è obbligatorio</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

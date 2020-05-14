@@ -1,17 +1,24 @@
 package it.polito.mad.mhackeroni.utilities
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import it.polito.mad.mhackeroni.R
-import java.io.*
+import java.io.FileNotFoundException
+import java.io.InputStream
+import java.io.OutputStream
 
 
 class ImageUtils {
@@ -40,7 +47,6 @@ class ImageUtils {
 
                 return bitmap
             }
-
 
         fun rotateImageFromUri(uri: Uri, angle: Float, context: Context): Bitmap? {
             val source =

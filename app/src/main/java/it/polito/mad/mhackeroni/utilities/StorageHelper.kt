@@ -3,14 +3,15 @@ package it.polito.mad.mhackeroni.utilities
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.SharedPreferences
+import android.database.Cursor
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import com.beust.klaxon.Klaxon
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import it.polito.mad.mhackeroni.Item
 import it.polito.mad.mhackeroni.Profile
 import it.polito.mad.mhackeroni.R
