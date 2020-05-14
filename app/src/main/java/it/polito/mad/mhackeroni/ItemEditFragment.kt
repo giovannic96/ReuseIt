@@ -59,9 +59,6 @@ class ItemEditFragment: Fragment() {
     private var subCat: String? = null
     private var cond : String? = null
     val c = Calendar.getInstance()
-    val year = c.get(Calendar.YEAR)
-    val month = c.get(Calendar.MONTH)
-    val day = c.get(Calendar.DAY_OF_MONTH)
     private var pickerShowing = false
     private var startCamera = false
 
@@ -104,7 +101,6 @@ class ItemEditFragment: Fragment() {
             oldItem = Item.fromStringJSON(itemJSON)
             currentItemPhotoPath = item.value?.image.toString()
 
-            Log.d("ULT2", currentItemPhotoPath)
 
             if (savedItem != null) {
                 item.value = savedItem // Get saved value

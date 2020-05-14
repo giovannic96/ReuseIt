@@ -54,6 +54,8 @@ class OnSaleListFragment: Fragment() {
             }
         })
 
+        myAdapter.allow_modify = false
+
         itemList.adapter = myAdapter
         itemList.layoutManager = if(items.size == 0)
             LinearLayoutManager(context)

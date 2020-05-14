@@ -17,6 +17,7 @@ class OnSaleListFragmentViewModel : ViewModel() {
     // TODO: Remove profile reference
     var uid: String = "" //id of the logged user
 
+
     private val items : MutableLiveData<List<Item>> by lazy {
         MutableLiveData<List<Item>>().also {
             loadItems()
