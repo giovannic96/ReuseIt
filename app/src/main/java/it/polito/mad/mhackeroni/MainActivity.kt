@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,10 +16,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.utilities.ImageUtils
+import kotlinx.android.synthetic.main.fragment_show_profile.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
@@ -101,7 +107,22 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         else
             navEmail.text = profile.email
 
-        navImage.setImageBitmap(profile.image?.let { ImageUtils.getBitmap(it, this) })
+        drawer_progressbar.visibility = View.VISIBLE
+        val imagePath: String = profile.image!!
+
+        val ref = Firebase.storage.reference
+            .child("profiles_images")
+            .child(imagePath)
+
+        ref.downloadUrl.addOnCompleteListener {
+            if (it.isSuccessful) {
+                Glide.with(this)
+                    .load(it.result)
+                    .into(navImage)
+            }
+
+            drawer_progressbar.visibility = View.INVISIBLE
+        }
     }
 
     private fun initialHeader() {
