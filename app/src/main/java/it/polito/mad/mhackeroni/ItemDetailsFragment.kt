@@ -1,10 +1,12 @@
 package it.polito.mad.mhackeroni
 
-import android.content.Context
-import android.content.SharedPreferences
+import android.animation.ObjectAnimator
+import android.graphics.Path
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.animation.PathInterpolator
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,14 +15,16 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
-import it.polito.mad.mhackeroni.utilities.StorageHelper
 import kotlinx.android.synthetic.main.fragment_item_details.*
+
 
 class ItemDetailsFragment: Fragment() {
     var price: Double? = null
     lateinit var vm : ItemDetailsFragmentViewModel
     var item : Item? = Item()
+    var canModify : Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -33,9 +37,17 @@ class ItemDetailsFragment: Fragment() {
 
         vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
         getResult(view)
-
         vm.itemId = item?.id ?: ""
 
+
+        if(!canModify){
+            requireActivity().invalidateOptionsMenu()
+            itemState.visibility = View.GONE
+        } else {
+            fab_buy.visibility = View.GONE
+        }
+
+        checkFavorite()
 
         vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             item = it
@@ -74,6 +86,17 @@ class ItemDetailsFragment: Fragment() {
                 Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
+            when(it.state){
+                Item.ItemState.AVAILABLE -> {
+                    itemState.text = getString(R.string.stateAvailable)
+                }
+                Item.ItemState.SOLD -> {
+                    itemState.text = getString(R.string.stateSold)
+                }
+                Item.ItemState.BLOCKED -> {
+                    itemState.text = getString(R.string.stateBlocked)
+                }
+            }
             if (!it.desc.isNullOrEmpty()){
                 itemDesc.text =it.desc
             }
@@ -129,13 +152,34 @@ class ItemDetailsFragment: Fragment() {
 
                 vm.getProfile().observe(viewLifecycleOwner, Observer {
                    itemSeller.text = it.nickname
-
-
                })
-
             }
         })
-        getResult(view)
+
+        fab_buy.setOnClickListener {
+            val repo : FirebaseRepo = FirebaseRepo.INSTANCE
+            val entry = item
+            val uid = repo.getID(requireContext())
+            if(entry != null) {
+                repo.checkFavorite(uid, entry.id).addOnCompleteListener {
+                    if(it.isSuccessful){
+                        if(it.result?.isEmpty!!){
+                            repo.insertFavorite(repo.getID(requireContext()), entry).addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    // TODO: Add undo
+                                    Snackbar.make(view, getString(R.string.favorite), Snackbar.LENGTH_LONG)
+                                        .show()
+                                }
+                            }
+                        } else {
+                            Snackbar.make(view, getString(R.string.alreadyFavorite), Snackbar.LENGTH_LONG).show()
+                            hide_fab()
+
+                        }
+                    }
+                }
+            }
+        }
 
         itemImage.setOnClickListener {
             val bundle=Bundle()
@@ -159,7 +203,8 @@ class ItemDetailsFragment: Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_menu, menu)
+        if(canModify)
+            inflater.inflate(R.menu.main_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -174,6 +219,21 @@ class ItemDetailsFragment: Fragment() {
         }
     }
 
+    private fun checkFavorite(){
+        val repo : FirebaseRepo = FirebaseRepo.INSTANCE
+        val entry = item
+        val uid = repo.getID(requireContext())
+        if(entry != null) {
+            repo.checkFavorite(uid, entry.id).addOnCompleteListener {
+                if(it.isSuccessful){
+                    if(!it.result?.isEmpty!!){
+                        fab_buy.visibility = View.GONE
+                    }
+                }
+            }
+        }
+    }
+
     private fun editItem() {
         val bundle = Bundle()
         bundle.putString("item", item?.let { it.let { it1 -> Item.toJSON(it1).toString() } })
@@ -181,6 +241,9 @@ class ItemDetailsFragment: Fragment() {
     }
 
     private fun getResult(view:View) {
+
+        canModify = arguments?.getBoolean("allowModify", true) ?: true
+
         //get item derived from edit fragment (editedItem)
         val editedItemJSON = arguments?.getString("new_item", "")
 
@@ -251,6 +314,10 @@ class ItemDetailsFragment: Fragment() {
         super.onSaveInstanceState(outState)
         outState.putString("item", item?.let { Item.toJSON(item!!).toString() })
 
+    }
+
+    private fun hide_fab(){
+       fab_buy.visibility = View.GONE
     }
 
     /*

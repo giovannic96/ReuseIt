@@ -73,8 +73,15 @@
     <string name="required_field">This field is required</string>
     <string name="sold">Mark as sold</string>
     <string name="block">Block ads</string>
+    <string name="available">Mark as available</string>
     <string name="itemSellerLabel">Sold by</string>
     <string name="defaultSeller">Unknown</string>
+    <string name="stateAvailable">Available</string>
+    <string name="stateBlocked">Blocked</string>
+    <string name="stateSold">Sold</string>
+    <string name="blockedHint">The item will be visible only for you</string>
+    <string name="favorite">You will receive update on this item state</string>
+    <string name="alreadyFavorite">You are already interested to this ads</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

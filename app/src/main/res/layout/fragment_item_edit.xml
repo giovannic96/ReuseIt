@@ -257,9 +257,20 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <RadioGroup
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/edit_state">
+
+            <RadioButton
+                android:checked="true"
+                android:id="@+id/radio_available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/available">
+            </RadioButton>
 
             <RadioButton
                 android:id="@+id/radio_sold"

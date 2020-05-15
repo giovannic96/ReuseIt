@@ -6,7 +6,7 @@ import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
 
-class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var user : String = "null") : Serializable {
+class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var user : String = "null", var state : ItemState = ItemState.AVAILABLE) : Serializable {
     constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "")
 
     companion object Factory {
@@ -65,5 +65,11 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 return obj
             }
         }
+    }
+
+    enum class ItemState{
+        AVAILABLE,
+        BLOCKED,
+        SOLD
     }
 }

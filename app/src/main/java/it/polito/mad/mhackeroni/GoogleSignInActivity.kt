@@ -65,6 +65,10 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             var emailVerified: Boolean
             var uid: String
 
+            user.getIdToken(true).addOnCompleteListener {
+                Log.d("MAD2020", "Token: ${it.result?.token}")
+            }
+
             user.let {
                 // Name, email address, and profile photo Url
                 name = user.displayName

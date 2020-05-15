@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.StorageHelper
 
 
@@ -39,6 +40,7 @@ class OnSaleListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
+        vm.uid = FirebaseRepo.INSTANCE.getID(requireContext())
 
         val itemList:RecyclerView = view.findViewById(R.id.item_list_sale)
 
@@ -108,10 +110,10 @@ class OnSaleListFragment: Fragment() {
     private fun navigateWithInfo(layoutId: Int, item: Item) {
         val bundle = Bundle()
 
-        // TODO pass whole item or just document ID
-
         bundle.putString("item", item.let { Item.toJSON(it).toString()})
         bundle.putBoolean("fromList", true)
+        bundle.putBoolean("allowModify", false)
+
         view?.findNavController()?.navigate(layoutId, bundle)
     }
 

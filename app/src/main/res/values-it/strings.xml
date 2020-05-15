@@ -74,8 +74,15 @@
     <string name="required_field">Questo campo è obbligatorio</string>
     <string name="sold">Contrassegna come venduto</string>
     <string name="block">Blocca annuncio</string>
-    <string name="itemSellerLabel">Sold by</string>
-    <string name="defaultSeller">Unknown</string>
+    <string name="available">Contrassegna come disponibile</string>
+    <string name="itemSellerLabel">Venduto da</string>
+    <string name="defaultSeller">Sconosciuto</string>
+    <string name="stateAvailable">Disponibile</string>
+    <string name="stateBlocked">Bloccato</string>
+    <string name="stateSold">Venduto</string>
+    <string name="blockedHint">L\'articolo non comparirà nel feed di altri utenti</string>
+    <string name="favorite">Riceverai aggiornamenti sullo stato dell\'inserzione</string>
+    <string name="alreadyFavorite">Sei già interessato all\'inserzione</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

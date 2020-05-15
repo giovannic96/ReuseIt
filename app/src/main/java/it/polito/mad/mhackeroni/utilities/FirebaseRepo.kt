@@ -1,9 +1,13 @@
 package it.polito.mad.mhackeroni.utilities
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.Item
@@ -99,9 +103,11 @@ public class FirebaseRepo private constructor() {
         return db.collection("items").document(id)
     }
 
-    fun getItemsRef(): CollectionReference {
+    fun getItemsRef(state : Item.ItemState = Item.ItemState.AVAILABLE): Query {
         var collectionReference = db.collection("items")
-        return collectionReference
+        var selectedCollection = collectionReference.whereEqualTo("state", state)
+
+        return selectedCollection
     }
 
     fun getItemsRef(uid: String) : Query {
@@ -118,9 +124,6 @@ public class FirebaseRepo private constructor() {
     }
 
     fun updateItem(id : String, item : Item){
-
-        Log.d("MAG2020", "Updating to; ${Item.toJSON(item)}")
-
         db.collection("items")
             .document(id)
             .update(hashMapOf(
@@ -134,7 +137,8 @@ public class FirebaseRepo private constructor() {
                 "name" to item.name,
                 "price" to item.price,
                 "subcategory" to item.subcategory,
-                "user" to item.user
+                "user" to item.user,
+                "state" to item.state
             ) as Map<String, Any>).addOnCompleteListener{
                 if (it.isSuccessful){
                     val ref = uploadItemImage(Uri.parse(item.image), id)
@@ -145,6 +149,20 @@ public class FirebaseRepo private constructor() {
                     Log.d("MAG2020", it.exception.toString())
                 }
             }
+    }
+
+    fun checkFavorite(user : String, item : String) : Task<QuerySnapshot> {
+       return db.collection("favorites")
+            .whereEqualTo("user", user).whereEqualTo("item", item).get()
+    }
+
+    fun insertFavorite(user : String, item : Item): Task<DocumentReference> {
+        return db.collection("favorites")
+            .add(hashMapOf(
+                    "user" to user,
+                    "item" to item.id,
+                    "seller" to item.user
+            ))
     }
 
     fun clearPersistency(){

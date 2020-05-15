@@ -59,6 +59,7 @@ class ItemEditFragment: Fragment() {
     val c = Calendar.getInstance()
     private var pickerShowing = false
     private var startCamera = false
+    private var state : Item.ItemState = Item.ItemState.AVAILABLE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -90,6 +91,8 @@ class ItemEditFragment: Fragment() {
             val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
             if(!savedItem?.image.isNullOrEmpty())
                 currentItemPhotoPath = savedItem?.image ?: ""
+
+            edit_state.visibility = View.GONE
         }
         //EDIT ITEM
         else {
@@ -137,6 +140,17 @@ class ItemEditFragment: Fragment() {
                 }
             }
         })
+
+        edit_state.setOnCheckedChangeListener { _, checkedId ->
+            when(checkedId) {
+                R.id.radio_available -> state = Item.ItemState.AVAILABLE
+                R.id.radio_block -> {
+                    state = Item.ItemState.BLOCKED
+                    Snackbar.make(view, getString(R.string.blockedHint), Snackbar.LENGTH_LONG).show()
+                }
+                R.id.radio_sold -> state = Item.ItemState.SOLD
+            }
+        }
 
         rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
             val deg: Float = 90f * it
@@ -214,10 +228,11 @@ class ItemEditFragment: Fragment() {
                 } else {
                     if(cat.isNullOrEmpty())
                         subCat = ""
+
                     item.value = Item(
                         oldItem?.id ?: "", edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
                         edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
-                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null)
+                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null, state = state)
                 }
 
 
