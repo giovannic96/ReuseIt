@@ -34,7 +34,6 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
 
         //return view with items
         return if (viewType == VIEW_TYPE_ITEM) {
-
             v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item, parent, false) //get layout inflater and inflate item layout
             ItemViewHolder(v, listener)
@@ -50,7 +49,6 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         val viewType = getItemViewType(position)
         if (viewType == VIEW_TYPE_ITEM) //bind item only if list is not empty
             holder.bind(items[position], allow_modify)
-
     }
 
     abstract class ViewHolder(v: View): RecyclerView.ViewHolder(v) {

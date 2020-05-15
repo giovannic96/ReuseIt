@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Profile
 
 // DAO singleton class
 public class FirebaseRepo private constructor() {

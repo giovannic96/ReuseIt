@@ -59,7 +59,6 @@ class ItemListFragment: Fragment() {
                     )
                 }
             })
-
         fab.setOnClickListener {
             navigateWithoutInfo()
         }
@@ -83,13 +82,10 @@ class ItemListFragment: Fragment() {
 
     private fun navigateWithInfo(layoutId: Int, item: Item) {
         val bundle = Bundle()
-        bundle.putString("item", item.let { Item.toJSON(
-            it
-        ).toString()})
+        bundle.putString("item", item.let { Item.toJSON(it).toString()})
         bundle.putBoolean("fromList", true)
         view?.findNavController()?.navigate(layoutId, bundle)
     }
-
 
     private fun navigateWithoutInfo() {
         val bundle = Bundle()
