@@ -63,8 +63,6 @@ public class FirebaseRepo private constructor() {
     }
 
     fun updateUserToken(uid : String, token : String): Task<Void> {
-
-       // Log.d("MAD2020", "update token uid: ${uid}, token: ${token}")
         return db.collection("users")
             .document(uid)
             .update(

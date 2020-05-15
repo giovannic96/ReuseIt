@@ -28,7 +28,6 @@ class ItemListFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_itemlist, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,26 +58,25 @@ class ItemListFragment: Fragment() {
         myAdapter.allow_modify = true
 
         itemList.adapter = myAdapter
-        itemList.layoutManager = if(items.size == 0)
-            LinearLayoutManager(context)
-        else {
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
-            else
-                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        }
+        itemList.layoutManager = LinearLayoutManager(context)
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
+            itemList.layoutManager = if(it.isEmpty())
+                LinearLayoutManager(context)
+            else {
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+                else
+                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            }
         })
     }
 
     private fun navigateWithInfo(layoutId: Int, item: Item) {
         val bundle = Bundle()
-
         bundle.putString("item", item.let { Item.toJSON(it).toString()})
         bundle.putBoolean("fromList", true)
-
         view?.findNavController()?.navigate(layoutId, bundle)
     }
 
@@ -86,7 +84,6 @@ class ItemListFragment: Fragment() {
     private fun navigateWithoutInfo() {
         val bundle = Bundle()
         bundle.putString("item", null)
-
         view?.findNavController()?.navigate(R.id.action_nav_itemList_to_nav_ItemDetailEdit, bundle)
     }
 
@@ -100,14 +97,11 @@ class ItemListFragment: Fragment() {
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.undo), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-
                     val repo : FirebaseRepo = FirebaseRepo.INSTANCE
                     val prevItem = Item.fromStringJSON(oldItem)!!
                     prevItem.user = repo.getID(requireContext())
-
                     if(prevItem != null)
                         FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)
-
                 })
                 snackbar.show()
             }

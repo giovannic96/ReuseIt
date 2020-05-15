@@ -51,19 +51,19 @@ class OnSaleListFragment: Fragment() {
         })
 
         myAdapter.allow_modify = false
-
         itemList.adapter = myAdapter
-        itemList.layoutManager = if(items.size == 0)
-            LinearLayoutManager(context)
-        else {
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
-            else
-                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        }
+        itemList.layoutManager = LinearLayoutManager(context)
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
+            itemList.layoutManager = if(it.isEmpty())
+                LinearLayoutManager(context)
+            else {
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+                else
+                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            }
         })
     }
 
@@ -73,7 +73,6 @@ class OnSaleListFragment: Fragment() {
         val searchItem = menu.findItem(R.id.menu_search)
         val searchView = searchItem.actionView as SearchView
         // searchView.setQueryHint()
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
@@ -81,7 +80,6 @@ class OnSaleListFragment: Fragment() {
                     searchFilter.name = ""
                     updateFilter()
                 }
-
                 return false
             }
 
@@ -90,37 +88,29 @@ class OnSaleListFragment: Fragment() {
                 updateFilter()
                 return false
             }
-
         })
-
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun navigateWithInfo(item: Item) {
         val bundle = Bundle()
-
         bundle.putString("item", item.let { Item.toJSON(it).toString()})
         bundle.putBoolean("fromList", true)
         bundle.putBoolean("allowModify", false)
-
         view?.findNavController()?.navigate(R.id.action_nav_itemListSale_to_nav_ItemDetail, bundle)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when(item.itemId){
             R.id.menu_filter -> {
                 showFilterDialog()
                 return true
             }
         }
-
         return super.onOptionsItemSelected(item)
-
     }
 
     private fun updateFilter(){
-
         vm.getItems().removeObservers(viewLifecycleOwner)
         vm.getItems().observe(viewLifecycleOwner, Observer {
 
