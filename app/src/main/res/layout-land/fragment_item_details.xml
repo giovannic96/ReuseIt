@@ -183,30 +183,53 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemDefSubCategory"
                 tools:layout_editor_absoluteX="310dp" />
 
-            <TextView
-                android:id="@+id/itemSellerLabel"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/itemSellerLabel"
+                android:layout_height="70dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="30dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintTop_toBottomOf="@+id/itemSubCategory"
-                tools:layout_editor_absoluteX="310dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemSubCategory">
 
-            <TextView
-                android:id="@+id/itemSeller"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/defaultSeller"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintTop_toBottomOf="@+id/itemSellerLabel"
-                tools:layout_editor_absoluteX="310dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageProfileItem"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="left"
+                    android:contentDescription="@string/photo"
+                    android:foregroundGravity="center_horizontal"
+                    android:src="@drawable/ic_avatar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/profile_progress_bar_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="6dp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/itemSeller"
+                    android:layout_width="277dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="70dp"
+                    android:hint="@string/defaultSeller"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#505050"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/imageProfileItem"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/itemState"
@@ -219,7 +242,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemSeller"/>
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
 
 
             <TextView
