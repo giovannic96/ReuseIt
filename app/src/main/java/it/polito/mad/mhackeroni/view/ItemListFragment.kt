@@ -1,9 +1,8 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,15 +14,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.model.Item
+import it.polito.mad.mhackeroni.view.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.viewmodel.ItemListFragmentViewModel
+import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.fragment_itemlist.*
 
 
 class ItemListFragment: Fragment() {
 
-    private var items: MutableList<Item> = mutableListOf()
-    private lateinit var myAdapter:ItemAdapter
+    private lateinit var myAdapter: ItemAdapter
     private lateinit var vm : ItemListFragmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,23 +41,30 @@ class ItemListFragment: Fragment() {
 
         val itemList:RecyclerView = view.findViewById(R.id.item_list)
 
-        myAdapter = ItemAdapter(mutableListOf(), object : MyAdapterListener {
+        myAdapter = ItemAdapter(
+            mutableListOf(),
+            object : MyAdapterListener {
 
-            override fun editItemViewOnClick(item: Item) {
-                navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetailEdit, item)
-            }
+                override fun editItemViewOnClick(item: Item) {
+                    navigateWithInfo(
+                        R.id.action_nav_itemList_to_nav_ItemDetailEdit,
+                        item
+                    )
+                }
 
-            override fun itemViewOnClick(item: Item) {
-                navigateWithInfo(R.id.action_nav_itemList_to_nav_ItemDetail, item)
-            }
-        })
+                override fun itemViewOnClick(item: Item) {
+                    navigateWithInfo(
+                        R.id.action_nav_itemList_to_nav_ItemDetail,
+                        item
+                    )
+                }
+            })
 
         fab.setOnClickListener {
             navigateWithoutInfo()
         }
 
         myAdapter.allow_modify = true
-
         itemList.adapter = myAdapter
         itemList.layoutManager = LinearLayoutManager(context)
 
@@ -75,7 +83,9 @@ class ItemListFragment: Fragment() {
 
     private fun navigateWithInfo(layoutId: Int, item: Item) {
         val bundle = Bundle()
-        bundle.putString("item", item.let { Item.toJSON(it).toString()})
+        bundle.putString("item", item.let { Item.toJSON(
+            it
+        ).toString()})
         bundle.putBoolean("fromList", true)
         view?.findNavController()?.navigate(layoutId, bundle)
     }
@@ -98,7 +108,9 @@ class ItemListFragment: Fragment() {
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-                    val prevItem = Item.fromStringJSON(oldItem)!!
+                    val prevItem = Item.fromStringJSON(
+                        oldItem
+                    )!!
                     prevItem.user = repo.getID(requireContext())
                     if(prevItem != null)
                         FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)

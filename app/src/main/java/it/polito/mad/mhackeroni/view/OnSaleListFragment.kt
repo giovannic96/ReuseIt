@@ -1,10 +1,9 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 
 import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -14,16 +13,19 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.snackbar.Snackbar
-import it.polito.mad.mhackeroni.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.*
+import it.polito.mad.mhackeroni.view.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
+import it.polito.mad.mhackeroni.utilities.ItemFilter
+import it.polito.mad.mhackeroni.viewmodel.OnSaleListFragmentViewModel
 
 
 class OnSaleListFragment: Fragment() {
 
-    private var items: MutableList<Item> = mutableListOf()
-    private lateinit var myAdapter:ItemAdapter
-    private var searchFilter : ItemFilter = ItemFilter()
+    private lateinit var myAdapter: ItemAdapter
+    private var searchFilter : ItemFilter =
+        ItemFilter()
     private lateinit var vm : OnSaleListFragmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -41,14 +43,16 @@ class OnSaleListFragment: Fragment() {
 
         val itemList:RecyclerView = view.findViewById(R.id.item_list_sale)
 
-        myAdapter = ItemAdapter(mutableListOf(), object : MyAdapterListener {
+        myAdapter = ItemAdapter(
+            mutableListOf(),
+            object : MyAdapterListener {
 
-            override fun editItemViewOnClick(item: Item) {}
+                override fun editItemViewOnClick(item: Item) {}
 
-            override fun itemViewOnClick(item: Item) {
-                navigateWithInfo(item)
-            }
-        })
+                override fun itemViewOnClick(item: Item) {
+                    navigateWithInfo(item)
+                }
+            })
 
         myAdapter.allow_modify = false
         itemList.adapter = myAdapter
@@ -94,7 +98,9 @@ class OnSaleListFragment: Fragment() {
 
     private fun navigateWithInfo(item: Item) {
         val bundle = Bundle()
-        bundle.putString("item", item.let { Item.toJSON(it).toString()})
+        bundle.putString("item", item.let { Item.toJSON(
+            it
+        ).toString()})
         bundle.putBoolean("fromList", true)
         bundle.putBoolean("allowModify", false)
         view?.findNavController()?.navigate(R.id.action_nav_itemListSale_to_nav_ItemDetail, bundle)

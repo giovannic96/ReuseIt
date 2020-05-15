@@ -1,12 +1,12 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import it.polito.mad.mhackeroni.R
 import kotlinx.android.synthetic.main.fragment_show_image.*
 
 

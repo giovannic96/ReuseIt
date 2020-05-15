@@ -1,23 +1,20 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import it.polito.mad.mhackeroni.model.Profile
+import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
+import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
-import it.polito.mad.mhackeroni.utilities.ImageUtils
-import it.polito.mad.mhackeroni.utilities.StorageHelper
-import kotlinx.android.synthetic.main.fragment_item_details.*
 import kotlinx.android.synthetic.main.fragment_show_profile.*
 
 
@@ -25,7 +22,8 @@ class ShowProfileFragment : Fragment() {
     private var mListener: OnCompleteListener? = null
     private lateinit var vm : ProfileFragmentViewModel
     private var canEdit = true
-    private var profile : Profile = Profile()
+    private var profile : Profile =
+        Profile()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -81,7 +79,8 @@ class ShowProfileFragment : Fragment() {
                      }
                 }
             } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,
+                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             fullname.text = it?.fullName ?: resources.getString(R.string.defaultFullName)
@@ -103,7 +102,8 @@ class ShowProfileFragment : Fragment() {
                         .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
                 }
             } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,
+                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
         }
@@ -128,7 +128,9 @@ class ShowProfileFragment : Fragment() {
 
     private fun editProfile() {
         val bundle = Bundle()
-        bundle.putString("profile", profile.let { Profile.toJSON(it).toString()})
+        bundle.putString("profile", profile.let { Profile.toJSON(
+            it
+        ).toString()})
         view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
     }
 
@@ -144,7 +146,9 @@ class ShowProfileFragment : Fragment() {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
 
                     val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-                    val prevProfile = Profile.fromStringJSON(oldProfileJSON)!!
+                    val prevProfile = Profile.fromStringJSON(
+                        oldProfileJSON
+                    )!!
 
                     if(prevProfile != null)
                         repo.updateProfile(prevProfile, repo.getID(requireContext()))
@@ -158,7 +162,7 @@ class ShowProfileFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            mListener = context as ShowProfileFragment.OnCompleteListener
+            mListener = context as OnCompleteListener
         } catch (e: ClassCastException) {
             throw ClassCastException("$context must implement OnCompleteListener")
         }

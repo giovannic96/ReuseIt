@@ -1,11 +1,12 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 
-class EditProfileFragmentViewModel : ViewModel() {
+class ProfileFragmentViewModel : ViewModel() {
     var uid : String = ""
     private var profile : MutableLiveData<Profile> = MutableLiveData()
 
@@ -17,7 +18,7 @@ class EditProfileFragmentViewModel : ViewModel() {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                profile.value = snapshot.toObject(Profile::class.java)
+               profile.value = snapshot.toObject(Profile::class.java)
             } else {
                 profile.value = Profile()
             }
@@ -26,8 +27,5 @@ class EditProfileFragmentViewModel : ViewModel() {
         return profile
     }
 
-    fun updateProfile(newProfile : Profile){
-        profile.value = newProfile
-    }
-
 }
+

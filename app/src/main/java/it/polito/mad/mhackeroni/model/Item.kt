@@ -1,10 +1,8 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.model
 
-import android.content.Context
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
-import java.util.*
 
 class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var user : String = "null", var state : ItemState = ItemState.AVAILABLE) : Serializable {
     constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "")
@@ -19,7 +17,9 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 e.printStackTrace()
             } finally {
                 return if (jsonObject != null)
-                    fromJSON(jsonObject)
+                    fromJSON(
+                        jsonObject
+                    )
                 else
                     null
             }

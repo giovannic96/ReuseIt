@@ -1,4 +1,4 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 import android.Manifest
 import android.app.Activity
@@ -29,12 +29,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
+import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
+import it.polito.mad.mhackeroni.model.Profile
+import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -82,7 +83,8 @@ class EditProfileFragment : Fragment() {
                     edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
                 }
             } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,
+                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             edit_fullname.setText(it.fullName ?: resources.getString(R.string.defaultFullName))
@@ -144,26 +146,35 @@ class EditProfileFragment : Fragment() {
         super.onSaveInstanceState(outState)
 
         if(::currentPhotoPath.isInitialized)
-            profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
-                    edit_mail.text.toString(), edit_location.text.toString(),
-                    currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+            profile = Profile(
+                edit_fullname.text.toString(), edit_nickname.text.toString(),
+                edit_mail.text.toString(), edit_location.text.toString(),
+                currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString()
+            )
         else
-            profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
-                    edit_mail.text.toString(), edit_location.text.toString(),
-                    profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+            profile = Profile(
+                edit_fullname.text.toString(), edit_nickname.text.toString(),
+                edit_mail.text.toString(), edit_location.text.toString(),
+                profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString()
+            )
 
         if(profile?.image.isNullOrEmpty() )
             profile?.image = ""
 
 
-        outState.putString("profile", profile?.let { Profile.toJSON(it).toString() })
+        outState.putString("profile", profile?.let { Profile.toJSON(
+            it
+        ).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         val savedProfileJSON = savedInstanceState?.getString("profile") ?: ""
-        val savedProfile = Profile.fromStringJSON(savedProfileJSON)
+        val savedProfile =
+            Profile.fromStringJSON(
+                savedProfileJSON
+            )
 
         if(savedProfile != null){
             Log.d("MG", savedProfileJSON)
@@ -186,13 +197,17 @@ class EditProfileFragment : Fragment() {
                     return false
 
                 if(::currentPhotoPath.isInitialized)
-                    profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
-                            edit_mail.text.toString(), edit_location.text.toString(),
-                            currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                    profile = Profile(
+                        edit_fullname.text.toString(), edit_nickname.text.toString(),
+                        edit_mail.text.toString(), edit_location.text.toString(),
+                        currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString()
+                    )
                 else
-                    profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
-                            edit_mail.text.toString(), edit_location.text.toString(),
-                            profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                    profile = Profile(
+                        edit_fullname.text.toString(), edit_nickname.text.toString(),
+                        edit_mail.text.toString(), edit_location.text.toString(),
+                        profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString()
+                    )
 
 
                 val nRotation = rotationCount.value
@@ -229,13 +244,17 @@ class EditProfileFragment : Fragment() {
                                     it1
                                 ).toString()
                             },
-                                "new_profile" to profile?.let { Profile.toJSON(it).toString() }
+                                "new_profile" to profile?.let { Profile.toJSON(
+                                    it
+                                ).toString() }
                             )
                             view?.findNavController()
                                 ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                         } else {
                             val bundle = bundleOf("error" to true,
-                                "new_profile" to profile?.let { Profile.toJSON(it).toString() }
+                                "new_profile" to profile?.let { Profile.toJSON(
+                                    it
+                                ).toString() }
                             )
                             view?.findNavController()
                                 ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
@@ -537,7 +556,9 @@ class EditProfileFragment : Fragment() {
         edit_phoneNumber.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if(s.isNullOrEmpty()) {
-                    val defaultColor:Int = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+                    val defaultColor:Int = ContextCompat.getColor(requireContext(),
+                        R.color.colorAccent
+                    )
                     changeEditViewLineColor(edit_phoneNumber, defaultColor)
                 } else {
                     val c:Int = checkColor(s.toString(), Validation.isValidPhoneNumber)
@@ -553,7 +574,9 @@ class EditProfileFragment : Fragment() {
         edit_phoneNumber.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
             val s:String = edit_phoneNumber.text.toString()
             val c:Int
-            val defaultColor:Int = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            val defaultColor:Int = ContextCompat.getColor(requireContext(),
+                R.color.colorAccent
+            )
 
             c = checkColor(s, Validation.isValidPhoneNumber)
 
@@ -604,7 +627,9 @@ class EditProfileFragment : Fragment() {
         return if(s.isNullOrEmpty() || !f(s)) {
             Color.RED
         } else {
-            ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            ContextCompat.getColor(requireContext(),
+                R.color.colorAccent
+            )
         }
     }
 

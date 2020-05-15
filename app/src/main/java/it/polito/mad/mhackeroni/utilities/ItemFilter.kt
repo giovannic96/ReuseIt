@@ -1,4 +1,6 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.utilities
+
+import it.polito.mad.mhackeroni.model.Item
 
 class ItemFilter(){
     var name :String = ""
