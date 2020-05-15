@@ -137,7 +137,7 @@ class ItemDetailsFragment: Fragment() {
                 itemLocation.text = resources.getString(R.string.notSpecified)
             }
 
-            itemSeller.setOnClickListener { listener ->
+            imageProfileItem.setOnClickListener { listener ->
                 val bundle = Bundle()
                 bundle.putString(getString(R.string.uid), it.user)
                 view.findNavController()
@@ -150,7 +150,26 @@ class ItemDetailsFragment: Fragment() {
 
                 vm.getProfile().observe(viewLifecycleOwner, Observer {
                    itemSeller.text = it.nickname
+                    profile_progress_bar_item.visibility = View.VISIBLE
+                    val imagePath: String = it.image!!
+
+                    val ref = Firebase.storage.reference
+                        .child("profiles_images")
+                        .child(imagePath)
+
+                    ref.downloadUrl.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            Glide.with(requireContext())
+                                .load(it.result)
+                                .into(imageProfileItem)
+                        }
+
+                        profile_progress_bar_item.visibility = View.INVISIBLE
+                    }
                })
+            }
+            else{
+                imageProfileItem.setImageResource(R.drawable.ic_avatar)
             }
         })
 
