@@ -151,6 +151,8 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             // send the ID token to your backend server and validate the token on the server.
             firebaseAuthWithGoogle(account.idToken!!) // Signed in successfully, show authenticated UI.
 
+            FirebaseRepo.INSTANCE.isLogged = true
+
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

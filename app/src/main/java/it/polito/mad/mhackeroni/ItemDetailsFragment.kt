@@ -1,12 +1,9 @@
 package it.polito.mad.mhackeroni
 
-import android.animation.ObjectAnimator
-import android.graphics.Path
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.animation.PathInterpolator
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,15 +33,16 @@ class ItemDetailsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
-        getResult(view)
-        vm.itemId = item?.id ?: ""
+        getNavigationInfo()
 
+        if(vm.itemId.isEmpty())
+            vm.itemId = item?.id ?: ""
 
         if(!canModify){
             requireActivity().invalidateOptionsMenu()
             itemState.visibility = View.GONE
         } else {
-            fab_buy.visibility = View.GONE
+            fab_buy.visibility = View.INVISIBLE
         }
 
         checkFavorite()
@@ -74,9 +72,9 @@ class ItemDetailsFragment: Fragment() {
                 Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            itemTitle.text = it.name ?: resources.getString(R.string.defaultTitle)
+            itemTitle.text = it.name
             try {
-                price = it.price;
+                price = it.price
                 if (price == null)
                     itemPrice.text = resources.getString(R.string.defaultPrice)
                 else
@@ -97,7 +95,7 @@ class ItemDetailsFragment: Fragment() {
                     itemState.text = getString(R.string.stateBlocked)
                 }
             }
-            if (!it.desc.isNullOrEmpty()){
+            if (!it.desc.isEmpty()){
                 itemDesc.text =it.desc
             }
             else{
@@ -111,28 +109,28 @@ class ItemDetailsFragment: Fragment() {
                 itemCategory.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!it.subcategory.isNullOrEmpty()){
+            if (!it.subcategory.isEmpty()){
                 itemSubCategory.text = it?.subcategory
             }
             else{
                 itemSubCategory.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!it.condition.isNullOrEmpty()){
+            if (!it.condition.isEmpty()){
                 itemCondition.text = it?.condition
             }
             else{
                 itemCondition.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!it.expiryDate.isNullOrEmpty()){
+            if (!it.expiryDate.isEmpty()){
                 itemExpiryDate.text = it.expiryDate
             }
             else{
                 itemExpiryDate.text = resources.getString(R.string.notSpecified)
             }
 
-            if (!it.location.isNullOrEmpty()){
+            if (!it.location.isEmpty()){
                 itemLocation.text = it.location
             }
             else{
@@ -147,7 +145,7 @@ class ItemDetailsFragment: Fragment() {
             }
 
             // TODO: Check this lines
-            if(!it.user.isNullOrEmpty()) {
+            if(!it.user.isEmpty()) {
                 vm.getProfile().removeObservers(viewLifecycleOwner)
 
                 vm.getProfile().observe(viewLifecycleOwner, Observer {
@@ -240,7 +238,7 @@ class ItemDetailsFragment: Fragment() {
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
-    private fun getResult(view:View) {
+    private fun getNavigationInfo() {
 
         canModify = arguments?.getBoolean("allowModify", true) ?: true
 
@@ -250,7 +248,6 @@ class ItemDetailsFragment: Fragment() {
         //get item derived from list fragment (selectedItem)
         val selectedItemJSON = arguments?.getString("item", "")
 
-        //EDITED ITEM
         if (!editedItemJSON.isNullOrEmpty()) {
             val oldItem = arguments?.getString("old_item", "")
 
@@ -262,7 +259,7 @@ class ItemDetailsFragment: Fragment() {
                 handleEditItem(editedItemJSON, oldItem)
             }
         }
-        //SELECTED ITEM
+
         else if (!selectedItemJSON.isNullOrEmpty()) {
             handleSelectedItem(selectedItemJSON)
         }
@@ -271,38 +268,23 @@ class ItemDetailsFragment: Fragment() {
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
-        /*
-        val storageHelper =
-            StorageHelper(requireContext())
-        val sharedPref:SharedPreferences = requireContext()
-            .getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        val snackbar = view?.let { Snackbar.make(it, getString(R.string.undo), Snackbar.LENGTH_LONG) }
 
-        if(editedItemJSON != oldItem) {
+        item = Item.fromStringJSON(oldItem)
 
-            item = editedItemJSON.let { Item.fromStringJSON(it) }
+        if (snackbar != null) {
+            snackbar.setAction(getString(R.string.undo), View.OnClickListener {
 
+                val repo : FirebaseRepo = FirebaseRepo.INSTANCE
+                val prevItem = Item.fromStringJSON(oldItem)!!
+                prevItem.user = repo.getID(requireContext())
 
-            item.let {
-                if (it != null) {
-                    storageHelper.editItem(sharedPref, it)
-                }
-            }
-
-            val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
-            if (snackbar != null) {
-                snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-                    item = Item.fromStringJSON(oldItem)
-
-                    if(item?.image.isNullOrEmpty()) {
-                        itemImage.setImageResource(R.drawable.ic_box)
-                    }
-                    item?.let { storageHelper.editItem(sharedPref, it) }
+                if(prevItem != null)
+                    FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)
 
                 })
-                snackbar.show()
-            }
+            snackbar.show()
         }
-         */
     }
 
 
@@ -310,26 +292,7 @@ class ItemDetailsFragment: Fragment() {
       item = selectedItemJSON.let { Item.fromStringJSON(it) }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("item", item?.let { Item.toJSON(item!!).toString() })
-
-    }
-
     private fun hide_fab(){
-       fab_buy.visibility = View.GONE
+       fab_buy.visibility = View.INVISIBLE
     }
-
-    /*
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
-
-            if(savedItem != null)
-                item = savedItem
-        }
-    }
-
-     */
 }

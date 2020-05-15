@@ -14,8 +14,8 @@ import kotlinx.coroutines.*
 
 class ItemDetailsFragmentViewModel : ViewModel() {
     var itemId : String = ""
-    var profile : MutableLiveData<Profile> = MutableLiveData()
-    var item : MutableLiveData<Item> = MutableLiveData()
+    private var profile : MutableLiveData<Profile> = MutableLiveData()
+    private var item : MutableLiveData<Item> = MutableLiveData()
 
     fun getItem(): LiveData<Item>{
         val repo = FirebaseRepo.INSTANCE

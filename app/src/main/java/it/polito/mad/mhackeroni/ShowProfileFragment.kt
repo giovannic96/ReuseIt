@@ -39,6 +39,7 @@ class ShowProfileFragment : Fragment() {
         lateinit var uid : String
 
         var passingUID= arguments?.getString(getString(R.string.uid), "")
+        getNavigationInfo()
         arguments?.clear()
 
         // Show personal profile
@@ -53,9 +54,7 @@ class ShowProfileFragment : Fragment() {
         }
 
         vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
-        if (uid != null) {
-            vm.uid = uid
-        }
+        vm.uid = uid
 
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             profile = it
@@ -100,7 +99,6 @@ class ShowProfileFragment : Fragment() {
                     bundle.putString("uri", profile.image.toString())
                     bundle.putBoolean("profile_image", true)
 
-                    Log.d("MAD2020", profile.image)
                     view.findNavController()
                         .navigate(R.id.action_nav_showProfile_to_showImageFragment, bundle)
                 }
@@ -134,35 +132,29 @@ class ShowProfileFragment : Fragment() {
         view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
     }
 
-    /*
-    private fun getResult() {
-        val newProfileJSON = arguments?.getString("new_profile", "")
-        db = FirebaseFirestore.getInstance()
+    private fun getNavigationInfo(){
+        val oldProfileJSON = arguments?.getString("old_profile") ?: ""
+        val newProfileJSON = arguments?.getString("new_profile") ?: ""
 
-        val oldProfile = profile
+        Log.d("MAD2020", "old - ${oldProfileJSON} - new ${newProfileJSON}")
 
-        if(!newProfileJSON.isNullOrEmpty() && newProfileJSON != oldProfile?.let { Profile.toJSON(it).toString() }){
-
-            profile = newProfileJSON.let { Profile.fromStringJSON(it) ?: profile}
-
-            val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
+        if(!newProfileJSON.isEmpty() && !oldProfileJSON.isEmpty() && oldProfileJSON != newProfileJSON){
+            val snackbar = view?.let { Snackbar.make(it, getString(R.string.undo), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
-                    profile = oldProfile
-                    if (oldProfile != null) {
-                        storageHelper.saveProfile(db, oldProfile)
-                        mListener?.onComplete(oldProfile)
-                    }
+
+                    val repo : FirebaseRepo = FirebaseRepo.INSTANCE
+                    val prevProfile = Profile.fromStringJSON(oldProfileJSON)!!
+
+                    if(prevProfile != null)
+                        repo.updateProfile(prevProfile, repo.getID(requireContext()))
+
                 })
                 snackbar.show()
             }
         }
-        profile.let { storageHelper.saveProfile(db, it) }
-        profile.let { mListener?.onComplete(it) }
-        arguments?.clear() // Clear arguments
     }
 
-     */
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {

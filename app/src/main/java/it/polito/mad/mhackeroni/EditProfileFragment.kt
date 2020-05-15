@@ -14,6 +14,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
@@ -46,8 +47,9 @@ class EditProfileFragment : Fragment() {
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
     private var startCamera = false
     private var originalPhotPath = ""
-    private lateinit  var vm : ProfileFragmentViewModel
-    private lateinit var  profile : Profile
+    private lateinit  var vm : EditProfileFragmentViewModel
+    private var  profile : Profile? = null
+    private var oldProfile : Profile? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_edit_profile, container, false)
@@ -58,37 +60,17 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val profileJSON = arguments?.getString("profile", "")
-        val savedProfile = savedInstanceState?.getString("profile")?.let { Profile.fromStringJSON(it) }
-        val rotationSaved = savedInstanceState?.getInt("rotation")
-        val dao = FirebaseRepo.INSTANCE
+        val repo = FirebaseRepo.INSTANCE
 
-        vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
-        vm.uid = dao.getID(requireContext())
+        vm = ViewModelProvider(this).get(EditProfileFragmentViewModel::class.java)
+        vm.uid = repo.getID(requireContext())
 
-        if(rotationSaved != null)
-            rotationCount.value = rotationSaved
-        else
-            rotationCount.value = 0
-
-        // TODO: Handle two sources: local profile online profile
-        if(!profileJSON.isNullOrEmpty()){
-            profile = Profile()
-            profile = Profile.fromStringJSON(profileJSON)!!
-            currentPhotoPath = profile.image.toString()
-            originalPhotPath = currentPhotoPath
-        }
-
-        // Get saved value
-        if(savedProfile != null) {
-            profile = Profile()
-            profile = savedProfile
-            currentPhotoPath = savedProfile.image.toString()
-            originalPhotPath = currentPhotoPath
-        }
+        profile = vm.getProfile().value
 
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            profile = it
+            if(oldProfile == null)
+                oldProfile = it
+
             try {
                 val draw = it.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) }
 
@@ -157,6 +139,7 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -167,14 +150,26 @@ class EditProfileFragment : Fragment() {
         else
             profile = Profile(edit_fullname.text.toString(), edit_nickname.text.toString(),
                     edit_mail.text.toString(), edit_location.text.toString(),
-                    profile.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
+                    profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString())
 
         if(profile?.image.isNullOrEmpty() )
-            profile!!.image = ""
+            profile?.image = ""
 
 
         outState.putString("profile", profile?.let { Profile.toJSON(it).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        val savedProfileJSON = savedInstanceState?.getString("profile") ?: ""
+        val savedProfile = Profile.fromStringJSON(savedProfileJSON)
+
+        if(savedProfile != null){
+            Log.d("MG", savedProfileJSON)
+            vm.updateProfile(savedProfile)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -219,26 +214,35 @@ class EditProfileFragment : Fragment() {
                     profile!!.image = currentPhotoPath
                 }
 
-                val bundle = bundleOf(
-                    "new_profile" to profile?.let { Profile.toJSON(it).toString() }
-                )
-                view?.findNavController()?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
 
-                // TODO: Update profile
-                val dao = FirebaseRepo.INSTANCE
-                runBlocking {
-                    launch {
-                        val entry = profile
-                        val dao = FirebaseRepo.INSTANCE
-                        val uid = dao.getID(requireContext())
+                val repo = FirebaseRepo.INSTANCE
+                val entry = profile
+                val uid = repo.getID(requireContext())
 
-                        if (entry != null) {
-                            dao.updateProfile(entry, uid)
+                // TODO: Handle error
+                if (entry != null) {
+                    repo.updateProfile(entry, uid).addOnCompleteListener {
+                        if(it.isSuccessful) {
+
+                            val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
+                                Profile.toJSON(
+                                    it1
+                                ).toString()
+                            },
+                                "new_profile" to profile?.let { Profile.toJSON(it).toString() }
+                            )
+                            view?.findNavController()
+                                ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
+                        } else {
+                            val bundle = bundleOf("error" to true,
+                                "new_profile" to profile?.let { Profile.toJSON(it).toString() }
+                            )
+                            view?.findNavController()
+                                ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                         }
-                    }.invokeOnCompletion {
-                        // TODO: item_progressbar.visibility = View.INVISIBLE
                     }
                 }
+
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -303,7 +307,7 @@ class EditProfileFragment : Fragment() {
             currentPhotoPath = originalPhotPath ?: ""
             profile?.image = originalPhotPath
 
-            if(originalPhotPath.isNullOrEmpty()){
+            if(originalPhotPath.isEmpty()){
                 edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
             }
 
@@ -312,7 +316,7 @@ class EditProfileFragment : Fragment() {
             profile?.image = originalPhotPath
 
 
-            if(originalPhotPath.isNullOrEmpty()){
+            if(originalPhotPath.isEmpty()){
                 edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
             }
         }
@@ -321,7 +325,7 @@ class EditProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // Used to solve lazy update issue
-        if(::currentPhotoPath.isInitialized && !currentPhotoPath.isNullOrEmpty()){
+        if(::currentPhotoPath.isInitialized && !currentPhotoPath.isEmpty()){
             edit_showImageProfile.setImageBitmap(ImageUtils.getBitmap(currentPhotoPath, requireContext()))
         }
 

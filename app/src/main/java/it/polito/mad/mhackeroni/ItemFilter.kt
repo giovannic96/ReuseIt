@@ -1,7 +1,5 @@
 package it.polito.mad.mhackeroni
 
-import android.util.Log
-
 class ItemFilter(){
     var name :String = ""
     var price_min:Double = 0.0
@@ -13,11 +11,11 @@ class ItemFilter(){
     var user : String = ""
 
     fun nameMatch(item : Item) : Boolean{
-        return !name.isNullOrEmpty() && !item.name.isNullOrEmpty() && item.name.contains(name!!, true)
+        return !name.isEmpty() && !item.name.isEmpty() && item.name.contains(name, true)
     }
 
     fun priceMatch(item : Item) : Boolean{
-        return item.price <= price_max && item.price >= price_min
+        return item.price in price_min..price_max
     }
 
      fun matchCategory(item : Item) : Boolean {
@@ -43,12 +41,12 @@ class ItemFilter(){
     fun match(item: Item) : Boolean{
 
         // Check user
-        if(!user.isNullOrEmpty() && !matchUser(item)) {
+        if(!user.isEmpty() && !matchUser(item)) {
             return false
         }
 
         // Check name constraint
-        if(!name.isNullOrEmpty() && !nameMatch(item)) {
+        if(!name.isEmpty() && !nameMatch(item)) {
             return false
         }
 
@@ -69,7 +67,7 @@ class ItemFilter(){
 
 
         // Check location
-        if(!location.isNullOrEmpty() && !matchLocation(item)){
+        if(!location.isEmpty() && !matchLocation(item)){
             return false
         }
 

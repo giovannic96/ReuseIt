@@ -15,17 +15,32 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/itemImage"
+            <FrameLayout
+                android:id="@+id/image_detail_wrapper"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:contentDescription="@string/photo"
-                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_box"/>
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageView
+                    android:id="@+id/itemImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/photo"
+                    android:src="@drawable/ic_box"/>
+
+                <ProgressBar
+                    android:id="@+id/detail_progressbar"
+                    android:layout_gravity="center"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/itemTitle"
@@ -42,7 +57,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemImage" />
+                app:layout_constraintTop_toBottomOf="@+id/image_detail_wrapper" />
 
             <TextView
                 android:id="@+id/itemPrice"
@@ -60,7 +75,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/itemTitle"
-                app:layout_constraintTop_toBottomOf="@+id/itemImage" />
+                app:layout_constraintTop_toBottomOf="@+id/image_detail_wrapper" />
 
             <TextView
                 android:id="@+id/itemDefCond"

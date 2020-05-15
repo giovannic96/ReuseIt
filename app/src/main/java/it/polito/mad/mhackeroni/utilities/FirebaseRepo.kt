@@ -17,6 +17,7 @@ import it.polito.mad.mhackeroni.R
 // DAO singleton class
 public class FirebaseRepo private constructor() {
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    var isLogged = false
 
     private object GetInstance {
         val INSTANCE = FirebaseRepo()
@@ -27,7 +28,7 @@ public class FirebaseRepo private constructor() {
     }
 
     fun setProfile(profile: Profile, userID : String){
-        Log.d("MAG2020", "Testing: ${userID}")
+        // Log.d("MAG2020", "Testing: ${userID}")
 
         db.collection("users").document(userID).get().addOnCompleteListener {
             if(it.isSuccessful){
@@ -38,8 +39,8 @@ public class FirebaseRepo private constructor() {
         }
     }
 
-    fun updateProfile(profile: Profile, userID: String){
-        db.collection("users")
+    fun updateProfile(profile: Profile, userID: String): Task<Void> {
+        return db.collection("users")
             .document(userID)
             .update(hashMapOf(
                 "fullName" to profile.fullName,
@@ -63,7 +64,7 @@ public class FirebaseRepo private constructor() {
 
     fun updateUserToken(uid : String, token : String): Task<Void> {
 
-        Log.d("MAD2020", "update token uid: ${uid}, token: ${token}")
+       // Log.d("MAD2020", "update token uid: ${uid}, token: ${token}")
         return db.collection("users")
             .document(uid)
             .update(
@@ -145,8 +146,8 @@ public class FirebaseRepo private constructor() {
         return  db.collection("users").document(uid)
     }
 
-    fun updateItem(id : String, item : Item){
-        db.collection("items")
+    fun updateItem(id : String, item : Item): Task<Void> {
+       return db.collection("items")
             .document(id)
             .update(hashMapOf(
                 "category" to item.category,
@@ -168,7 +169,7 @@ public class FirebaseRepo private constructor() {
                         hashMapOf("image" to ref) as Map<String, Any>
                     )
                 } else {
-                    Log.d("MAG2020", it.exception.toString())
+                   // Log.d("MAG2020", it.exception.toString())
                 }
             }
     }

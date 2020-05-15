@@ -6,10 +6,10 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -19,22 +19,18 @@ import androidx.navigation.ui.*
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import it.polito.mad.mhackeroni.utilities.ImageUtils
-import kotlinx.android.synthetic.main.fragment_show_profile.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
-    private lateinit var db: FirebaseFirestore
     private lateinit var uid: String
     private lateinit var vm : ProfileFragmentViewModel
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +44,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -90,12 +86,11 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     }
 
     private fun updateHeader(profile: Profile) {
-        db = FirebaseFirestore.getInstance()
-
         val headerView = navView.getHeaderView(0)
         val navUsername = headerView.findViewById(R.id.drawable_name) as TextView
         val navEmail = headerView.findViewById(R.id.drawable_mail) as TextView
         val navImage = headerView.findViewById(R.id.drawable_pic) as ImageView
+        val navProgressbar = headerView.findViewById(R.id.drawer_progressbar) as ProgressBar
 
         if(profile.fullName.isNullOrEmpty())
             navUsername.text = resources.getString(R.string.defaultFullName)
@@ -108,7 +103,9 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
             navEmail.text = profile.email
 
         if(!profile.image.isNullOrEmpty()) {
-            drawer_progressbar.visibility = View.VISIBLE
+            if(drawerLayout.isDrawerOpen(GravityCompat.START))
+                navProgressbar.visibility = View.VISIBLE // Show only if drawer is open
+
             val imagePath: String = profile.image!!
 
             val ref = Firebase.storage.reference
@@ -122,7 +119,8 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
                         .into(navImage)
                 }
 
-                drawer_progressbar.visibility = View.INVISIBLE
+                if(drawerLayout.isDrawerOpen(GravityCompat.START))
+                    navProgressbar.visibility = View.INVISIBLE
             }
         }
     }

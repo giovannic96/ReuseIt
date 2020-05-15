@@ -4,16 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.QuerySnapshot
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 
 class ItemListFragmentViewModel : ViewModel() {
-    var items : MutableLiveData<List<Item>> = MutableLiveData()
+    private var items : MutableLiveData<List<Item>> = MutableLiveData()
     var uid : String = ""
 
     fun getItems(): LiveData<List<Item>>{
         val repo = FirebaseRepo.INSTANCE
-        repo.getItemsRef(uid).addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+        repo.getItemsRef(uid).addSnapshotListener(EventListener { value, e ->
             if (e != null) {
                 items.value = mutableListOf()
                 return@EventListener
@@ -21,9 +20,9 @@ class ItemListFragmentViewModel : ViewModel() {
 
             var itemList : MutableList<Item> = mutableListOf()
             for (doc in value!!) {
-                var addressItem = doc.toObject(Item::class.java)
-                addressItem.id = doc.id
-                itemList.add(addressItem)
+                var queryItems = doc.toObject(Item::class.java)
+                queryItems.id = doc.id
+                itemList.add(queryItems)
             }
             items.value = itemList
         })

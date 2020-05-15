@@ -8,7 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 
 class OnSaleListFragmentViewModel : ViewModel() {
-    var items : MutableLiveData<List<Item>> = MutableLiveData()
+    private var items : MutableLiveData<List<Item>> = MutableLiveData()
     var uid : String = ""
 
     fun getItems(): LiveData<List<Item>>{
@@ -19,12 +19,12 @@ class OnSaleListFragmentViewModel : ViewModel() {
                 return@EventListener
             }
 
-            var itemList : MutableList<Item> = mutableListOf()
+            val itemList : MutableList<Item> = mutableListOf()
             for (doc in value!!) {
-                var addressItem = doc.toObject(Item::class.java)
-                addressItem.id = doc.id
-                if(addressItem.user != uid)
-                    itemList.add(addressItem)
+                val queryItems = doc.toObject(Item::class.java)
+                queryItems.id = doc.id
+                if(queryItems.user != uid)
+                    itemList.add(queryItems)
             }
             items.value = itemList
         })
