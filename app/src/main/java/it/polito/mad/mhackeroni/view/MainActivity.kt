@@ -1,4 +1,4 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,9 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Profile
+import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
@@ -50,7 +53,10 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_showProfile, R.id.nav_itemList, R.id.nav_itemListSale), drawerLayout)
+            R.id.nav_showProfile,
+            R.id.nav_itemList,
+            R.id.nav_itemListSale
+        ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

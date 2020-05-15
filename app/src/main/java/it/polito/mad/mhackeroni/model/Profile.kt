@@ -1,11 +1,8 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.model
 
-import android.R
-import android.widget.TextView
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
-import java.util.*
 
 
 class Profile(var fullName:String, var nickname:String,
@@ -23,14 +20,17 @@ class Profile(var fullName:String, var nickname:String,
                 e.printStackTrace()
             } finally {
                 return if(jsonObject != null)
-                    fromJSON(jsonObject)
+                    fromJSON(
+                        jsonObject
+                    )
                 else
                     null
             }
         }
 
         private fun fromJSON(jsonObject : JSONObject ) : Profile {
-            return Profile(jsonObject.getString("fullname"),
+            return Profile(
+                jsonObject.getString("fullname"),
                 jsonObject.getString("nickname"),
                 jsonObject.getString("email"),
                 jsonObject.getString("location"),
@@ -40,7 +40,7 @@ class Profile(var fullName:String, var nickname:String,
             )
         }
 
-        fun toJSON(profile:Profile) : JSONObject{
+        fun toJSON(profile: Profile) : JSONObject{
             val obj:JSONObject = JSONObject()
             try {
                 obj.put("fullname", profile.fullName)

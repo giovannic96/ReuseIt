@@ -1,9 +1,7 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +10,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import it.polito.mad.mhackeroni.model.Item
+import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
+import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import kotlinx.android.synthetic.main.fragment_item_details.*
@@ -20,7 +21,8 @@ import kotlinx.android.synthetic.main.fragment_item_details.*
 class ItemDetailsFragment: Fragment() {
     var price: Double? = null
     lateinit var vm : ItemDetailsFragmentViewModel
-    var item : Item? = Item()
+    var item : Item? =
+        Item()
     var canModify : Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,7 +71,8 @@ class ItemDetailsFragment: Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,
+                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             itemTitle.text = it.name
@@ -81,7 +84,8 @@ class ItemDetailsFragment: Fragment() {
                     itemPrice.text = "$price"
             }
             catch (e: Exception) {
-                Snackbar.make(view, R.string.price_error, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,
+                    R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
             when(it.state){
@@ -213,7 +217,8 @@ class ItemDetailsFragment: Fragment() {
                             .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
                     }
                 } catch (e: Exception) {
-                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view,
+                        R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
@@ -253,7 +258,9 @@ class ItemDetailsFragment: Fragment() {
 
     private fun editItem() {
         val bundle = Bundle()
-        bundle.putString("item", item?.let { it.let { it1 -> Item.toJSON(it1).toString() } })
+        bundle.putString("item", item?.let { it.let { it1 -> Item.toJSON(
+            it1
+        ).toString() } })
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
@@ -295,7 +302,9 @@ class ItemDetailsFragment: Fragment() {
             snackbar.setAction(getString(R.string.undo), View.OnClickListener {
 
                 val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-                val prevItem = Item.fromStringJSON(oldItem)!!
+                val prevItem = Item.fromStringJSON(
+                    oldItem
+                )!!
                 prevItem.user = repo.getID(requireContext())
 
                 if(prevItem != null)
@@ -308,7 +317,11 @@ class ItemDetailsFragment: Fragment() {
 
 
     private fun handleSelectedItem(selectedItemJSON: String) {
-      item = selectedItemJSON.let { Item.fromStringJSON(it) }
+      item = selectedItemJSON.let {
+          Item.fromStringJSON(
+              it
+          )
+      }
     }
 
     private fun hide_fab(){

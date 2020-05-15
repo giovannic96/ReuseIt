@@ -1,4 +1,4 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
+import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.google_signin.*
 

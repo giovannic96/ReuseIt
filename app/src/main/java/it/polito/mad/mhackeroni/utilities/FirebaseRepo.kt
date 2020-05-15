@@ -1,17 +1,12 @@
 package it.polito.mad.mhackeroni.utilities
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import it.polito.mad.mhackeroni.Item
-import it.polito.mad.mhackeroni.Profile
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
 
 // DAO singleton class

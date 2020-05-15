@@ -1,6 +1,5 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Item
 import java.lang.ref.WeakReference
 
 class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):
@@ -70,7 +71,6 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         notifyDataSetChanged()
     }
 
-
     //class that handles list with items
     class ItemViewHolder(v: View, listener: MyAdapterListener): ViewHolder(v) {
         private val name:TextView = v.findViewById(R.id.item_name)
@@ -81,7 +81,7 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         private val context = v.context
         private val progressBar:ProgressBar = v.findViewById(R.id.item_progressbar)
 
-        override fun bind(item:Item, allow_modify: Boolean) {
+        override fun bind(item: Item, allow_modify: Boolean) {
             name.text = item.name
             price.text = item.price.toString() + " €"
 

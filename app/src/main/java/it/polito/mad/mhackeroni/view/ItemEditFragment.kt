@@ -1,4 +1,4 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.view
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -31,6 +31,8 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import it.polito.mad.mhackeroni.model.Item
+import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
@@ -59,7 +61,8 @@ class ItemEditFragment: Fragment() {
     val c = Calendar.getInstance()
     private var pickerShowing = false
     private var startCamera = false
-    private var state : Item.ItemState = Item.ItemState.AVAILABLE
+    private var state : Item.ItemState =
+        Item.ItemState.AVAILABLE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -88,7 +91,11 @@ class ItemEditFragment: Fragment() {
         if(itemJSON.isNullOrEmpty()) {
             isAddingItem = true
 
-            val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
+            val savedItem = savedInstanceState?.getString("item")?.let {
+                Item.fromStringJSON(
+                    it
+                )
+            }
             if(!savedItem?.image.isNullOrEmpty())
                 currentItemPhotoPath = savedItem?.image ?: ""
 
@@ -97,9 +104,15 @@ class ItemEditFragment: Fragment() {
         //EDIT ITEM
         else {
             isAddingItem = false
-            val savedItem = savedInstanceState?.getString("item")?.let { Item.fromStringJSON(it) }
-            item.value = Item.fromStringJSON(itemJSON)
-            oldItem = Item.fromStringJSON(itemJSON)
+            val savedItem = savedInstanceState?.getString("item")?.let {
+                Item.fromStringJSON(
+                    it
+                )
+            }
+            item.value =
+                Item.fromStringJSON(itemJSON)
+            oldItem =
+                Item.fromStringJSON(itemJSON)
             currentItemPhotoPath = item.value?.image.toString()
 
 
@@ -119,8 +132,12 @@ class ItemEditFragment: Fragment() {
                     item.value?.price.toString()
                 )
                 edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultDesc))
-                edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(R.string.defaultExpire))
-                edit_itemLocation.setText(item.value?.location ?: resources.getString(R.string.defaultLocation))
+                edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(
+                    R.string.defaultExpire
+                ))
+                edit_itemLocation.setText(item.value?.location ?: resources.getString(
+                    R.string.defaultLocation
+                ))
 
                 try {
                     if(item.value?.image.isNullOrEmpty()){
@@ -136,19 +153,22 @@ class ItemEditFragment: Fragment() {
                         }
                     }
                 } catch (e: Exception) {
-                    Snackbar.make(view, R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view,
+                        R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                 }
             }
         })
 
         edit_state.setOnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
-                R.id.radio_available -> state = Item.ItemState.AVAILABLE
+                R.id.radio_available -> state =
+                    Item.ItemState.AVAILABLE
                 R.id.radio_block -> {
                     state = Item.ItemState.BLOCKED
                     Snackbar.make(view, getString(R.string.blockedHint), Snackbar.LENGTH_LONG).show()
                 }
-                R.id.radio_sold -> state = Item.ItemState.SOLD
+                R.id.radio_sold -> state =
+                    Item.ItemState.SOLD
             }
         }
 
@@ -222,17 +242,35 @@ class ItemEditFragment: Fragment() {
                 if(isAddingItem){
                     if(cat.isNullOrEmpty())
                         subCat = ""
-                    item.value = Item("", edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
-                        edit_itemDesc.text.toString(), cat ?: "", subCat ?: "", edit_itemExpiryDate.text.toString(),
-                        edit_itemLocation.text.toString(), cond ?: "", null)
+                    item.value = Item(
+                        "",
+                        edit_itemTitle.text.toString(),
+                        edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        edit_itemDesc.text.toString(),
+                        cat ?: "",
+                        subCat ?: "",
+                        edit_itemExpiryDate.text.toString(),
+                        edit_itemLocation.text.toString(),
+                        cond ?: "",
+                        null
+                    )
                 } else {
                     if(cat.isNullOrEmpty())
                         subCat = ""
 
                     item.value = Item(
-                        oldItem?.id ?: "", edit_itemTitle.text.toString(), edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
-                        edit_itemDesc.text.toString(), cat ?: oldItem!!.category, subCat ?: oldItem!!.subcategory,
-                        edit_itemExpiryDate.text.toString(), edit_itemLocation.text.toString(), cond ?: oldItem!!.condition, null, state = state)
+                        oldItem?.id ?: "",
+                        edit_itemTitle.text.toString(),
+                        edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                        edit_itemDesc.text.toString(),
+                        cat ?: oldItem!!.category,
+                        subCat ?: oldItem!!.subcategory,
+                        edit_itemExpiryDate.text.toString(),
+                        edit_itemLocation.text.toString(),
+                        cond ?: oldItem!!.condition,
+                        null,
+                        state = state
+                    )
                 }
 
 
@@ -282,7 +320,9 @@ class ItemEditFragment: Fragment() {
                     }
 
                     val bundle =
-                        bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString() })
+                        bundleOf("new_item" to item.value?.let { Item.toJSON(
+                            it
+                        ).toString() })
 
                     view?.findNavController()
                         ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
@@ -315,14 +355,22 @@ class ItemEditFragment: Fragment() {
 
                     if(fromList!!){
                         val bundle =
-                            bundleOf("edited_item" to item.value?.let { Item.toJSON(it).toString()},
-                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+                            bundleOf("edited_item" to item.value?.let { Item.toJSON(
+                                it
+                            ).toString()},
+                                "old_item" to oldItem?.let { Item.toJSON(
+                                    it
+                                ).toString() })
                         view?.findNavController()
                             ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
                     } else {
                         val bundle =
-                            bundleOf("new_item" to item.value?.let { Item.toJSON(it).toString()},
-                                "old_item" to oldItem?.let { Item.toJSON(it).toString() })
+                            bundleOf("new_item" to item.value?.let { Item.toJSON(
+                                it
+                            ).toString()},
+                                "old_item" to oldItem?.let { Item.toJSON(
+                                    it
+                                ).toString() })
                         view?.findNavController()
                             ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
                     }
@@ -711,7 +759,18 @@ class ItemEditFragment: Fragment() {
         super.onSaveInstanceState(outState)
 
         if(item.value == null)
-            item.value = Item("","",0.0,"","","","","","","")
+            item.value = Item(
+                "",
+                "",
+                0.0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            )
 
 
         if(isAddingItem && ::currentItemPhotoPath.isInitialized) {
@@ -756,7 +815,9 @@ class ItemEditFragment: Fragment() {
                 item.value?.condition = cond ?: ""
             }
 
-            outState.putString("item", item.value?.let { Item.toJSON(it).toString() })
+            outState.putString("item", item.value?.let { Item.toJSON(
+                it
+            ).toString() })
             rotationCount.value?.let { outState.putInt("rotation", it) }
             helperTextVisible.value?.let { outState.putBoolean("helperText", it) }
         }
@@ -767,7 +828,11 @@ class ItemEditFragment: Fragment() {
         super.onViewStateRestored(savedInstanceState)
 
         if (savedInstanceState != null) {
-            val savedItem  = savedInstanceState.getString("item")?.let { Item.fromStringJSON(it) }
+            val savedItem  = savedInstanceState.getString("item")?.let {
+                Item.fromStringJSON(
+                    it
+                )
+            }
             val rotation = savedInstanceState.getInt("rotation")
             val helperText = savedInstanceState.getBoolean("helperText")
 

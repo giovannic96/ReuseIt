@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/nav_showProfile"
-        android:name="it.polito.mad.mhackeroni.ShowProfileFragment"
+        android:name="it.polito.mad.mhackeroni.view.ShowProfileFragment"
         android:label="@string/frag_profile_title">
         <argument
             android:name="uid"
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_editProfile"
-        android:name="it.polito.mad.mhackeroni.EditProfileFragment"
+        android:name="it.polito.mad.mhackeroni.view.EditProfileFragment"
         android:label="@string/frag_profile_title" >
         <action
             android:id="@+id/action_nav_editProfile_to_nav_showProfile"
@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/nav_ItemDetail"
-        android:name="it.polito.mad.mhackeroni.ItemDetailsFragment"
+        android:name="it.polito.mad.mhackeroni.view.ItemDetailsFragment"
         android:label="@string/frag_item_title" >
         <action
             android:id="@+id/action_nav_ItemDetail_to_nav_ItemDetailEdit"
@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_ItemDetailEdit"
-        android:name="it.polito.mad.mhackeroni.ItemEditFragment"
+        android:name="it.polito.mad.mhackeroni.view.ItemEditFragment"
         android:label="@string/frag_item_title" >
         <action
             android:id="@+id/action_nav_ItemDetailEdit_to_nav_ItemDetail"
@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_itemList"
-        android:name="it.polito.mad.mhackeroni.ItemListFragment"
+        android:name="it.polito.mad.mhackeroni.view.ItemListFragment"
         android:label="@string/frag_list_title" >
         <action
             android:id="@+id/action_nav_itemList_to_nav_ItemDetail"
@@ -99,7 +99,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_showImage"
-        android:name="it.polito.mad.mhackeroni.ShowImageFragment"
+        android:name="it.polito.mad.mhackeroni.view.ShowImageFragment"
         android:label="ShowImageFragment" >
         <action
             android:id="@+id/action_showImageFragment_to_nav_showProfile"
@@ -109,7 +109,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_itemListSale"
-        android:name="it.polito.mad.mhackeroni.OnSaleListFragment"
+        android:name="it.polito.mad.mhackeroni.view.OnSaleListFragment"
         android:label="@string/on_sale_title" >
         <action
             android:id="@+id/action_nav_itemListSale_to_nav_ItemDetail"

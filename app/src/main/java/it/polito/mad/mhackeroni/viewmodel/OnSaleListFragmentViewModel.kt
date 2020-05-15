@@ -1,10 +1,11 @@
-package it.polito.mad.mhackeroni
+package it.polito.mad.mhackeroni.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.QuerySnapshot
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 
 class OnSaleListFragmentViewModel : ViewModel() {
