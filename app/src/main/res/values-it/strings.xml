@@ -83,6 +83,8 @@
     <string name="blockedHint">L\'articolo non comparirà nel feed di altri utenti</string>
     <string name="favorite">Riceverai aggiornamenti sullo stato dell\'inserzione</string>
     <string name="alreadyFavorite">Sei già interessato all\'inserzione</string>
+    <string name="channelName">ReuseIt App</string>
+    <string name="channelDesc">Notifiche ReuseIt</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

@@ -14,11 +14,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.iid.FirebaseInstanceId
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.google_signin.*
 
 
@@ -65,9 +68,26 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             var emailVerified: Boolean
             var uid: String
 
-            user.getIdToken(true).addOnCompleteListener {
-                Log.d("MAD2020", "Token: ${it.result?.token}")
-            }
+            FirebaseRepo.INSTANCE.setProfile(Profile(), user.uid)
+
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+
+                    // Get new Instance ID token
+                    val token = task.result?.token
+
+                    // TODO: Check
+                    if (token != null) {
+                        auth.currentUser?.uid?.let {
+                            FirebaseRepo.INSTANCE.updateUserToken(
+                                it, token)
+                        }
+                    }
+                })
+
 
             user.let {
                 // Name, email address, and profile photo Url
@@ -130,6 +150,7 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             // and an ID token for the user with getIdToken. If you need to pass the currently signed-in user to a backend server,
             // send the ID token to your backend server and validate the token on the server.
             firebaseAuthWithGoogle(account.idToken!!) // Signed in successfully, show authenticated UI.
+
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -146,6 +167,9 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("KKK", "signInWithCredential:success")
                     val user = auth.currentUser
+
+
+
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.

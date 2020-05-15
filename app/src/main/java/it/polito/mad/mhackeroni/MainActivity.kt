@@ -107,21 +107,23 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         else
             navEmail.text = profile.email
 
-        drawer_progressbar.visibility = View.VISIBLE
-        val imagePath: String = profile.image!!
+        if(!profile.image.isNullOrEmpty()) {
+            drawer_progressbar.visibility = View.VISIBLE
+            val imagePath: String = profile.image!!
 
-        val ref = Firebase.storage.reference
-            .child("profiles_images")
-            .child(imagePath)
+            val ref = Firebase.storage.reference
+                .child("profiles_images")
+                .child(imagePath)
 
-        ref.downloadUrl.addOnCompleteListener {
-            if (it.isSuccessful) {
-                Glide.with(this)
-                    .load(it.result)
-                    .into(navImage)
+            ref.downloadUrl.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Glide.with(this)
+                        .load(it.result)
+                        .into(navImage)
+                }
+
+                drawer_progressbar.visibility = View.INVISIBLE
             }
-
-            drawer_progressbar.visibility = View.INVISIBLE
         }
     }
 

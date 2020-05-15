@@ -26,6 +26,18 @@ public class FirebaseRepo private constructor() {
         val INSTANCE: FirebaseRepo by lazy { GetInstance.INSTANCE }
     }
 
+    fun setProfile(profile: Profile, userID : String){
+        Log.d("MAG2020", "Testing: ${userID}")
+
+        db.collection("users").document(userID).get().addOnCompleteListener {
+            if(it.isSuccessful){
+                if(!it.result?.exists()!!){
+                    db.collection("users").document(userID).set(profile)
+                }
+            }
+        }
+    }
+
     fun updateProfile(profile: Profile, userID: String){
         db.collection("users")
             .document(userID)
@@ -47,6 +59,16 @@ public class FirebaseRepo private constructor() {
                     }
                 }
             }
+    }
+
+    fun updateUserToken(uid : String, token : String): Task<Void> {
+
+        Log.d("MAD2020", "update token uid: ${uid}, token: ${token}")
+        return db.collection("users")
+            .document(uid)
+            .update(
+                hashMapOf(
+                    "token" to token) as Map<String, Any>)
     }
 
     fun insertItem(item: Item) {
