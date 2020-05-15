@@ -52,7 +52,7 @@
     <string name="edit_item">Modifica</string>
     <string name="date_format">dd-MM-yyyy</string>
     <string name="no_data_available">Nessun item presente nella lista</string>
-    <string name="frag_list_title">Oggetti in vendita</string>
+    <string name="frag_list_title">Le mie inserzioni</string>
     <string name="frag_item_title">Articolo</string>
     <string name="frag_profile_title">Profilo</string>
     <string name="helper_subcat">Ricordati di inserire una categoria</string>
@@ -60,7 +60,7 @@
     <string name="filter_title">Filtri</string>
     <string name="logout_title">Logout</string>
     <string name="my_items_nav">Le mie inserzioni</string>
-    <string name="on_sale_title">Annunci</string>
+    <string name="on_sale_title">Oggetti in vendita</string>
     <string name="price_min">Prezzo minimo</string>
     <string name="price_max">Prezzo massimo</string>
     <string name="uid">uid</string>

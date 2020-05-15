@@ -51,7 +51,7 @@
     <string name="date_format">yyyy-MM-dd</string>
     <string name="selectSubcat">Select a subcategory</string>
     <string name="no_data_available">No data available</string>
-    <string name="frag_list_title">Items for sale</string>
+    <string name="frag_list_title">My advertisements</string>
     <string name="frag_item_title">Item</string>
     <string name="frag_profile_title">Profile</string>
     <string name="helper_subcat">Remember to enter a category</string>
@@ -59,7 +59,7 @@
     <string name="filter_title">Filters</string>
     <string name="logout_title">Logout</string>
     <string name="my_items_nav">My adverts</string>
-    <string name="on_sale_title">Ads</string>
+    <string name="on_sale_title">Items for sale</string>
     <string name="price_min">Minimun price</string>
     <string name="price_max">Maximum price</string>
     <string name="uid">uid</string>
