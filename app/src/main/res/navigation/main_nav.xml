@@ -106,6 +106,11 @@
             app:destination="@id/nav_showProfile"
             app:popUpTo="@id/nav_showProfile"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_showImage_to_nav_ItemDetail"
+            app:destination="@id/nav_ItemDetail"
+            app:popUpTo="@id/nav_ItemDetail"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/nav_itemListSale"

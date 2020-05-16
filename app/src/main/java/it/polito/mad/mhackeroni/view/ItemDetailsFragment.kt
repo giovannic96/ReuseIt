@@ -42,6 +42,9 @@ class ItemDetailsFragment: Fragment() {
         if(vm.itemId.isEmpty())
             vm.itemId = item?.id ?: ""
 
+        if(FirebaseRepo.INSTANCE.getID(requireContext()) != vm.itemId)
+            canModify = false
+
         if(!canModify){
             requireActivity().invalidateOptionsMenu()
             itemState.visibility = View.GONE
