@@ -2,8 +2,10 @@ package it.polito.mad.mhackeroni.utilities
 
 import android.content.Context
 import android.net.Uri
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Item
@@ -25,14 +27,31 @@ public class FirebaseRepo private constructor() {
 
     fun setProfile(profile: Profile, userID : String){
         // Log.d("MAG2020", "Testing: ${userID}")
-
-        db.collection("users").document(userID).get().addOnCompleteListener {
-            if(it.isSuccessful){
-                if(!it.result?.exists()!!){
-                    db.collection("users").document(userID).set(profile)
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
                 }
-            }
-        }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                if (token != null) {
+                    db.collection("users").document(userID).get().addOnCompleteListener {
+                        if(it.isSuccessful){
+                            if(!it.result?.exists()!!){
+                                db.collection("users").document(userID).set(profile).addOnCompleteListener {
+                                    if(it.isSuccessful) {
+                                        db.collection("users").document(userID).update(
+                                            hashMapOf("token" to token) as Map<String, Any>
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
     }
 
     fun updateProfile(profile: Profile, userID: String): Task<Void> {

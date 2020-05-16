@@ -72,25 +72,6 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
 
             FirebaseRepo.INSTANCE.setProfile(Profile(), user.uid)
 
-            FirebaseInstanceId.getInstance().instanceId
-                .addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
-                    }
-
-                    // Get new Instance ID token
-                    val token = task.result?.token
-
-                    // TODO: Check
-                    if (token != null) {
-                        auth.currentUser?.uid?.let {
-                            FirebaseRepo.INSTANCE.updateUserToken(
-                                it, token)
-                        }
-                    }
-                })
-
-
             user.let {
                 // Name, email address, and profile photo Url
                 name = user.displayName

@@ -294,7 +294,7 @@ class ItemDetailsFragment: Fragment() {
     }
 
     private fun handleEditItem(editedItemJSON: String, oldItem: String) {
-        val snackbar = view?.let { Snackbar.make(it, getString(R.string.undo), Snackbar.LENGTH_LONG) }
+        val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
 
         item = Item.fromStringJSON(oldItem)
 
