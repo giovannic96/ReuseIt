@@ -1,5 +1,6 @@
 package it.polito.mad.mhackeroni.view
 
+import android.media.AudioRecord.MetricsConstants.SOURCE
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +9,16 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
+import com.google.firebase.analytics.FirebaseAnalytics.Param.SOURCE
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import java.lang.ref.WeakReference
+import java.sql.Time
 
 class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):
     RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
@@ -107,24 +112,18 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
                     .child(imageRef!!)
 
                 ref.downloadUrl.addOnCompleteListener {
+                    val requestOptions = RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+
                     if(it.isSuccessful) {
-                        Glide.with(context)
+                        Glide.with(context.applicationContext)
                             .load(it.result)
+                            .apply(requestOptions)
                             .into(image)
                     }
                     progressBar.visibility = View.INVISIBLE
                 }
             }
-            /*
-        } else if(item.image?.let { ImageUtils.canDisplayBitmap(it, context) }!!){
-
-            if(ImageUtils.getBitmap(item.image!!, context) == null){
-                image.setImageResource(R.drawable.ic_box)
-            } else {
-                image.setImageBitmap(ImageUtils.getBitmap(item.image!!, context))
-            }
-        }
-        */
         }
     }
 
