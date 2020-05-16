@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -42,7 +44,7 @@ class ItemDetailsFragment: Fragment() {
         if(vm.itemId.isEmpty())
             vm.itemId = item?.id ?: ""
 
-        if(FirebaseRepo.INSTANCE.getID(requireContext()) != vm.itemId)
+        if((FirebaseRepo.INSTANCE.getID(requireContext()) != vm.owner) && !vm.owner.isNullOrEmpty())
             canModify = false
 
         if(!canModify){
@@ -59,6 +61,7 @@ class ItemDetailsFragment: Fragment() {
 
             try {
                 if(!it.image.isNullOrEmpty()) {
+                    /*
                     detail_progressbar.visibility = View.VISIBLE
 
                     val imageRef = it.image
@@ -74,6 +77,15 @@ class ItemDetailsFragment: Fragment() {
                         }
                         detail_progressbar.visibility = View.INVISIBLE
                     }
+                     */
+                    val requestOptions = RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+
+                    Glide.with(requireContext().applicationContext)
+                        .load(it.image)
+                        .apply(requestOptions)
+                        .into(itemImage)
+
                 }
             } catch (e: Exception) {
                 Snackbar.make(view,

@@ -1,6 +1,7 @@
 package it.polito.mad.mhackeroni.view
 
 import android.media.AudioRecord.MetricsConstants.SOURCE
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,17 +105,22 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
             if(item.image.isNullOrEmpty()) {
                 image.setImageResource(R.drawable.ic_box)
             }else {
-                progressBar.visibility = View.VISIBLE
+                val requestOptions = RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
 
+                Glide.with(context.applicationContext)
+                    .load(item.image)
+                    .apply(requestOptions)
+                    .into(image)
+
+                /*
                 val imageRef = item.image
                 val ref = Firebase.storage.reference
                     .child("items_images")
                     .child(imageRef!!)
 
+                progressBar.visibility = View.VISIBLE
                 ref.downloadUrl.addOnCompleteListener {
-                    val requestOptions = RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-
                     if(it.isSuccessful) {
                         Glide.with(context.applicationContext)
                             .load(it.result)
@@ -123,6 +129,7 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
                     }
                     progressBar.visibility = View.INVISIBLE
                 }
+                 */
             }
         }
     }

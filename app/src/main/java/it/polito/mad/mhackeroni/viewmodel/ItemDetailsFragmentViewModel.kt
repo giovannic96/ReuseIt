@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 
 class ItemDetailsFragmentViewModel : ViewModel() {
     var itemId : String = ""
+    var owner : String = ""
     private var profile : MutableLiveData<Profile> = MutableLiveData()
     private var item : MutableLiveData<Item> = MutableLiveData()
 
@@ -24,7 +25,8 @@ class ItemDetailsFragmentViewModel : ViewModel() {
                 item.value = snapshot.toObject(Item::class.java)
                 item.value?.id  = snapshot.id
                 runBlocking {
-                    launch { item.value?.user?.let { loadProfile(it) } }
+                    launch { item.value?.user?.let { loadProfile(it)
+                    owner = it} }
                 }
             } else {
                 item.value = Item()

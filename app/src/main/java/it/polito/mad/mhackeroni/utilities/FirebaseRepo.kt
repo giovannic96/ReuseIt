@@ -132,14 +132,14 @@ import org.w3c.dom.Document
         return ref.name
     }
 
-    fun uploadItemImage(uri : Uri, documentId : String) : String {
+    fun uploadItemImage(uri : Uri, documentId : String) : Task<Uri> {
         val storage = Firebase.storage
         var storageRef = storage.reference
 
         var ref = storageRef.child("items_images/${documentId}.jpg")
         ref.putFile(uri)
 
-        return ref.name
+        return ref.downloadUrl
     }
 
     fun getUserItem(userID : String) : List<Item>{
@@ -195,10 +195,9 @@ import org.w3c.dom.Document
                 "state" to item.state
             ) as Map<String, Any>).addOnCompleteListener{
                 if (it.isSuccessful){
-                    val ref = uploadItemImage(Uri.parse(item.image), id)
-                    db.collection("items").document(id).update(
-                        hashMapOf("image" to ref) as Map<String, Any>
-                    )
+                    val ref = uploadItemImage(Uri.parse(item.image), id).addOnCompleteListener {
+
+                    }
                 } else {
                    // Log.d("MAG2020", it.exception.toString())
                 }
