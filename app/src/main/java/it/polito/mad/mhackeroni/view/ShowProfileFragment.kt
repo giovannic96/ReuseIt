@@ -34,7 +34,6 @@ class ShowProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         lateinit var uid : String
 
         var passingUID= arguments?.getString(getString(R.string.uid), "")
@@ -42,7 +41,7 @@ class ShowProfileFragment : Fragment() {
         arguments?.clear()
 
         // Show personal profile
-        if(passingUID.isNullOrEmpty() || passingUID.equals("null")) {
+        if(passingUID.isNullOrEmpty() || passingUID.equals("null") && vm.uid.isEmpty()) {
             val repo = FirebaseRepo.INSTANCE
             uid = repo.getID(requireContext())
         } else { // Show another profile
@@ -53,7 +52,9 @@ class ShowProfileFragment : Fragment() {
         }
 
         vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
-        vm.uid = uid
+
+        if(vm.uid.isNullOrEmpty())
+            vm.uid = uid
 
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             profile = it
@@ -108,6 +109,11 @@ class ShowProfileFragment : Fragment() {
             }
 
         }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        Log.d("PROFILE", "restore")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
