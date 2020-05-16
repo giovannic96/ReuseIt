@@ -36,9 +36,11 @@ class ShowProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         lateinit var uid : String
 
-        var passingUID= arguments?.getString(getString(R.string.uid), "")
+        var passingUID= arguments?.getString(getString(R.string.uid), "") ?: ""
         getNavigationInfo()
         arguments?.clear()
+
+        vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
 
         // Show personal profile
         if(passingUID.isNullOrEmpty() || passingUID.equals("null") && vm.uid.isEmpty()) {
@@ -51,7 +53,6 @@ class ShowProfileFragment : Fragment() {
             requireActivity().invalidateOptionsMenu()
         }
 
-        vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
 
         if(vm.uid.isNullOrEmpty())
             vm.uid = uid
