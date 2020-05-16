@@ -1,7 +1,9 @@
 package it.polito.mad.mhackeroni.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -10,11 +12,11 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import it.polito.mad.mhackeroni.model.Item
-import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
+import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
 
 
@@ -177,7 +179,33 @@ class ItemDetailsFragment: Fragment() {
             else{
                 imageProfileItem.setImageResource(R.drawable.ic_avatar)
             }
+
+            if(!it.id.isNullOrEmpty() && canModify){
+                vm.getInterestedUsers(it.id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                    if(it.size != 0) {
+                        val interestedUsers: MutableList<String> =
+                            ArrayList()
+
+                        it.forEach {
+                            interestedUsers.add(it.nickname)
+                        }
+
+                        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            interestedUsers
+                        )
+
+                        buyers_listview.adapter = arrayAdapter
+                        buyers_listview_label.visibility = View.VISIBLE
+                        buyers_listview.visibility = View.VISIBLE
+                    }
+
+                })
+            }
         })
+
+
 
         fab_buy.setOnClickListener {
             val repo : FirebaseRepo = FirebaseRepo.INSTANCE

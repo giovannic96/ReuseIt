@@ -2,6 +2,9 @@ package it.polito.mad.mhackeroni.utilities
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
@@ -11,10 +14,12 @@ import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Profile
+import org.w3c.dom.Document
 
 // DAO singleton class
-public class FirebaseRepo private constructor() {
+ class FirebaseRepo private constructor() {
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+
     var isLogged = false
 
     private object GetInstance {
@@ -214,6 +219,38 @@ public class FirebaseRepo private constructor() {
             ))
     }
 
+    fun getInterestedProfile(item : String) : LiveData<List<Profile>>{
+        val profiles : MutableLiveData<List<Profile>> = MutableLiveData()
+        val profileList : MutableList<Profile> = mutableListOf()
+
+        db.collection("favorites")
+            .whereEqualTo("item", item)
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    if(!it.result?.isEmpty!!){
+                        it.result?.forEach {snap ->
+                            val user : String = snap["user"] as String
+                            db.collection("users").document(user).get().addOnCompleteListener {
+                                if(it.isSuccessful){
+                                    if(it.result?.exists()!!){
+                                        it.result!!.toObject(Profile::class.java)?.let { it1 ->
+                                            profileList.add(it1)
+                                        }
+                                        profiles.value = listOf()
+                                        profiles.value = profileList
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        return profiles
+    }
+
+    // just for debug
     fun clearPersistency(){
         db.clearPersistence()
     }

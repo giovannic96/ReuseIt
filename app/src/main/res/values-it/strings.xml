@@ -85,6 +85,7 @@
     <string name="alreadyFavorite">Sei già interessato all\'inserzione</string>
     <string name="channelName">ReuseIt App</string>
     <string name="channelDesc">Notifiche ReuseIt</string>
+    <string name="interestedUsers">Utenti interessati</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

@@ -57,5 +57,11 @@ class ItemDetailsFragmentViewModel : ViewModel() {
         return profile
     }
 
+    fun getInterestedUsers(item : String): LiveData<List<Profile>> {
+        val repo = FirebaseRepo.INSTANCE
+
+        return repo.getInterestedProfile(item)
+    }
+
 }
 

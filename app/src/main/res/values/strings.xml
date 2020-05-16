@@ -84,6 +84,7 @@
     <string name="alreadyFavorite">You are already interested to this ads</string>
     <string name="channelName">ReuseIt App</string>
     <string name="channelDesc">ReuseIt notifications</string>
+    <string name="interestedUsers">Interested users</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>
