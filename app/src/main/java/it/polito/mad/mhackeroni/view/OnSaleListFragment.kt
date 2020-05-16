@@ -31,11 +31,14 @@ class OnSaleListFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_itemlist_sale, container, false)
         setHasOptionsMenu(true)
+
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        FirebaseRepo.INSTANCE.updateToken(FirebaseRepo.INSTANCE.getID(requireContext()))
 
         vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
         vm.uid = FirebaseRepo.INSTANCE.getID(requireContext())

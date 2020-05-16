@@ -64,6 +64,7 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun updateUI(user: FirebaseUser?) {
         if(user != null) { //the user has already signed in to your app with Google.
+            FirebaseRepo.INSTANCE.isLogged = true
             var name: String?
             var email:String?
             var photoUrl: Uri?

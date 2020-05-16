@@ -18,10 +18,15 @@ class MessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
 
-        if(repo.isLogged)
-            repo.updateUserToken(repo.getID(this), token)
+        var id = repo.getID(this)
 
-         Log.d("MAD2020", "Token: ${token}")
+        Log.d("MAD2020", "New token: ${token}")
+
+        if(!id.isNullOrEmpty()) {
+            Log.d("MAD2020", "Updated token")
+            repo.updateUserToken(repo.getID(this), token)
+        }
+
         super.onNewToken(token)
     }
 

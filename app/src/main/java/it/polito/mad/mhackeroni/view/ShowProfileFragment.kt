@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Profile
@@ -138,8 +139,6 @@ class ShowProfileFragment : Fragment() {
         val oldProfileJSON = arguments?.getString("old_profile") ?: ""
         val newProfileJSON = arguments?.getString("new_profile") ?: ""
 
-        Log.d("MAD2020", "old - ${oldProfileJSON} - new ${newProfileJSON}")
-
         if(!newProfileJSON.isEmpty() && !oldProfileJSON.isEmpty() && oldProfileJSON != newProfileJSON){
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
@@ -166,6 +165,15 @@ class ShowProfileFragment : Fragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException("$context must implement OnCompleteListener")
         }
+
+        // TODO: delete this - only for debugging purposes
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener{ task ->
+                if (task.isSuccessful) {
+                    val token = task.result?.token
+                    Log.d("MAD2020", "DEBUG: TOKEN: ${token} is logged: ${FirebaseRepo.INSTANCE.isLogged}")
+                }
+            }
     }
 
     interface OnCompleteListener {

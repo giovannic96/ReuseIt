@@ -77,6 +77,19 @@ public class FirebaseRepo private constructor() {
             }
     }
 
+    fun updateToken(uid : String){
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener{ task ->
+                if (task.isSuccessful) {
+                    val token = task.result?.token
+                    db.collection("users")
+                        .document(uid)
+                        .update(hashMapOf("token" to token) as Map<String, Any>)
+                }
+            }
+    }
+
+
     fun updateUserToken(uid : String, token : String): Task<Void> {
         return db.collection("users")
             .document(uid)
