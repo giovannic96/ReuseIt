@@ -148,27 +148,29 @@ class ItemDetailsFragment: Fragment() {
                     .navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
             }
 
-            // TODO: Check this lines
             if(!it.user.isEmpty()) {
                 vm.getProfile().removeObservers(viewLifecycleOwner)
 
                 vm.getProfile().observe(viewLifecycleOwner, Observer {
                    itemSeller.text = it.nickname
-                    profile_progress_bar_item.visibility = View.VISIBLE
-                    val imagePath: String = it.image!!
 
-                    val ref = Firebase.storage.reference
-                        .child("profiles_images")
-                        .child(imagePath)
+                    if(!it.image.isNullOrEmpty()) {
+                        profile_progress_bar_item.visibility = View.VISIBLE
+                        val imagePath: String = it.image!!
 
-                    ref.downloadUrl.addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Glide.with(requireContext())
-                                .load(it.result)
-                                .into(imageProfileItem)
+                        val ref = Firebase.storage.reference
+                            .child("profiles_images")
+                            .child(imagePath)
+
+                        ref.downloadUrl.addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                Glide.with(requireContext())
+                                    .load(it.result)
+                                    .into(imageProfileItem)
+                            }
+
+                            profile_progress_bar_item.visibility = View.INVISIBLE
                         }
-
-                        profile_progress_bar_item.visibility = View.INVISIBLE
                     }
                })
             }
