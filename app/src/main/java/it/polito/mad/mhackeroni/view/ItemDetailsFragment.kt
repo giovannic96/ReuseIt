@@ -1,11 +1,10 @@
 package it.polito.mad.mhackeroni.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.view.View.OnTouchListener
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -229,7 +228,10 @@ class ItemDetailsFragment: Fragment() {
             }
         })
 
-
+        buyers_listview.setOnTouchListener(OnTouchListener { v, event ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            false
+        })
 
         fab_buy.setOnClickListener {
             val repo : FirebaseRepo = FirebaseRepo.INSTANCE
