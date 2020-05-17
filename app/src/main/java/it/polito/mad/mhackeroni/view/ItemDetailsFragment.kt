@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -106,15 +107,20 @@ class ItemDetailsFragment: Fragment() {
                     R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
+            val defaultColor:Int;
+
             when(it.state){
                 Item.ItemState.AVAILABLE -> {
                     itemState.text = getString(R.string.stateAvailable)
+                    itemState.setBackgroundResource(R.color.green)
                 }
                 Item.ItemState.SOLD -> {
                     itemState.text = getString(R.string.stateSold)
+                    itemState.setBackgroundResource(R.color.red)
                 }
                 Item.ItemState.BLOCKED -> {
                     itemState.text = getString(R.string.stateBlocked)
+                    itemState.setBackgroundResource(R.color.grey)
                 }
             }
             if (!it.desc.isEmpty()){
