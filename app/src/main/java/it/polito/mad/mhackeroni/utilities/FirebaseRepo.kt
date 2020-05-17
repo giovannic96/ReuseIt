@@ -88,7 +88,6 @@ import it.polito.mad.mhackeroni.model.Profile
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     val token = task.result?.token
-                    Log.d("MAD2020", "Updating token: ${token}")
                     db.collection("users")
                         .document(uid)
                         .update(hashMapOf("token" to token) as Map<String, Any>)
@@ -118,7 +117,6 @@ import it.polito.mad.mhackeroni.model.Profile
                                 if(it.isSuccessful){
                                     getUriTask.downloadUrl.addOnCompleteListener { task ->
                                         if(task.isSuccessful){
-                                            Log.d("MAD2020", it.result.toString())
                                             db.collection("items").document(id).update(hashMapOf("image" to task.result.toString()) as Map<String, Any>)
                                         }
                                     }
@@ -215,8 +213,6 @@ import it.polito.mad.mhackeroni.model.Profile
                             }
                         }
                     }
-                } else {
-                   // Log.d("MAG2020", it.exception.toString())
                 }
             }
     }

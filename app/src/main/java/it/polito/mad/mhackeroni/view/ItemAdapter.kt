@@ -108,28 +108,11 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
                 val requestOptions = RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
 
+                Log.d("MAD2020", "${item.image}")
                 Glide.with(context.applicationContext)
                     .load(item.image)
                     .apply(requestOptions)
                     .into(image)
-
-                /*
-                val imageRef = item.image
-                val ref = Firebase.storage.reference
-                    .child("items_images")
-                    .child(imageRef!!)
-
-                progressBar.visibility = View.VISIBLE
-                ref.downloadUrl.addOnCompleteListener {
-                    if(it.isSuccessful) {
-                        Glide.with(context.applicationContext)
-                            .load(it.result)
-                            .apply(requestOptions)
-                            .into(image)
-                    }
-                    progressBar.visibility = View.INVISIBLE
-                }
-                 */
             }
         }
     }

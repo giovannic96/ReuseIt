@@ -112,11 +112,6 @@ class ShowProfileFragment : Fragment() {
         }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        Log.d("PROFILE", "restore")
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if(canEdit)
             inflater.inflate(R.menu.main_menu, menu)
@@ -145,8 +140,6 @@ class ShowProfileFragment : Fragment() {
     private fun getNavigationInfo(){
         val oldProfileJSON = arguments?.getString("old_profile") ?: ""
         val newProfileJSON = arguments?.getString("new_profile") ?: ""
-
-        Log.d("MAD2020" ,"Old profile: ${oldProfileJSON}")
 
         if(!newProfileJSON.isEmpty() && !oldProfileJSON.isEmpty() && oldProfileJSON != newProfileJSON){
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }

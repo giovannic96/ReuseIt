@@ -40,9 +40,6 @@ class EditItemFragmentViewModel : ViewModel() {
     }
 
     fun addItem(context : Context): Task<DocumentReference> {
-        Log.d("MAD2020","Image: ${localItem?.image}")
-
-
         val repo = FirebaseRepo.INSTANCE
         localItem?.user = repo.getID(context)
 
@@ -50,8 +47,6 @@ class EditItemFragmentViewModel : ViewModel() {
     }
 
     fun updateItem(context : Context): Task<Void> {
-        Log.d("MAD2020","Image: ${localItem?.image}")
-
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
         localItem?.user = repo.getID(context)
         return repo.updateItem(itemId, localItem!!)
