@@ -1,6 +1,7 @@
 package it.polito.mad.mhackeroni.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.ArrayAdapter
@@ -26,9 +27,9 @@ import kotlinx.android.synthetic.main.fragment_item_details.*
 class ItemDetailsFragment: Fragment() {
     var price: Double? = null
     lateinit var vm : ItemDetailsFragmentViewModel
-    var item : Item? =
-        Item()
+    var item : Item? = Item()
     var canModify : Boolean = true
+    private var isOwner = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -48,14 +49,16 @@ class ItemDetailsFragment: Fragment() {
         if((FirebaseRepo.INSTANCE.getID(requireContext()) != vm.owner) && !vm.owner.isNullOrEmpty())
             canModify = false
 
-        if(!canModify){
+        hide_fab()
+        if(!canModify) {
             requireActivity().invalidateOptionsMenu()
             itemState.visibility = View.GONE
         } else {
-            fab_buy.visibility = View.INVISIBLE
+            hide_fab()
+            isOwner = true
         }
 
-        checkFavorite()
+        checkFavorite(isOwner)
 
         vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             item = it
@@ -251,7 +254,6 @@ class ItemDetailsFragment: Fragment() {
                         } else {
                             Snackbar.make(view, getString(R.string.alreadyFavorite), Snackbar.LENGTH_LONG).show()
                             hide_fab()
-
                         }
                     }
                 }
@@ -297,15 +299,16 @@ class ItemDetailsFragment: Fragment() {
         }
     }
 
-    private fun checkFavorite(){
+    private fun checkFavorite(isOwner: Boolean) {
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
         val entry = item
         val uid = repo.getID(requireContext())
         if(entry != null) {
             repo.checkFavorite(uid, entry.id).addOnCompleteListener {
                 if(it.isSuccessful){
-                    if(!it.result?.isEmpty!!){
-                        fab_buy.visibility = View.GONE
+                    if(it.result?.isEmpty!!) {
+                        if(!isOwner)
+                            fab_buy.visibility = View.VISIBLE
                     }
                 }
             }
