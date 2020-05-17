@@ -1,8 +1,8 @@
 package it.polito.mad.mhackeroni.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.view.View.OnTouchListener
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -106,15 +106,20 @@ class ItemDetailsFragment: Fragment() {
                     R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
+            val defaultColor:Int;
+
             when(it.state){
                 Item.ItemState.AVAILABLE -> {
                     itemState.text = getString(R.string.stateAvailable)
+                    itemState.setBackgroundResource(R.color.green)
                 }
                 Item.ItemState.SOLD -> {
                     itemState.text = getString(R.string.stateSold)
+                    itemState.setBackgroundResource(R.color.red)
                 }
                 Item.ItemState.BLOCKED -> {
                     itemState.text = getString(R.string.stateBlocked)
+                    itemState.setBackgroundResource(R.color.grey)
                 }
             }
             if (!it.desc.isEmpty()){
@@ -223,7 +228,10 @@ class ItemDetailsFragment: Fragment() {
             }
         })
 
-
+        buyers_listview.setOnTouchListener(OnTouchListener { v, event ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            false
+        })
 
         fab_buy.setOnClickListener {
             val repo : FirebaseRepo = FirebaseRepo.INSTANCE
