@@ -28,7 +28,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.R
@@ -36,6 +39,7 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_show_profile.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -66,33 +70,50 @@ class EditProfileFragment : Fragment() {
         vm = ViewModelProvider(this).get(EditProfileFragmentViewModel::class.java)
         vm.uid = repo.getID(requireContext())
 
-        profile = vm.getProfile().value
 
-        vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if(oldProfile == null)
-                oldProfile = it
+        vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {profileVal ->
+            var profileData = profileVal
+            profile = profileVal
+            oldProfile = profileVal
+
+            if(vm.getLocalProfile() != null) {
+                profileData = vm.getLocalProfile()
+                currentPhotoPath = profileData.image.toString()
+            }
+
 
             try {
-                val draw = it.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) }
+                if(!profileData.image.isNullOrEmpty()){
+                    val imagePath: String = profileData.image!!
+                    val ref = Firebase.storage.reference
+                        .child("profiles_images")
+                        .child(imagePath)
 
-                if(draw != null) {
-                    edit_showImageProfile.setImageBitmap(it.image?.let { it1 ->
-                        ImageUtils.getBitmap(it1, requireContext())
-                    })
+                    ref.downloadUrl.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            Glide.with(requireContext())
+                                .load(it.result)
+                                .into(edit_showImageProfile)
+                        } else {
+                            Glide.with(requireContext())
+                                .load(imagePath)
+                                .into(edit_showImageProfile)
+                        }
+                    }
                 } else {
-                    edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
-                }
+                        edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+                    }
             } catch (e: Exception) {
                 Snackbar.make(view,
                     R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            edit_fullname.setText(it.fullName ?: resources.getString(R.string.defaultFullName))
-            edit_bio.setText(it.bio ?: resources.getString(R.string.defaultNickname))
-            edit_nickname.setText(it.nickname ?: resources.getString(R.string.defaultNickname))
-            edit_mail.setText(it.email ?: resources.getString(R.string.defaultEmail))
-            edit_phoneNumber.setText(it.phoneNumber ?: resources.getString(R.string.defaultLocation))
-            edit_location.setText(it.location ?: resources.getString(R.string.defaultLocation))
+            edit_fullname.setText(profileData.fullName ?: resources.getString(R.string.defaultFullName))
+            edit_bio.setText(profileData.bio ?: resources.getString(R.string.defaultNickname))
+            edit_nickname.setText(profileData.nickname ?: resources.getString(R.string.defaultNickname))
+            edit_mail.setText(profileData.email ?: resources.getString(R.string.defaultEmail))
+            edit_phoneNumber.setText(profileData.phoneNumber ?: resources.getString(R.string.defaultLocation))
+            edit_location.setText(profileData.location ?: resources.getString(R.string.defaultLocation))
         })
 
         rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
@@ -171,6 +192,7 @@ class EditProfileFragment : Fragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         val savedProfileJSON = savedInstanceState?.getString("profile") ?: ""
+        Log.d("MAD2020", savedProfileJSON)
         val savedProfile =
             Profile.fromStringJSON(
                 savedProfileJSON
@@ -196,19 +218,21 @@ class EditProfileFragment : Fragment() {
                 if(!checkData())
                     return false
 
-                if(::currentPhotoPath.isInitialized)
+                if(::currentPhotoPath.isInitialized) {
                     profile = Profile(
                         edit_fullname.text.toString(), edit_nickname.text.toString(),
                         edit_mail.text.toString(), edit_location.text.toString(),
                         currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString()
                     )
-                else
+                    vm.updateProfile(profile!!)
+                }else {
                     profile = Profile(
                         edit_fullname.text.toString(), edit_nickname.text.toString(),
                         edit_mail.text.toString(), edit_location.text.toString(),
                         profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString()
                     )
-
+                    vm.updateProfile(profile!!)
+                }
 
                 val nRotation = rotationCount.value
                 if(::currentPhotoPath.isInitialized){
@@ -229,37 +253,57 @@ class EditProfileFragment : Fragment() {
                     profile!!.image = currentPhotoPath
                 }
 
-
+/*
                 val repo = FirebaseRepo.INSTANCE
                 val entry = profile
                 val uid = repo.getID(requireContext())
 
                 // TODO: Handle error
                 if (entry != null) {
-                    repo.updateProfile(entry, uid).addOnCompleteListener {
-                        if(it.isSuccessful) {
+                    repo.updateProfile(entry, uid)*/
 
+                if(vm.getLocalProfile() != null) {
+                    vm.updateDB().addOnCompleteListener {
+                        if (it.isSuccessful) {
                             val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
                                 Profile.toJSON(
                                     it1
                                 ).toString()
                             },
-                                "new_profile" to profile?.let { Profile.toJSON(
-                                    it
-                                ).toString() }
+                                "new_profile" to profile?.let {
+                                    Profile.toJSON(
+                                        it
+                                    ).toString()
+                                }
                             )
                             view?.findNavController()
                                 ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                         } else {
                             val bundle = bundleOf("error" to true,
-                                "new_profile" to profile?.let { Profile.toJSON(
-                                    it
-                                ).toString() }
+                                "new_profile" to profile?.let {
+                                    Profile.toJSON(
+                                        it
+                                    ).toString()
+                                }
                             )
                             view?.findNavController()
                                 ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                         }
                     }
+                } else {
+                    val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
+                        Profile.toJSON(
+                            it1
+                        ).toString()
+                    },
+                        "new_profile" to profile?.let {
+                            Profile.toJSON(
+                                it
+                            ).toString()
+                        }
+                    )
+                    view?.findNavController()
+                        ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                 }
 
                 return true

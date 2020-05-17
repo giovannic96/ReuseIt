@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -179,14 +180,16 @@ class ItemDetailsFragment: Fragment() {
                             .child("profiles_images")
                             .child(imagePath)
 
-                        ref.downloadUrl.addOnCompleteListener {
-                            if (it.isSuccessful) {
-                                Glide.with(requireContext())
-                                    .load(it.result)
-                                    .into(imageProfileItem)
-                            }
+                        if(view.isVisible) {
+                            ref.downloadUrl.addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    Glide.with(requireContext())
+                                        .load(it.result)
+                                        .into(imageProfileItem)
+                                }
 
-                            profile_progress_bar_item.visibility = View.INVISIBLE
+                                profile_progress_bar_item.visibility = View.INVISIBLE
+                            }
                         }
                     }
                })

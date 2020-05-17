@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Item
@@ -115,8 +116,9 @@ import it.polito.mad.mhackeroni.model.Profile
                             val getUriTask = uploadTask.second
                             uploadTask.first.addOnCompleteListener {
                                 if(it.isSuccessful){
-                                    getUriTask.addOnCompleteListener { task ->
+                                    getUriTask.downloadUrl.addOnCompleteListener { task ->
                                         if(task.isSuccessful){
+                                            Log.d("MAD2020", it.result.toString())
                                             db.collection("items").document(id).update(hashMapOf("image" to task.result.toString()) as Map<String, Any>)
                                         }
                                     }
@@ -140,13 +142,13 @@ import it.polito.mad.mhackeroni.model.Profile
         return ref.name
     }
 
-    fun uploadItemImage(uri : Uri, documentId : String) : Pair<UploadTask, Task<Uri>> {
+    fun uploadItemImage(uri : Uri, documentId : String) : Pair<UploadTask, StorageReference> {
         val storage = Firebase.storage
         var storageRef = storage.reference
 
         var ref = storageRef.child("items_images/${documentId}.jpg")
 
-        return Pair(ref.putFile(uri), ref.downloadUrl)
+        return Pair(ref.putFile(uri), ref)
     }
 
     fun getUserItem(userID : String) : List<Item>{
@@ -193,7 +195,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "desc" to item.desc,
                 "expiryDate" to item.expiryDate,
                 "id" to id,
-                "image" to item.image,
+                "image" to null,
                 "location" to item.location,
                 "name" to item.name,
                 "price" to item.price,
@@ -206,7 +208,7 @@ import it.polito.mad.mhackeroni.model.Profile
                     val getUriTask = uploadTask.second
                     uploadTask.first.addOnCompleteListener {
                         if(it.isSuccessful){
-                            getUriTask.addOnCompleteListener { task ->
+                            getUriTask.downloadUrl.addOnCompleteListener { task ->
                                 if(task.isSuccessful){
                                     db.collection("items").document(id).update(hashMapOf("image" to task.result.toString()) as Map<String, Any>)
                                 }
