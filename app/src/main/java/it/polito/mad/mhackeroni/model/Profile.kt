@@ -6,7 +6,7 @@ import java.io.Serializable
 
 
 class Profile(var fullName:String, var nickname:String,
-              var email:String, var location:String, var image: String?, var bio:String, var phoneNumber:String) : Serializable {
+              var email:String, var location:String, var image: String?, var bio:String, var phoneNumber:String, var id:String = "") : Serializable {
 
     constructor() : this("", "", "", "", "", "", "")
 
