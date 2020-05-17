@@ -74,10 +74,14 @@ import it.polito.mad.mhackeroni.model.Profile
         ) as Map<String, Any>).addOnCompleteListener{
                 if(it.isSuccessful){
                     if(!profile.image.isNullOrEmpty()){
-                        val ref = uploadProfileImage(Uri.parse(profile.image), userID)
-                        db.collection("users").document(userID).update(
-                            hashMapOf("image" to ref) as Map<String, Any>
-                        )
+                        val uploadImage = uploadProfileImage(Uri.parse(profile.image), userID)
+                        val imageRef = uploadImage.second
+                        uploadImage.first.addOnCompleteListener {
+                            db.collection("users").document(userID).update(
+                                hashMapOf("image" to imageRef) as Map<String, Any>
+                            )
+                        }
+
                     }
                 }
             }
@@ -130,14 +134,12 @@ import it.polito.mad.mhackeroni.model.Profile
             }
     }
 
-    fun uploadProfileImage(uri : Uri, profileID : String) : String {
+    fun uploadProfileImage(uri : Uri, profileID : String) : Pair<UploadTask, String> {
         val storage = Firebase.storage
         var storageRef = storage.reference
 
         var ref = storageRef.child("profiles_images/${profileID}.jpg")
-        ref.putFile(uri)
-
-        return ref.name
+        return Pair(ref.putFile(uri), ref.name)
     }
 
     fun uploadItemImage(uri : Uri, documentId : String) : Pair<UploadTask, StorageReference> {

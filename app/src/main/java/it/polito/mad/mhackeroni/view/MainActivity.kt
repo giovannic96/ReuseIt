@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -123,20 +122,12 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
                 if (it.isSuccessful) {
                     Glide.with(this)
                         .load(it.result)
-                        .apply(
-                            RequestOptions()
-                            .placeholder(R.drawable.ic_avatar)
-                        )
                         .into(navImage)
                 }
 
                 if(drawerLayout.isDrawerOpen(GravityCompat.START))
                     navProgressbar.visibility = View.INVISIBLE
             }
-        } else {
-            Glide.with(this)
-                .load(R.drawable.ic_avatar)
-                .into(navImage)
         }
     }
 

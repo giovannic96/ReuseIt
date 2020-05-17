@@ -160,6 +160,31 @@ class ShowProfileFragment : Fragment() {
         }
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if(vm != null && !vm.uid.isNullOrEmpty()){
+            val image = vm.getProfile().value?.image
+
+            if(image != null){
+                profile_progress_bar.visibility = View.VISIBLE
+
+                val ref = Firebase.storage.reference
+                    .child("profiles_images")
+                    .child(image)
+
+                ref.downloadUrl.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Glide.with(requireContext())
+                            .load(it.result)
+                            .into(imageProfile)
+                    }
+
+                    profile_progress_bar.visibility = View.INVISIBLE
+                }
+            }
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
