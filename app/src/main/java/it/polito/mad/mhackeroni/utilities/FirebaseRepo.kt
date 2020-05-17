@@ -105,8 +105,8 @@ import it.polito.mad.mhackeroni.model.Profile
                     "token" to token) as Map<String, Any>)
     }
 
-    fun insertItem(item: Item) {
-        db.collection("items")
+    fun insertItem(item: Item): Task<DocumentReference> {
+       return db.collection("items")
             .add(item)
             .addOnCompleteListener {
                 if(it.isSuccessful){

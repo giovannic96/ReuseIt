@@ -19,6 +19,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -26,7 +27,9 @@ import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -37,6 +40,9 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
+import it.polito.mad.mhackeroni.viewmodel.EditItemFragmentViewModel
+import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
+import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -46,7 +52,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ItemEditFragment: Fragment() {
-    var item: MutableLiveData<Item> = MutableLiveData()
+    var item: Item? = null
     private var oldItem: Item? = null
     private lateinit var currentItemPhotoPath: String
     private val rotationCount: MutableLiveData<Int> = MutableLiveData()
@@ -60,6 +66,7 @@ class ItemEditFragment: Fragment() {
     private var cond : String? = null
     val c = Calendar.getInstance()
     private var pickerShowing = false
+    lateinit var vm : EditItemFragmentViewModel
     private var startCamera = false
     private var state : Item.ItemState =
         Item.ItemState.AVAILABLE
@@ -72,6 +79,8 @@ class ItemEditFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        vm = ViewModelProvider(this).get(EditItemFragmentViewModel::class.java)
 
         val rotationSaved = savedInstanceState?.getInt("rotation")
         if(rotationSaved != null)
@@ -109,22 +118,93 @@ class ItemEditFragment: Fragment() {
                     it
                 )
             }
-            item.value =
+            item=
                 Item.fromStringJSON(itemJSON)
             oldItem =
                 Item.fromStringJSON(itemJSON)
-            currentItemPhotoPath = item.value?.image.toString()
+            currentItemPhotoPath = item?.image.toString()
 
+            vm.itemId = oldItem?.id.toString()
 
             if (savedItem != null) {
-                item.value = savedItem // Get saved value
+                item = savedItem // Get saved value
                 currentItemPhotoPath = savedItem.image.toString()
             }
+        }
+
+        if(isAddingItem){
+            var itemData = vm.getLocalItem()
+
+            if(itemData != null){
+                edit_itemTitle.setText(itemData.name ?: resources.getString(R.string.defaultTitle))
+                edit_itemPrice.setText(
+                    itemData.price.toString()
+                )
+                edit_itemDesc.setText(itemData.desc ?: resources.getString(R.string.defaultDesc))
+                edit_itemExpiryDate.setText(itemData.expiryDate ?: resources.getString(
+                    R.string.defaultExpire
+                ))
+                edit_itemLocation.setText(itemData.location ?: resources.getString(
+                    R.string.defaultLocation
+                ))
+
+                try {
+                    if(itemData.image.isNullOrEmpty()){
+                        edit_itemImage.setImageResource(R.drawable.ic_box)
+
+                    } else {
+                        Glide.with(requireContext())
+                            .load(itemData.image)
+                            .into(edit_itemImage)
+                    }
+                } catch (e: Exception) {
+                    Snackbar.make(view,
+                        R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+
+        } else {
+            vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                var itemData = it
+
+                if(vm.getLocalItem() != null){
+                    itemData = vm.getLocalItem()
+                }
+
+                if(itemData != null){
+                    edit_itemTitle.setText(itemData.name ?: resources.getString(R.string.defaultTitle))
+                    edit_itemPrice.setText(
+                        itemData.price.toString()
+                    )
+                    edit_itemDesc.setText(itemData.desc ?: resources.getString(R.string.defaultDesc))
+                    edit_itemExpiryDate.setText(itemData.expiryDate ?: resources.getString(
+                        R.string.defaultExpire
+                    ))
+                    edit_itemLocation.setText(itemData.location ?: resources.getString(
+                        R.string.defaultLocation
+                    ))
+
+                    try {
+                        if(itemData.image.isNullOrEmpty()){
+                            edit_itemImage.setImageResource(R.drawable.ic_box)
+
+                        } else {
+                            Glide.with(requireContext())
+                                .load(itemData.image)
+                                .into(edit_itemImage)
+                        }
+                    } catch (e: Exception) {
+                        Snackbar.make(view,
+                            R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            })
         }
 
 
         handleDatePicker()
 
+        /*
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(item.value != null){
                 edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
@@ -158,6 +238,7 @@ class ItemEditFragment: Fragment() {
                 }
             }
         })
+         */
 
         edit_state.setOnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
@@ -237,12 +318,10 @@ class ItemEditFragment: Fragment() {
         return when (menuItem.itemId) {
             R.id.menu_save -> {
 
-                item.removeObservers(viewLifecycleOwner)
-
                 if(isAddingItem){
                     if(cat.isNullOrEmpty())
                         subCat = ""
-                    item.value = Item(
+                    item = Item(
                         "",
                         edit_itemTitle.text.toString(),
                         edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
@@ -258,7 +337,7 @@ class ItemEditFragment: Fragment() {
                     if(cat.isNullOrEmpty())
                         subCat = ""
 
-                    item.value = Item(
+                    item = Item(
                         oldItem?.id ?: "",
                         edit_itemTitle.text.toString(),
                         edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
@@ -291,89 +370,116 @@ class ItemEditFragment: Fragment() {
                             }
                         }
                     }
-                    item.value?.image = currentItemPhotoPath
+                    item?.image = currentItemPhotoPath
                 }
 
 
                 if(isAddingItem) {
-                    item.value!!.id = IDGenerator.getNextID(requireContext()).toString()
+                    item!!.id = IDGenerator.getNextID(requireContext()).toString()
 
                     if(!checkData())
                         return false
 
-                    // TODO Check
-                    item_progressbar.visibility = View.VISIBLE
+                    vm.updateLocalItem(item!!)
 
-                    runBlocking {
-                        launch {
-                            val entry = item.value
-                            val dao = FirebaseRepo.INSTANCE
-                            val uid = dao.getID(requireContext())
+                    vm.addItem(requireContext()).addOnCompleteListener {
+                        if(it.isSuccessful){
+                            val bundle =
+                                bundleOf("new_item" to item?.let { Item.toJSON(
+                                    it
+                                ).toString() })
 
-                            if (entry != null) {
-                                entry.user = uid
-                                addItem(entry)
-                            }
-                        }.invokeOnCompletion {
-                            item_progressbar.visibility = View.INVISIBLE
+                            view?.findNavController()
+                                ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                        } else {
+                            view?.let { it1 -> Snackbar.make(it1, getString(R.string.errorConnection), Snackbar.LENGTH_SHORT).show() }
+                            val bundle =
+                                bundleOf("new_item" to item?.let { Item.toJSON(
+                                    it
+                                ).toString() })
+
+                            view?.findNavController()
+                                ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+
                         }
                     }
-
-                    val bundle =
-                        bundleOf("new_item" to item.value?.let { Item.toJSON(
-                            it
-                        ).toString() })
-
-                    view?.findNavController()
-                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-
                 }else {
 
                     if(!checkData())
                         return false
 
-                    item.value!!.id = oldItem?.id ?: ""
+
+                    item!!.id = oldItem?.id ?: ""
                     val fromList = arguments?.getBoolean("fromList", false)
+                    vm.updateLocalItem(item!!)
 
-                    // TODO Check
-                    item_progressbar.visibility = View.VISIBLE
+                    vm.updateItem(requireContext()).addOnCompleteListener {
+                        if(it.isSuccessful){
+                            val bundle =
+                                bundleOf("new_item" to item?.let { Item.toJSON(
+                                    it
+                                ).toString() })
 
-                    runBlocking {
-                        launch {
-                            val entry = item.value
-                            val dao = FirebaseRepo.INSTANCE
-                            val uid = dao.getID(requireContext())
-
-                            if (entry != null) {
-                                entry.user = uid
-                                updateItem(entry)
+                            if(fromList!!){
+                                val bundle =
+                                    bundleOf("edited_item" to item?.let { Item.toJSON(
+                                        it
+                                    ).toString()},
+                                        "old_item" to oldItem?.let { Item.toJSON(
+                                            it
+                                        ).toString() })
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                            } else {
+                                val bundle =
+                                    bundleOf("new_item" to item?.let { Item.toJSON(
+                                        it
+                                    ).toString()},
+                                        "old_item" to oldItem?.let { Item.toJSON(
+                                            it
+                                        ).toString() })
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
                             }
-                        }.invokeOnCompletion {
-                            item_progressbar.visibility = View.INVISIBLE
+                        } else {
+                            view?.let { it1 -> Snackbar.make(it1, getString(R.string.errorConnection), Snackbar.LENGTH_SHORT).show() }
+
+                            val bundle =
+                                bundleOf("new_item" to item?.let { Item.toJSON(
+                                    it
+                                ).toString() })
+
+                            if(fromList!!){
+                                val bundle =
+                                    bundleOf("edited_item" to item?.let { Item.toJSON(
+                                        it
+                                    ).toString()},
+                                        "old_item" to oldItem?.let { Item.toJSON(
+                                            it
+                                        ).toString() })
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                            } else {
+                                val bundle =
+                                    bundleOf("new_item" to item?.let {
+                                        Item.toJSON(
+                                            it
+                                        ).toString()
+                                    },
+                                        "old_item" to oldItem?.let {
+                                            Item.toJSON(
+                                                it
+                                            ).toString()
+                                        })
+                                view?.findNavController()
+                                    ?.navigate(
+                                        R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail,
+                                        bundle
+                                    )
+                            }
                         }
                     }
 
-                    if(fromList!!){
-                        val bundle =
-                            bundleOf("edited_item" to item.value?.let { Item.toJSON(
-                                it
-                            ).toString()},
-                                "old_item" to oldItem?.let { Item.toJSON(
-                                    it
-                                ).toString() })
-                        view?.findNavController()
-                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-                    } else {
-                        val bundle =
-                            bundleOf("new_item" to item.value?.let { Item.toJSON(
-                                it
-                            ).toString()},
-                                "old_item" to oldItem?.let { Item.toJSON(
-                                    it
-                                ).toString() })
-                        view?.findNavController()
-                            ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
-                    }
                 }
                 return true
             }
@@ -385,7 +491,7 @@ class ItemEditFragment: Fragment() {
         super.onResume()
 
         // Used to solve lazy update issue
-        if(item?.value?.image?.let { ImageUtils.getBitmap(it, requireContext()) } == null){
+        if(item?.image?.let { ImageUtils.getBitmap(it, requireContext()) } == null){
             edit_itemImage.setImageResource(R.drawable.ic_box)
         }
 
@@ -552,8 +658,8 @@ class ItemEditFragment: Fragment() {
 
         edit_itemPrice.filters = arrayOf<InputFilter>(Validation.DecimalDigitsInputFilter(5, 2))
 
-        if(!item.value?.category.isNullOrEmpty()){
-            val value = item.value?.category
+        if(!item?.category.isNullOrEmpty()){
+            val value = item?.category
             val pos = adapterCat.getPosition(value)
 
             edit_itemCategory.setHint("\n${value}")
@@ -564,8 +670,8 @@ class ItemEditFragment: Fragment() {
                 // Not valid selection
             }
         }
-        if(!item.value?.condition.isNullOrEmpty()){
-            val value = item.value?.condition
+        if(!item?.condition.isNullOrEmpty()){
+            val value = item?.condition
             val pos = adapterCond.getPosition(value)
 
             edit_itemCondition.setHint("\n${value}")
@@ -577,11 +683,11 @@ class ItemEditFragment: Fragment() {
             }
 
         }
-        if(!item.value?.subcategory.isNullOrEmpty()){
-            val value = item.value?.subcategory
+        if(!item?.subcategory.isNullOrEmpty()){
+            val value = item?.subcategory
 
 
-           if (item.value?.category.isNullOrEmpty())
+           if (item?.category.isNullOrEmpty())
             return
 
             // val pos = adapterSubcat.getPosition(value)
@@ -644,10 +750,10 @@ class ItemEditFragment: Fragment() {
             rotationCount.value = 0
         } else if((requestCode == REQUEST_CREATEIMAGE || requestCode == REQUEST_PICKIMAGE) && resultCode == AppCompatActivity.RESULT_CANCELED){
             currentItemPhotoPath = oldItem?.image ?: ""
-            item.value = oldItem
+            item = oldItem
         } else {
             currentItemPhotoPath = oldItem?.image ?: ""
-            item.value = oldItem
+            item = oldItem
         }
     }
 
@@ -758,8 +864,8 @@ class ItemEditFragment: Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        if(item.value == null)
-            item.value = Item(
+        if(item == null)
+            item = Item(
                 "",
                 "",
                 0.0,
@@ -774,7 +880,7 @@ class ItemEditFragment: Fragment() {
 
 
         if(isAddingItem && ::currentItemPhotoPath.isInitialized) {
-            item.value?.image = currentItemPhotoPath ?: ""
+            item?.image = currentItemPhotoPath ?: ""
         }
 
         if(this.isVisible) {
@@ -787,37 +893,39 @@ class ItemEditFragment: Fragment() {
             }
 
             if (::currentItemPhotoPath.isInitialized) {
-                item.value?.name = edit_itemTitle.text.toString()
-                item.value?.price = price
-                item.value?.desc = edit_itemDesc.text.toString()
-                item.value?.expiryDate = edit_itemExpiryDate.text.toString()
-                item.value?.location = edit_itemLocation.text.toString()
+                item?.name = edit_itemTitle.text.toString()
+                item?.price = price
+                item?.desc = edit_itemDesc.text.toString()
+                item?.expiryDate = edit_itemExpiryDate.text.toString()
+                item?.location = edit_itemLocation.text.toString()
 
                 if (!cat.isNullOrEmpty())
-                    item.value?.category = cat ?: ""
+                    item?.category = cat ?: ""
 
                 if(!subCat.isNullOrEmpty())
-                    item.value?.subcategory = subCat ?: ""
+                    item?.subcategory = subCat ?: ""
 
                 if(!cond.isNullOrEmpty())
-                    item.value?.condition = cond ?: ""
+                    item?.condition = cond ?: ""
 
-                item.value?.image = currentItemPhotoPath
+                item?.image = currentItemPhotoPath
 
             } else {
-                item.value?.name = edit_itemTitle.text.toString()
-                item.value?.price = price
-                item.value?.desc = edit_itemDesc.text.toString()
-                item.value?.expiryDate = edit_itemExpiryDate.text.toString()
-                item.value?.location = edit_itemLocation.text.toString()
-                item.value?.category = cat ?: ""
-                item.value?.subcategory = subCat ?: ""
-                item.value?.condition = cond ?: ""
+                item?.name = edit_itemTitle.text.toString()
+                item?.price = price
+                item?.desc = edit_itemDesc.text.toString()
+                item?.expiryDate = edit_itemExpiryDate.text.toString()
+                item?.location = edit_itemLocation.text.toString()
+                item?.category = cat ?: ""
+                item?.subcategory = subCat ?: ""
+                item?.condition = cond ?: ""
             }
 
-            outState.putString("item", item.value?.let { Item.toJSON(
+            outState.putString("item", item?.let { Item.toJSON(
                 it
             ).toString() })
+
+            vm.updateLocalItem(item!!)
             rotationCount.value?.let { outState.putInt("rotation", it) }
             helperTextVisible.value?.let { outState.putBoolean("helperText", it) }
         }
@@ -840,7 +948,7 @@ class ItemEditFragment: Fragment() {
             helperTextVisible.value = helperText
 
             if(savedItem != null){
-                item.value = savedItem
+                item = savedItem
             }
 
         }
@@ -921,43 +1029,43 @@ class ItemEditFragment: Fragment() {
     private fun checkData(): Boolean{
         var retVal = true
 
-        if(item.value?.name.isNullOrEmpty()){
+        if(item?.name.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemTitle.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item.value?.condition.isNullOrEmpty()){
+        if(item?.condition.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemCondition.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item.value?.category.isNullOrEmpty()){
+        if(item?.category.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemCategory.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item.value?.subcategory.isNullOrEmpty()){
+        if(item?.subcategory.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemSubCategory.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item.value?.price == null){
+        if(item?.price == null){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemPrice.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item.value?.expiryDate.isNullOrEmpty()){
+        if(item?.expiryDate.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemExpiryDate.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item.value?.location.isNullOrEmpty()){
+        if(item?.location.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemLocation.error = getString(R.string.required_field)
             retVal = false
