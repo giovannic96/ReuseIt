@@ -214,6 +214,7 @@ class ItemDetailsFragment: Fragment() {
                         interestedUsers = ArrayList()
 
                         it.forEach {
+                            Log.d("MAD2020", it.id)
                             interestedUsers.add(it.nickname)
                         }
 

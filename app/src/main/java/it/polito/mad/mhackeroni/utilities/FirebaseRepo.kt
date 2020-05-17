@@ -249,6 +249,7 @@ import it.polito.mad.mhackeroni.model.Profile
                                 if(it.isSuccessful){
                                     if(it.result?.exists()!!){
                                         it.result!!.toObject(Profile::class.java)?.let { it1 ->
+                                            it1.id = user
                                             profileList.add(it1)
                                         }
                                         profiles.value = listOf()
