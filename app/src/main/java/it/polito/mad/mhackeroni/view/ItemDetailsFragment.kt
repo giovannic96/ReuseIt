@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ class ItemDetailsFragment: Fragment() {
     var item : Item? = Item()
     var canModify : Boolean = true
     private var isOwner = false
+    private lateinit var interestedUsers: MutableList<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -208,9 +210,8 @@ class ItemDetailsFragment: Fragment() {
 
             if(!it.id.isNullOrEmpty() && canModify){
                 vm.getInterestedUsers(it.id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                    if(it.size != 0) {
-                        val interestedUsers: MutableList<String> =
-                            ArrayList()
+                    if(it.isNotEmpty()) {
+                        interestedUsers = ArrayList()
 
                         it.forEach {
                             interestedUsers.add(it.nickname)
@@ -231,6 +232,35 @@ class ItemDetailsFragment: Fragment() {
             }
         })
 
+        buyers_listview.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+            }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                Log.d("KKK", "profile: ${interestedUsers[position]}" )
+                /* TODO INTENT GO TO SELECTED PROFILE
+                val bundle = Bundle()
+                bundle.putString(getString(R.string.uid), interestedUsers[position].id) //TODO add id to profile
+                view.findNavController().navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
+                 */
+            }
+        }
+
         buyers_listview.setOnTouchListener(OnTouchListener { v, event ->
             v.parent.requestDisallowInterceptTouchEvent(true)
             false
@@ -247,6 +277,7 @@ class ItemDetailsFragment: Fragment() {
                             repo.insertFavorite(repo.getID(requireContext()), entry).addOnCompleteListener {
                                 if (it.isSuccessful) {
                                     // TODO: Add undo
+                                    hide_fab()
                                     Snackbar.make(view, getString(R.string.favorite), Snackbar.LENGTH_LONG)
                                         .show()
                                 }
