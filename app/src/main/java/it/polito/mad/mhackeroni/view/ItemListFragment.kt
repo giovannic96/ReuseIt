@@ -26,6 +26,7 @@ class ItemListFragment: Fragment() {
 
     private lateinit var myAdapter: ItemAdapter
     private lateinit var vm : ItemListFragmentViewModel
+    private lateinit var itemList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_itemlist, container, false)
@@ -39,7 +40,7 @@ class ItemListFragment: Fragment() {
         vm.uid = repo.getID(requireContext())
         getNavigationDetails()
 
-        val itemList:RecyclerView = view.findViewById(R.id.item_list)
+        itemList = view.findViewById(R.id.item_list)
 
         myAdapter = ItemAdapter(
             mutableListOf(),
@@ -69,15 +70,19 @@ class ItemListFragment: Fragment() {
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
-            itemList.layoutManager = if(it.isEmpty())
-                LinearLayoutManager(context)
-            else {
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                    StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
-                else
-                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-            }
+            updateLayoutManager(it)
         })
+    }
+
+    private fun updateLayoutManager(list: List<Item>) {
+        itemList.layoutManager = if(list.isEmpty())
+            LinearLayoutManager(context)
+        else {
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+            else
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        }
     }
 
     private fun navigateWithInfo(layoutId: Int, item: Item) {

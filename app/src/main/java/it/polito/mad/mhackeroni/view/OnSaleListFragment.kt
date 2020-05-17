@@ -4,6 +4,7 @@ package it.polito.mad.mhackeroni.view
 import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -24,14 +25,13 @@ import it.polito.mad.mhackeroni.viewmodel.OnSaleListFragmentViewModel
 class OnSaleListFragment: Fragment() {
 
     private lateinit var myAdapter: ItemAdapter
-    private var searchFilter : ItemFilter =
-        ItemFilter()
+    private var searchFilter : ItemFilter = ItemFilter()
     private lateinit var vm : OnSaleListFragmentViewModel
+    private lateinit var itemList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_itemlist_sale, container, false)
         setHasOptionsMenu(true)
-
         return v
     }
 
@@ -43,8 +43,7 @@ class OnSaleListFragment: Fragment() {
         vm = ViewModelProvider(this).get(OnSaleListFragmentViewModel::class.java)
         vm.uid = FirebaseRepo.INSTANCE.getID(requireContext())
 
-
-        val itemList:RecyclerView = view.findViewById(R.id.item_list_sale)
+        itemList = view.findViewById(R.id.item_list_sale)
 
         myAdapter = ItemAdapter(
             mutableListOf(),
@@ -63,14 +62,7 @@ class OnSaleListFragment: Fragment() {
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
-            itemList.layoutManager = if(it.isEmpty())
-                LinearLayoutManager(context)
-            else {
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-                    StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
-                else
-                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-            }
+            updateLayoutManager(it)
         })
     }
 
@@ -122,9 +114,30 @@ class OnSaleListFragment: Fragment() {
     private fun updateFilter(){
         vm.getItems().removeObservers(viewLifecycleOwner)
         vm.getItems().observe(viewLifecycleOwner, Observer {
-
-            myAdapter.reload(it.filter { item -> searchFilter.match(item) })
+            var found = false
+            myAdapter.reload(it.filter { item ->
+                    if(searchFilter.match(item)) {
+                        found = true
+                        true
+                    } else
+                        false
+            })
+            if(!found)
+                updateLayoutManager(listOf())
+            else
+                updateLayoutManager(it)
         })
+    }
+
+    private fun updateLayoutManager(list: List<Item>) {
+        itemList.layoutManager = if(list.isEmpty())
+            LinearLayoutManager(context)
+        else {
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+            else
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        }
     }
 
     private fun showFilterDialog() {

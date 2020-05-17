@@ -62,14 +62,6 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         abstract fun bind(item: Item, canModify : Boolean)
     }
 
-    // TODO: Delete this
-    fun refresh(newItems: MutableList<Item>) {
-        items.clear()
-        // newItems.sort()
-        items.addAll(newItems)
-        notifyDataSetChanged()
-    }
-
     fun reload(newList : List<Item>){
         items.clear()
         items.addAll(newList)
