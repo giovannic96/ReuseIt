@@ -31,7 +31,7 @@ class ItemDetailsFragment: Fragment() {
     var item : Item? = Item()
     var canModify : Boolean = true
     private var isOwner = false
-    private lateinit var interestedUsers: MutableList<String>
+    private lateinit var interestedUsers: MutableList<Pair<String, String>>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -214,14 +214,14 @@ class ItemDetailsFragment: Fragment() {
                         interestedUsers = ArrayList()
 
                         it.forEach {
-                            Log.d("MAD2020", it.id)
-                            interestedUsers.add(it.nickname)
+                            Log.d("KKK", it.id)
+                            interestedUsers.add(Pair(it.nickname, it.id))
                         }
 
                         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
                             requireContext(),
                             android.R.layout.simple_list_item_1,
-                            interestedUsers
+                            interestedUsers.map { it.first }
                         )
 
                         buyers_listview.adapter = arrayAdapter
@@ -253,12 +253,11 @@ class ItemDetailsFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
-                Log.d("KKK", "profile: ${interestedUsers[position]}" )
-                /* TODO INTENT GO TO SELECTED PROFILE
+                Log.d("KKK", "profile: ${interestedUsers[position].second}" )
                 val bundle = Bundle()
-                bundle.putString(getString(R.string.uid), interestedUsers[position].id) //TODO add id to profile
-                view.findNavController().navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
-                 */
+                bundle.putString(getString(R.string.uid), interestedUsers[position].second)
+                view?.findNavController()
+                    ?.navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
             }
         }
 
