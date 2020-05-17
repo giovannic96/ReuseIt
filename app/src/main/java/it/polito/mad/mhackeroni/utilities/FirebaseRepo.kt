@@ -10,11 +10,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Profile
-import org.w3c.dom.Document
 
 // DAO singleton class
  class FirebaseRepo private constructor() {
@@ -87,6 +87,7 @@ import org.w3c.dom.Document
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     val token = task.result?.token
+                    Log.d("MAD2020", "Updating token: ${token}")
                     db.collection("users")
                         .document(uid)
                         .update(hashMapOf("token" to token) as Map<String, Any>)
@@ -109,11 +110,18 @@ import org.w3c.dom.Document
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     if(!item.image.isNullOrEmpty()){
-                        it.result?.id?.let { it1 ->
-                            val refImage = uploadItemImage(Uri.parse(item.image), it1)
-                            db.collection("items").document(it.result!!.id).update(
-                                hashMapOf("image" to refImage) as Map<String, Any>
-                            )
+                        it.result?.id?.let { id ->
+                            val uploadTask = uploadItemImage(Uri.parse(item.image), id)
+                            val getUriTask = uploadTask.second
+                            uploadTask.first.addOnCompleteListener {
+                                if(it.isSuccessful){
+                                    getUriTask.addOnCompleteListener { task ->
+                                        if(task.isSuccessful){
+                                            db.collection("items").document(id).update(hashMapOf("image" to task.result.toString()) as Map<String, Any>)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {
@@ -132,14 +140,13 @@ import org.w3c.dom.Document
         return ref.name
     }
 
-    fun uploadItemImage(uri : Uri, documentId : String) : Task<Uri> {
+    fun uploadItemImage(uri : Uri, documentId : String) : Pair<UploadTask, Task<Uri>> {
         val storage = Firebase.storage
         var storageRef = storage.reference
 
         var ref = storageRef.child("items_images/${documentId}.jpg")
-        ref.putFile(uri)
 
-        return ref.downloadUrl
+        return Pair(ref.putFile(uri), ref.downloadUrl)
     }
 
     fun getUserItem(userID : String) : List<Item>{
@@ -195,8 +202,16 @@ import org.w3c.dom.Document
                 "state" to item.state
             ) as Map<String, Any>).addOnCompleteListener{
                 if (it.isSuccessful){
-                    val ref = uploadItemImage(Uri.parse(item.image), id).addOnCompleteListener {
-
+                    val uploadTask = uploadItemImage(Uri.parse(item.image), id)
+                    val getUriTask = uploadTask.second
+                    uploadTask.first.addOnCompleteListener {
+                        if(it.isSuccessful){
+                            getUriTask.addOnCompleteListener { task ->
+                                if(task.isSuccessful){
+                                    db.collection("items").document(id).update(hashMapOf("image" to task.result.toString()) as Map<String, Any>)
+                                }
+                            }
+                        }
                     }
                 } else {
                    // Log.d("MAG2020", it.exception.toString())
