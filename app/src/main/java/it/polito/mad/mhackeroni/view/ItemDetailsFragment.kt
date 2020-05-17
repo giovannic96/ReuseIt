@@ -214,7 +214,6 @@ class ItemDetailsFragment: Fragment() {
                         interestedUsers = ArrayList()
 
                         it.forEach {
-                            Log.d("KKK", it.id)
                             interestedUsers.add(Pair(it.nickname, it.id))
                         }
 
@@ -253,7 +252,7 @@ class ItemDetailsFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
-                Log.d("KKK", "profile: ${interestedUsers[position].second}" )
+                // navigate to selected profile
                 val bundle = Bundle()
                 bundle.putString(getString(R.string.uid), interestedUsers[position].second)
                 view?.findNavController()
