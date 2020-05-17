@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
+import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.android.synthetic.main.fragment_show_image.*
 
 
@@ -45,24 +46,11 @@ class ShowImageFragment : Fragment() {
             }
         } else {
             val uri = arguments?.getString("uri")
-            val ref = uri?.let {
-                Firebase.storage.reference
-                    .child("items_images")
-                    .child(it)
-            }
+            Glide.with(requireContext())
+                .load(uri)
+                .into(imageFullscreen)
 
-            if (ref != null) {
-                ref.downloadUrl.addOnCompleteListener {
-                    if(it.isSuccessful) {
-                        context?.let { it1 ->
-                            Glide.with(it1)
-                                .load(it.result)
-                                .into(imageFullscreen)
-                        }
-                    }
-                    load_image_progessbar.visibility = View.INVISIBLE
-                }
-            }
+            load_image_progessbar.visibility = View.INVISIBLE
         }
 
 
