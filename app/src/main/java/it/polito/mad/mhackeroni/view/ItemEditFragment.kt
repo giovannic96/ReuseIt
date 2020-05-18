@@ -567,6 +567,7 @@ class ItemEditFragment: Fragment() {
             ) {
 
                 edit_itemSubCategory.setText(R.string.selectSubcat)
+                edit_itemCategory.error = null
 
                 when(position){
                     0-> {adapterSubcat = ArrayAdapter(requireContext(),
@@ -628,6 +629,7 @@ class ItemEditFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
+                edit_itemSubCategory.error = null
                 subCat = selectedCat[position]
                 helperTextVisible.value = false
             }
@@ -652,6 +654,7 @@ class ItemEditFragment: Fragment() {
                 position: Int,
                 id: Long
             ) {
+                edit_itemCondition.error = null
                 cond = conditions[position]
             }
         }
