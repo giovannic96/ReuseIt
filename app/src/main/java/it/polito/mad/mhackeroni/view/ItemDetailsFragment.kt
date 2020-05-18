@@ -194,8 +194,8 @@ class ItemDetailsFragment: Fragment() {
                             .child("profiles_images")
                             .child(imagePath)
 
-                        if(view.isVisible) {
-                            ref.downloadUrl.addOnCompleteListener {
+                        ref.downloadUrl.addOnCompleteListener {
+                            if(view.isVisible) {
                                 if (it.isSuccessful) {
                                     Glide.with(requireContext())
                                         .load(it.result)
@@ -204,7 +204,7 @@ class ItemDetailsFragment: Fragment() {
 
                                 profile_progress_bar_item.visibility = View.INVISIBLE
                             }
-                        }
+                            }
                     }
                })
             }
