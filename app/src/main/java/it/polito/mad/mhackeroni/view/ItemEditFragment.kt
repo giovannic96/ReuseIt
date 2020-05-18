@@ -319,8 +319,6 @@ class ItemEditFragment: Fragment() {
             R.id.menu_save -> {
 
                 if(isAddingItem){
-                    if(cat.isNullOrEmpty())
-                        subCat = ""
                     item = Item(
                         "",
                         edit_itemTitle.text.toString(),
@@ -334,9 +332,6 @@ class ItemEditFragment: Fragment() {
                         null
                     )
                 } else {
-                    if(cat.isNullOrEmpty())
-                        subCat = ""
-
                     item = Item(
                         oldItem?.id ?: "",
                         edit_itemTitle.text.toString(),
@@ -665,7 +660,8 @@ class ItemEditFragment: Fragment() {
             val value = item?.category
             val pos = adapterCat.getPosition(value)
 
-            edit_itemCategory.setHint("\n${value}")
+            edit_itemCategory.hint = "\n${value}"
+
             adapterCat.notifyDataSetChanged()
             try {
                 edit_itemCategory.setSelection(pos)
@@ -677,7 +673,7 @@ class ItemEditFragment: Fragment() {
             val value = item?.condition
             val pos = adapterCond.getPosition(value)
 
-            edit_itemCondition.setHint("\n${value}")
+            edit_itemCondition.hint = "\n${value}"
             adapterCond.notifyDataSetChanged()
          try{
             edit_itemCondition.setSelection(pos)
@@ -696,7 +692,7 @@ class ItemEditFragment: Fragment() {
             // val pos = adapterSubcat.getPosition(value)
 
             adapterSubcat.notifyDataSetChanged()
-            edit_itemSubCategory.setHint("\n${value}")
+            edit_itemSubCategory.hint = "\n${value}"
             // edit_itemSubCategory.setSelection(pos)
         }
 
