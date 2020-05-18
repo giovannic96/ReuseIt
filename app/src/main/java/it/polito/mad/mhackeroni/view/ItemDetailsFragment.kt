@@ -195,7 +195,7 @@ class ItemDetailsFragment: Fragment() {
                             .child(imagePath)
 
                         ref.downloadUrl.addOnCompleteListener {
-                            if(view.isVisible) {
+                            if(imageProfileItem != null) {
                                 if (it.isSuccessful) {
                                     Glide.with(requireContext())
                                         .load(it.result)
@@ -347,7 +347,8 @@ class ItemDetailsFragment: Fragment() {
                 if(it.isSuccessful){
                     if(it.result?.isEmpty!!) {
                         if(!isOwner)
-                            fab_buy.visibility = View.VISIBLE
+                            if(fab_buy != null)
+                                fab_buy.visibility = View.VISIBLE
                     }
                 }
             }
