@@ -87,6 +87,7 @@
     <string name="interestedUsers">Interested users</string>
     <string name="errorConnection">Connection error</string>
     <string name="imageFragment">Image</string>
+    <string name="interestedDialogLabel">Click on user to see his profile</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

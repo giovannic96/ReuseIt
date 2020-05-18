@@ -1,11 +1,14 @@
 package it.polito.mad.mhackeroni.view
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ListView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -23,6 +26,7 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
+import kotlinx.android.synthetic.main.interested_dialog_box.*
 
 
 class ItemDetailsFragment: Fragment() {
@@ -310,6 +314,11 @@ class ItemDetailsFragment: Fragment() {
                 }
             }
         }
+
+        buyers_listview_label.setOnClickListener {
+            showInterestedDialog()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -415,5 +424,107 @@ class ItemDetailsFragment: Fragment() {
 
     private fun hide_fab(){
        fab_buy.visibility = View.INVISIBLE
+    }
+
+
+    private fun showInterestedDialog() {
+        val dialog = Dialog(requireActivity())
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.interested_dialog_box)
+
+        dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+
+        val cancelBtn = dialog.findViewById<Button>(R.id.interested_cancel_btn)
+
+        val interested = dialog.findViewById<ListView>(R.id.interested_listView)
+
+        vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
+        getNavigationInfo()
+
+        if(vm.itemId.isEmpty())
+            vm.itemId = item?.id ?: ""
+
+        if((FirebaseRepo.INSTANCE.getID(requireContext()) != vm.owner) && !vm.owner.isNullOrEmpty())
+            canModify = false
+
+        hide_fab()
+        if(!canModify) {
+            requireActivity().invalidateOptionsMenu()
+            itemState.visibility = View.GONE
+        } else {
+            hide_fab()
+            isOwner = true
+        }
+
+        checkFavorite(isOwner)
+
+        vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            item = it
+
+            if(!it.id.isNullOrEmpty() && canModify) {
+                vm.getInterestedUsers(it.id)
+                    .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                        if (it.isNotEmpty()) {
+                            interestedUsers = ArrayList()
+
+                            it.forEach {
+                                interestedUsers.add(Pair(it.nickname, it.id))
+                            }
+
+                            val arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+                                requireContext(),
+                                android.R.layout.simple_list_item_1,
+                                interestedUsers.map { it.first }
+                            )
+
+                            interested.adapter = arrayAdapter
+                            interested.visibility = View.VISIBLE
+                        }
+
+                    })
+            }
+
+
+            interested.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+                AdapterView.OnItemClickListener {
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                }
+
+                override fun onItemClick(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // navigate to selected profile
+                    val bundle = Bundle()
+                    bundle.putString(getString(R.string.uid), interestedUsers[position].second)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
+                }
+            }
+
+            interested.setOnTouchListener(OnTouchListener { v, event ->
+                v.parent.requestDisallowInterceptTouchEvent(true)
+                false
+            })
+        })
+
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }

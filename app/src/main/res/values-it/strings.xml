@@ -88,6 +88,7 @@
     <string name="interestedUsers">Utenti interessati</string>
     <string name="errorConnection">Errore di connessione</string>
     <string name="imageFragment">Immagine</string>
+    <string name="interestedDialogLabel">Premi su un utente per vedere il profilo</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>
