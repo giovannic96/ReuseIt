@@ -51,5 +51,11 @@ class EditItemFragmentViewModel : ViewModel() {
         localItem?.user = repo.getID(context)
         return repo.updateItem(itemId, localItem!!)
     }
+
+    fun updateItemNoImageUpload(context : Context): Task<Void> {
+        val repo : FirebaseRepo = FirebaseRepo.INSTANCE
+        localItem?.user = repo.getID(context)
+        return repo.updateItem(itemId, localItem!!, false)
+    }
 }
 

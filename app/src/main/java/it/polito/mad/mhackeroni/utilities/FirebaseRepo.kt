@@ -186,7 +186,13 @@ import it.polito.mad.mhackeroni.model.Profile
         return  db.collection("users").document(uid)
     }
 
-    fun updateItem(id : String, item : Item): Task<Void> {
+    fun updateItem(id : String, item : Item, uploadImage : Boolean = true): Task<Void> {
+        var imageLink : String? = null
+
+        if(!uploadImage){
+            imageLink = item.image
+        }
+
        return db.collection("items")
             .document(id)
             .update(hashMapOf(
@@ -195,7 +201,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "desc" to item.desc,
                 "expiryDate" to item.expiryDate,
                 "id" to id,
-                "image" to null,
+                "image" to imageLink,
                 "location" to item.location,
                 "name" to item.name,
                 "price" to item.price,
@@ -203,7 +209,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "user" to item.user,
                 "state" to item.state
             ) as Map<String, Any>).addOnCompleteListener{
-                if (it.isSuccessful){
+                if (it.isSuccessful && uploadImage){
                     val uploadTask = uploadItemImage(Uri.parse(item.image), id)
                     val getUriTask = uploadTask.second
                     uploadTask.first.addOnCompleteListener {
