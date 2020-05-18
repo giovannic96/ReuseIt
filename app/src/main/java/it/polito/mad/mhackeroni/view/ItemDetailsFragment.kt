@@ -503,7 +503,7 @@ class ItemDetailsFragment: Fragment() {
 
                 override fun onItemClick(
                     parent: AdapterView<*>?,
-                    view: View?,
+                    viewItem: View?,
                     position: Int,
                     id: Long
                 ) {
@@ -512,6 +512,7 @@ class ItemDetailsFragment: Fragment() {
                     bundle.putString(getString(R.string.uid), interestedUsers[position].second)
                     view?.findNavController()
                         ?.navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
+                    dialog.dismiss()
                 }
             }
 
