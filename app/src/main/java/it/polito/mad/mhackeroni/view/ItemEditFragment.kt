@@ -19,7 +19,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -34,17 +33,16 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditItemFragmentViewModel
-import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
-import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_edit.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.text.DateFormat
@@ -149,6 +147,10 @@ class ItemEditFragment: Fragment() {
                     R.string.defaultLocation
                 ))
 
+                radio_available.isChecked = true
+                radio_sold.isChecked = false
+                radio_block.isChecked = false
+
                 try {
                     if(itemData.image.isNullOrEmpty()){
                         edit_itemImage.setImageResource(R.drawable.ic_box)
@@ -184,6 +186,24 @@ class ItemEditFragment: Fragment() {
                     edit_itemLocation.setText(itemData.location ?: resources.getString(
                         R.string.defaultLocation
                     ))
+
+                    val state = itemData.state.toString()
+
+                    if(state == "AVAILABLE"){
+                        radio_available.isChecked = true
+                        radio_sold.isChecked = false
+                        radio_block.isChecked = false
+                    }
+                    else if(state == "SOLD"){
+                        radio_available.isChecked = false
+                        radio_sold.isChecked = true
+                        radio_block.isChecked = false
+                    }
+                    else if(state == "BLOCKED"){
+                        radio_available.isChecked = false
+                        radio_sold.isChecked = false
+                        radio_block.isChecked = true
+                    }
 
                     try {
                         if(itemData.image.isNullOrEmpty()){
