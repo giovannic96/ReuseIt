@@ -424,7 +424,6 @@ class ItemEditFragment: Fragment() {
                     if(!checkData())
                         return false
 
-
                     item!!.id = oldItem?.id ?: ""
                     val fromList = arguments?.getBoolean("fromList", false)
                     vm.updateLocalItem(item!!)
@@ -532,11 +531,12 @@ class ItemEditFragment: Fragment() {
                     } else {
                         vm.updateItemNoImageUpload(requireContext()).addOnCompleteListener {
 
-                            Log.d("XXX", "No upload")
+                            val localImage = vm.getLocalItem()?.image!!
+                            Log.d("XXX", "No upload - Image: ${localImage}")
 
                             if (it.isSuccessful) {
                                 val bundle =
-                                    bundleOf("new_item" to item?.let {
+                                    bundleOf("uploadImage" to false, "new_item" to item?.let {
                                         Item.toJSON(
                                             it
                                         ).toString()
@@ -544,7 +544,7 @@ class ItemEditFragment: Fragment() {
 
                                 if (fromList!!) {
                                     val bundle =
-                                        bundleOf("edited_item" to item?.let {
+                                        bundleOf("uploadImage" to false, "edited_item" to item?.let {
                                             Item.toJSON(
                                                 it
                                             ).toString()
@@ -561,7 +561,7 @@ class ItemEditFragment: Fragment() {
                                         )
                                 } else {
                                     val bundle =
-                                        bundleOf("new_item" to item?.let {
+                                        bundleOf("uploadImage" to false, "new_item" to item?.let {
                                             Item.toJSON(
                                                 it
                                             ).toString()

@@ -189,6 +189,8 @@ import it.polito.mad.mhackeroni.model.Profile
     fun updateItem(id : String, item : Item, uploadImage : Boolean = true): Task<Void> {
         var imageLink : String? = null
 
+        Log.d("XXX", "bool : ${uploadImage}")
+
         if(!uploadImage){
             imageLink = item.image
         }
@@ -210,6 +212,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "state" to item.state
             ) as Map<String, Any>).addOnCompleteListener{
                 if (it.isSuccessful && uploadImage){
+                    Log.d("XXX", "Im uploading ${uploadImage}")
                     val uploadTask = uploadItemImage(Uri.parse(item.image), id)
                     val getUriTask = uploadTask.second
                     uploadTask.first.addOnCompleteListener {
