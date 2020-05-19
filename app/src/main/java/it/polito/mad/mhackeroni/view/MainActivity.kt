@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -16,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.Auth
@@ -77,9 +79,19 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         })
 
         val imageView = navView.getHeaderView(0).findViewById(R.id.drawable_pic) as ImageView
+
         imageView.setOnClickListener {
-            navController.navigate(R.id.nav_showProfile)
-            drawerLayout.closeDrawers()
+            val navHostFragment : NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            if(navHostFragment != null){
+                val currentFrag = navHostFragment.childFragmentManager.fragments.get(0)
+                if(currentFrag is ShowProfileFragment){
+                    // No need for navigate
+                    drawerLayout.closeDrawers()
+                } else {
+                    navController.navigate(R.id.nav_showProfile)
+                    drawerLayout.closeDrawers()
+                }
+            }
         }
     }
 
