@@ -100,14 +100,14 @@
             app:startIconDrawable="@drawable/ic_description"
             app:endIconMode="clear_text"
             app:counterEnabled="true"
-            app:counterMaxLength="300"
+            app:counterMaxLength="280"
             android:hint="@string/defaultDesc" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_itemDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="300"
+                android:maxLength="280"
                 android:inputType="textMultiLine"
                 android:textColor="#000000"
                 android:background="#FFFFFF" />

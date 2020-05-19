@@ -43,10 +43,6 @@
                 android:visibility="invisible"/>
         </FrameLayout>
 
-
-
-
-
         <TextView
             android:id="@+id/fullname"
             android:layout_width="match_parent"
