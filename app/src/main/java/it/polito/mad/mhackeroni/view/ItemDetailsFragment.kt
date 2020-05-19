@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +25,6 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
-import kotlinx.android.synthetic.main.interested_dialog_box.*
 
 
 class ItemDetailsFragment: Fragment() {
@@ -221,52 +219,11 @@ class ItemDetailsFragment: Fragment() {
                             interestedUsers.add(Pair(it.nickname, it.id))
                         }
 
-                        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            interestedUsers.map { it.first }
-                        )
-
-                        buyers_listview.adapter = arrayAdapter
                         buyers_listview_label.visibility = View.VISIBLE
-                        buyers_listview.visibility = View.VISIBLE
                     }
 
                 })
             }
-        })
-
-        buyers_listview.onItemClickListener = object : AdapterView.OnItemSelectedListener,
-            AdapterView.OnItemClickListener {
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-            }
-
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                // navigate to selected profile
-                val bundle = Bundle()
-                bundle.putString(getString(R.string.uid), interestedUsers[position].second)
-                view?.findNavController()
-                    ?.navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
-            }
-        }
-
-        buyers_listview.setOnTouchListener(OnTouchListener { v, event ->
-            v.parent.requestDisallowInterceptTouchEvent(true)
-            false
         })
 
         fab_buy.setOnClickListener {
