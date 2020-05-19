@@ -102,6 +102,8 @@ class ItemListFragment: Fragment() {
         //get item derived from edit fragment (editedItem)
         val editedItemJSON = arguments?.getString("edited_item", "") ?: ""
         val oldItem = arguments?.getString("old_item", "") ?: ""
+        val uploadImage : Boolean = arguments?.getBoolean("uploadImage", true) ?: true
+
         arguments?.clear()
 
         if(!editedItemJSON.isEmpty() && !oldItem.isEmpty() && oldItem != editedItemJSON){
@@ -112,9 +114,16 @@ class ItemListFragment: Fragment() {
                     val prevItem = Item.fromStringJSON(
                         oldItem
                     )!!
-                    prevItem.user = repo.getID(requireContext())
-                    if(prevItem != null)
-                        FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)
+                    if(view != null){
+                        prevItem.user = repo.getID(requireContext())
+
+                        if (prevItem != null) {
+                            if(uploadImage)
+                                FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)
+                            else
+                                FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem, false)
+                        }
+                    }
                 })
                 snackbar.show()
             }

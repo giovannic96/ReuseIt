@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,7 @@ class ItemDetailsFragment: Fragment() {
     var canModify : Boolean = true
     private var isOwner = false
     private lateinit var interestedUsers: MutableList<Pair<String, String>>
+    private var snackbar : Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -330,6 +332,8 @@ class ItemDetailsFragment: Fragment() {
         //get item derived from list fragment (selectedItem)
         val selectedItemJSON = arguments?.getString("item", "")
 
+        val uploadImage : Boolean = arguments?.getBoolean("uploadImage", true) ?: true
+
         if (!editedItemJSON.isNullOrEmpty()) {
             val oldItem = arguments?.getString("old_item", "")
 
@@ -338,7 +342,7 @@ class ItemDetailsFragment: Fragment() {
             }
 
             if (oldItem != null) {
-                handleEditItem(editedItemJSON, oldItem)
+                handleEditItem(editedItemJSON, oldItem, uploadImage)
             }
         }
 
@@ -349,25 +353,30 @@ class ItemDetailsFragment: Fragment() {
         arguments?.clear() // clear arguments
     }
 
-    private fun handleEditItem(editedItemJSON: String, oldItem: String) {
-        val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
+    private fun handleEditItem(editedItemJSON: String, oldItem: String, needUpload : Boolean) {
+        snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
 
         item = Item.fromStringJSON(oldItem)
 
         if (snackbar != null) {
-            snackbar.setAction(getString(R.string.undo), View.OnClickListener {
+            snackbar!!.setAction(getString(R.string.undo), View.OnClickListener {
 
                 val repo : FirebaseRepo = FirebaseRepo.INSTANCE
                 val prevItem = Item.fromStringJSON(
                     oldItem
                 )!!
-                prevItem.user = repo.getID(requireContext())
+                if(view != null){
+                    prevItem.user = repo.getID(requireContext())
 
-                if(prevItem != null)
-                    FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)
-
+                    if (prevItem != null) {
+                        if(needUpload)
+                            FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem)
+                        else
+                            FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem, false)
+                    }
+                }
                 })
-            snackbar.show()
+            snackbar!!.show()
         }
     }
 
@@ -382,6 +391,13 @@ class ItemDetailsFragment: Fragment() {
 
     private fun hide_fab(){
        fab_buy.visibility = View.INVISIBLE
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
+        if(snackbar != null)
+            snackbar!!.dismiss()
     }
 
 
