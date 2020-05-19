@@ -59,6 +59,7 @@
     <string name="search_title">Cerca...</string>
     <string name="filter_title">Filtri</string>
     <string name="logout_title">Logout</string>
+    <string name="logout_success">Logout effettuato con successo</string>
     <string name="my_items_nav">Le mie inserzioni</string>
     <string name="on_sale_title">Oggetti in vendita</string>
     <string name="price_min">Prezzo minimo</string>

@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -14,13 +15,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.iid.FirebaseInstanceId
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
@@ -38,6 +37,8 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.google_signin)
 
+        val isLogout = intent.getBooleanExtra(getString(R.string.logout_title), false)
+
         sign_in_button.setSize(SignInButton.SIZE_STANDARD)
         sign_in_button.setOnClickListener(this)
 
@@ -52,6 +53,13 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        // Do the logout if we pressed Logout button
+        if(isLogout) {
+            mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this) {
+                    Toast.makeText(applicationContext, R.string.logout_success, Toast.LENGTH_LONG).show()
+                }
+        }
         auth = FirebaseAuth.getInstance()
     }
 
@@ -128,19 +136,11 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)!!
-            Log.d("KKK", "firebaseAuthWithGoogle:" + account.id)
-
-            //TODO You can also get the user's email address with getEmail, the user's Google ID (for client-side use) with getId,
-            // and an ID token for the user with getIdToken. If you need to pass the currently signed-in user to a backend server,
-            // send the ID token to your backend server and validate the token on the server.
             firebaseAuthWithGoogle(account.idToken!!) // Signed in successfully, show authenticated UI.
-
             FirebaseRepo.INSTANCE.isLogged = true
-
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("KKK", "signInResult:failed code=" + e.statusCode)
             updateUI(null)
         }
     }
@@ -151,15 +151,10 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d("KKK", "signInWithCredential:success")
                     val user = auth.currentUser
-
-
-
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w("KKK", "signInWithCredential:failure", task.exception)
                     Snackbar.make(findViewById(android.R.id.content), "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
                     //updateUI(null)
                 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.Auth
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
@@ -94,6 +96,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
             commit()
         }
         val i = Intent(this, GoogleSignInActivity::class.java)
+        i.putExtra(getString(R.string.logout_title), true)
         startActivity(i)
     }
 

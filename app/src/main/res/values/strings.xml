@@ -58,6 +58,7 @@
     <string name="search_title">Search...</string>
     <string name="filter_title">Filters</string>
     <string name="logout_title">Logout</string>
+    <string name="logout_success">Logout successful</string>
     <string name="my_items_nav">My adverts</string>
     <string name="on_sale_title">Items for sale</string>
     <string name="price_min">Minimun price</string>
