@@ -23,8 +23,7 @@ class ShowProfileFragment : Fragment() {
     private var mListener: OnCompleteListener? = null
     private lateinit var vm : ProfileFragmentViewModel
     private var canEdit = true
-    private var profile : Profile =
-        Profile()
+    private var profile : Profile = Profile()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -36,7 +35,7 @@ class ShowProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         lateinit var uid : String
 
-        var passingUID= arguments?.getString(getString(R.string.uid), "") ?: ""
+        val passingUID= arguments?.getString(getString(R.string.uid), "") ?: ""
         getNavigationInfo()
         arguments?.clear()
 

@@ -73,6 +73,12 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         vm.getProfile().observe(this, Observer {
             updateHeader(it)
         })
+
+        val imageView = navView.getHeaderView(0).findViewById(R.id.drawable_pic) as ImageView
+        imageView.setOnClickListener {
+            navController.navigate(R.id.nav_showProfile)
+            drawerLayout.closeDrawers()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
