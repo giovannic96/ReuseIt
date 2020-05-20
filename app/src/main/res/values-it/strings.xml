@@ -90,6 +90,9 @@
     <string name="errorConnection">Errore di connessione</string>
     <string name="imageFragment">Immagine</string>
     <string name="interestedDialogLabel">Premi su un utente per vedere il profilo</string>
+    <string name="radio1">0 - 20 EUR</string>
+    <string name="radio2">20 - 50 EUR</string>
+    <string name="radio3">50 - 100 EUR</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

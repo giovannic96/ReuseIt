@@ -89,6 +89,12 @@
     <string name="errorConnection">Connection error</string>
     <string name="imageFragment">Image</string>
     <string name="interestedDialogLabel">Click on user to see his profile</string>
+    <string name="radio1">0 - 20 EUR</string>
+    <string name="radio2">20 - 50 EUR</string>
+    <string name="radio3">50 - 100 EUR</string>
+    <string name="radio4">100 - 250 EUR</string>
+    <string name="radio5">250 - 1000 EUR</string>
+    <string name="radio6">1000+ EUR</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

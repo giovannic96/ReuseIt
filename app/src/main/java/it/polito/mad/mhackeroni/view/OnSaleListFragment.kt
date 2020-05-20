@@ -4,7 +4,6 @@ package it.polito.mad.mhackeroni.view
 import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -14,11 +13,12 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import it.polito.mad.mhackeroni.*
-import it.polito.mad.mhackeroni.view.ItemAdapter.MyAdapterListener
+import com.beust.klaxon.token.RIGHT_BRACE
+import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ItemFilter
+import it.polito.mad.mhackeroni.view.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.viewmodel.OnSaleListFragmentViewModel
 
 
@@ -71,6 +71,7 @@ class OnSaleListFragment: Fragment() {
 
         val searchItem = menu.findItem(R.id.menu_search)
         val searchView = searchItem.actionView as SearchView
+        searchView.maxWidth = Int.MAX_VALUE //set search menu as full width
         // searchView.setQueryHint()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
@@ -152,10 +153,16 @@ class OnSaleListFragment: Fragment() {
         val okBtn = dialog.findViewById<Button>(R.id.filter_ok_btn)
         val cancelBtn = dialog.findViewById<Button>(R.id.filter_cancel_btn)
 
+        // Radio Buttons
+        val radioPrice1 = dialog.findViewById<RadioButton>(R.id.radioPrice1)
+        val radioPrice2 = dialog.findViewById<RadioButton>(R.id.radioPrice2)
+        val radioPrice3 = dialog.findViewById<RadioButton>(R.id.radioPrice3)
+        val radioPrice4 = dialog.findViewById<RadioButton>(R.id.radioPrice4)
+        val radioPrice5 = dialog.findViewById<RadioButton>(R.id.radioPrice5)
+        val radioPrice6 = dialog.findViewById<RadioButton>(R.id.radioPrice6)
+
         // Edit text
         val locationEditText = dialog.findViewById<EditText>(R.id.filter_box_location)
-        val minPriceEditText = dialog.findViewById<EditText>(R.id.filter_box_min_price)
-        val maxPriceEditText = dialog.findViewById<EditText>(R.id.filter_box_max_price)
 
         // Check boxes
         val newCheckBox = dialog.findViewById<CheckBox>(R.id.filter_cond_new)
@@ -291,8 +298,31 @@ class OnSaleListFragment: Fragment() {
             searchFilter = ItemFilter()
 
             searchFilter.location = locationEditText.text.toString()
-            searchFilter.price_min = minPriceEditText.text.toString().toDoubleOrNull() ?: 0.0
-            searchFilter.price_max = maxPriceEditText.text.toString().toDoubleOrNull() ?: Double.POSITIVE_INFINITY
+
+            if(radioPrice1.isChecked){
+                searchFilter.price_min = 0.0
+                searchFilter.price_max = 20.0
+            }
+            else if(radioPrice2.isChecked){
+                searchFilter.price_min = 20.0
+                searchFilter.price_max = 50.0
+            }
+            else if(radioPrice3.isChecked){
+                searchFilter.price_min = 50.0
+                searchFilter.price_max = 100.0
+            }
+            else if(radioPrice4.isChecked){
+                searchFilter.price_min = 100.0
+                searchFilter.price_max = 250.0
+            }
+            else if(radioPrice5.isChecked){
+                searchFilter.price_min = 250.0
+                searchFilter.price_max = 1000.0
+            }
+            else if(radioPrice6.isChecked){
+                searchFilter.price_min = 1000.0
+                searchFilter.price_max = Double.POSITIVE_INFINITY
+            }
 
             // Setup cat and subcategory if setted
             cat?.let { it -> searchFilter.category.add(it)}
