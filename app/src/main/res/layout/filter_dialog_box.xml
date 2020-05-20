@@ -160,10 +160,10 @@
                     android:id="@+id/filter_box_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#505050"
                     android:background="#FDFDFD"
-                    android:inputType="numberDecimal"
-                    android:hint="@string/defaultItemLocation"/>
+                    android:hint="@string/defaultItemLocation"
+                    android:inputType="text"
+                    android:textColor="#505050" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
