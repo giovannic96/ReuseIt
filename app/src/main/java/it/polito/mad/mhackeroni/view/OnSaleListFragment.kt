@@ -76,16 +76,13 @@ class OnSaleListFragment: Fragment() {
 
         val searchItem = menu.findItem(R.id.menu_search)
         searchView = searchItem.actionView as SearchView
+        searchView.isIconified = false
 
         searchView.maxWidth = Int.MAX_VALUE //set search menu as full width
         // searchView.setQueryHint()
 
-        searchView.setOnCloseListener {
-            hideKeyboard()
-            return@setOnCloseListener true
-        }
-
-        searchView.setOnQueryTextFocusChangeListener { view: View, b: Boolean ->
+        searchView.setOnQueryTextFocusChangeListener { _: View, hasFocus: Boolean ->
+            searchView.isIconified = false
             hideKeyboard()
         }
 
@@ -110,16 +107,14 @@ class OnSaleListFragment: Fragment() {
 
     private fun navigateWithInfo(item: Item) {
         val bundle = Bundle()
-        bundle.putString("item", item.let { Item.toJSON(
-            it
-        ).toString()})
+        bundle.putString("item", item.let { Item.toJSON(it).toString()})
         bundle.putBoolean("fromList", true)
         bundle.putBoolean("allowModify", false)
         view?.findNavController()?.navigate(R.id.action_nav_itemListSale_to_nav_ItemDetail, bundle)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when(item.itemId) {
             R.id.menu_filter -> {
                 showFilterDialog()
                 return true
@@ -128,7 +123,7 @@ class OnSaleListFragment: Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun updateFilter(){
+    private fun updateFilter() {
         vm.getItems().removeObservers(viewLifecycleOwner)
         vm.getItems().observe(viewLifecycleOwner, Observer {
             var found = false
