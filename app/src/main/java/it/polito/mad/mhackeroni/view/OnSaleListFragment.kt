@@ -1,11 +1,16 @@
 package it.polito.mad.mhackeroni.view
 
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +18,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.beust.klaxon.token.RIGHT_BRACE
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
@@ -28,6 +32,7 @@ class OnSaleListFragment: Fragment() {
     private var searchFilter : ItemFilter = ItemFilter()
     private lateinit var vm : OnSaleListFragmentViewModel
     private lateinit var itemList: RecyclerView
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_itemlist_sale, container, false)
@@ -70,9 +75,20 @@ class OnSaleListFragment: Fragment() {
         inflater.inflate(R.menu.fragment_filter_menu, menu)
 
         val searchItem = menu.findItem(R.id.menu_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
+
         searchView.maxWidth = Int.MAX_VALUE //set search menu as full width
         // searchView.setQueryHint()
+
+        searchView.setOnCloseListener {
+            hideKeyboard()
+            return@setOnCloseListener true
+        }
+
+        searchView.setOnQueryTextFocusChangeListener { view: View, b: Boolean ->
+            hideKeyboard()
+        }
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
@@ -355,5 +371,26 @@ class OnSaleListFragment: Fragment() {
         }
 
         dialog.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(this::searchView.isInitialized)
+            hideKeyboard()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(this::searchView.isInitialized)
+            hideKeyboard()
+    }
+
+    private fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
