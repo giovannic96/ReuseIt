@@ -172,7 +172,7 @@ class ShowProfileFragment : Fragment() {
         if(vm != null && !vm.uid.isNullOrEmpty()){
             val image = vm.getProfile().value?.image
 
-            if(image != null){
+            if(!image.isNullOrEmpty()){
                 profile_progress_bar.visibility = View.VISIBLE
 
                 val ref = Firebase.storage.reference
