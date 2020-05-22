@@ -433,16 +433,17 @@ class EditProfileFragment : Fragment() {
             retval = false
         } else if(edit_mail.text.isNullOrEmpty()){
             edit_mail.setError(getString(R.string.required_field))
+            retval = false
         }
 
         if(!edit_nickname.error.isNullOrEmpty()){
             retval = false
         } else if(edit_nickname.text.isNullOrEmpty()){
             edit_nickname.setError(getString(R.string.required_field))
+            retval = false
         }
 
         return retval
-
     }
 
     private fun dispatchPickImageIntent() {
