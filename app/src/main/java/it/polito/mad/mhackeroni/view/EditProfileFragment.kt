@@ -32,14 +32,13 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
-import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
+import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_show_profile.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -271,51 +270,65 @@ class EditProfileFragment : Fragment() {
                 // TODO: Handle error
                 if (entry != null) {
                     repo.updateProfile(entry, uid)*/
+                val repo : FirebaseRepo = FirebaseRepo.INSTANCE
 
-                if(vm.getLocalProfile() != null) {
-                    vm.updateDB().addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
-                                Profile.toJSON(
-                                    it1
-                                ).toString()
-                            },
-                                "new_profile" to profile?.let {
-                                    Profile.toJSON(
-                                        it
-                                    ).toString()
-                                }
-                            )
-                            view?.findNavController()
-                                ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
+                repo.checkNickname(edit_nickname.text.toString()).addOnCompleteListener {
+                    if(it.isSuccessful) {
+                        var idDoc = ""
+                        var canUpdateDb = false
+                        if(!it.result?.isEmpty!!) {
+                            for (document in it.result!!) {
+                                idDoc = document.id
+                                break
+                            }
                         } else {
-                            val bundle = bundleOf("error" to true,
-                                "new_profile" to profile?.let {
-                                    Profile.toJSON(
-                                        it
-                                    ).toString()
+                            canUpdateDb = true
+                        }
+
+                        //if username not exists OR it exists but it's mine -> can edit!
+                        if(canUpdateDb || idDoc == repo.getID(requireContext())) {
+                            if(vm.getLocalProfile() != null) {
+                                vm.updateDB().addOnCompleteListener {
+                                    if (it.isSuccessful) {
+                                        val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
+                                            Profile.toJSON(it1).toString()
+                                        },
+                                            "new_profile" to profile?.let {
+                                                Profile.toJSON(it).toString()
+                                            }
+                                        )
+                                        view?.findNavController()
+                                            ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
+                                    } else {
+                                        val bundle = bundleOf("error" to true,
+                                            "new_profile" to profile?.let {
+                                                Profile.toJSON(it).toString()
+                                            }
+                                        )
+                                        view?.findNavController()
+                                            ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
+                                    }
                                 }
-                            )
-                            view?.findNavController()
-                                ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
+                            } else {
+                                val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
+                                    Profile.toJSON(
+                                        it1
+                                    ).toString()
+                                },
+                                    "new_profile" to profile?.let {
+                                        Profile.toJSON(
+                                            it
+                                        ).toString()
+                                    }
+                                )
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
+                            }
+                        } else {
+                            edit_nickname.setError(getString(R.string.nickname_already_exist))
                         }
                     }
-                } else {
-                    val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
-                        Profile.toJSON(
-                            it1
-                        ).toString()
-                    },
-                        "new_profile" to profile?.let {
-                            Profile.toJSON(
-                                it
-                            ).toString()
-                        }
-                    )
-                    view?.findNavController()
-                        ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                 }
-
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -419,7 +432,7 @@ class EditProfileFragment : Fragment() {
         ViewCompat.setBackgroundTintList(edit_location, detectColor(edit_location))
     }
 
-    private fun checkData() : Boolean{
+    private fun checkData() : Boolean {
         var retval = true
 
         if(!edit_fullname.error.isNullOrEmpty()){
@@ -442,7 +455,6 @@ class EditProfileFragment : Fragment() {
             edit_nickname.setError(getString(R.string.required_field))
             retval = false
         }
-
         return retval
     }
 

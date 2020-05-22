@@ -27,7 +27,7 @@ class ShowImageFragment : Fragment() {
 
         val profilePic = arguments?.getBoolean("profile_image", false) ?: false
 
-        if(profilePic){
+        if(profilePic) {
             val uri = arguments?.getString("uri")
             val ref = uri?.let {
                 Firebase.storage.reference

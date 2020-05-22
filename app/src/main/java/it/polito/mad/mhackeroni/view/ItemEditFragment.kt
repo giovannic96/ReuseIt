@@ -1179,7 +1179,7 @@ class ItemEditFragment: Fragment() {
         contentResolver.takePersistableUriPermission(uri, takeFlags)
     }
 
-    private fun checkData(): Boolean{
+    private fun checkData(): Boolean {
         var retVal = true
 
         if(item?.name.isNullOrEmpty()){

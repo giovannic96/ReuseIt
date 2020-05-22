@@ -32,7 +32,6 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun setProfile(profile: Profile, userID : String){
-        // Log.d("MAG2020", "Testing: ${userID}")
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -133,7 +132,7 @@ import it.polito.mad.mhackeroni.model.Profile
             }
     }
 
-    fun uploadProfileImage(uri : Uri, profileID : String) : Pair<UploadTask, String> {
+    private fun uploadProfileImage(uri : Uri, profileID : String) : Pair<UploadTask, String> {
         val storage = Firebase.storage
         var storageRef = storage.reference
 
@@ -141,7 +140,7 @@ import it.polito.mad.mhackeroni.model.Profile
         return Pair(ref.putFile(uri), ref.name)
     }
 
-    fun uploadItemImage(uri : Uri, documentId : String) : Pair<UploadTask, StorageReference> {
+    private fun uploadItemImage(uri : Uri, documentId : String) : Pair<UploadTask, StorageReference> {
         val storage = Firebase.storage
         var storageRef = storage.reference
 
@@ -166,20 +165,14 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun getItemsRef(state : Item.ItemState = Item.ItemState.AVAILABLE): Query {
-        var collectionReference = db.collection("items")
-        var selectedCollection = collectionReference.whereEqualTo("state", state)
-
-        return selectedCollection
+        val collectionReference = db.collection("items")
+        return collectionReference.whereEqualTo("state", state)
     }
 
     fun getItemsRef(uid: String) : Query {
-
-        var collectionReference = db.collection("items")
-        var selectedCollection = collectionReference.whereEqualTo("user", uid)
-
-       return selectedCollection
+        val collectionReference = db.collection("items")
+        return collectionReference.whereEqualTo("user", uid)
     }
-
 
     fun getProfileRef(uid: String): DocumentReference{
         return  db.collection("users").document(uid)
@@ -188,9 +181,7 @@ import it.polito.mad.mhackeroni.model.Profile
     fun updateItem(id : String, item : Item, uploadImage : Boolean = true): Task<Void> {
         var imageLink : String? = null
 
-        Log.d("XXX", "bool : ${uploadImage}")
-
-        if(!uploadImage){
+        if(!uploadImage) {
             imageLink = item.image
         }
 
@@ -232,6 +223,11 @@ import it.polito.mad.mhackeroni.model.Profile
             .whereEqualTo("user", user).whereEqualTo("item", item).get()
     }
 
+    fun checkNickname(nickname : String) : Task<QuerySnapshot> {
+        return db.collection("users")
+            .whereEqualTo("nickname", nickname).get()
+    }
+
     fun insertFavorite(user : String, item : Item): Task<DocumentReference> {
         return db.collection("favorites")
             .add(hashMapOf(
@@ -269,7 +265,6 @@ import it.polito.mad.mhackeroni.model.Profile
                     }
                 }
             }
-
         return profiles
     }
 

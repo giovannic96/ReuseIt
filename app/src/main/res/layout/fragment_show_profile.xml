@@ -24,7 +24,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/photo"
                 android:foregroundGravity="center_horizontal"
-                android:padding="10dp"
+                android:padding="1dp"
                 android:src="@drawable/ic_avatar" />
 
             <ProgressBar

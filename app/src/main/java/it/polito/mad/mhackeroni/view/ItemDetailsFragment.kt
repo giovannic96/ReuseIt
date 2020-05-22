@@ -320,9 +320,7 @@ class ItemDetailsFragment: Fragment() {
 
     private fun editItem() {
         val bundle = Bundle()
-        bundle.putString("item", item?.let { it.let { it1 -> Item.toJSON(
-            it1
-        ).toString() } })
+        bundle.putString("item", item?.let { it.let { it1 -> Item.toJSON(it1).toString() } })
         view?.findNavController()?.navigate(R.id.action_nav_ItemDetail_to_nav_ItemDetailEdit, bundle)
     }
 
