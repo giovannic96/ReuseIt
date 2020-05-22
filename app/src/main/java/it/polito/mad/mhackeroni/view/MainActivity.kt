@@ -85,7 +85,13 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
             if(navHostFragment != null) {
                 val currentFrag = navHostFragment.childFragmentManager.fragments[0]
                 if(currentFrag is ShowProfileFragment) {
-                    // No need for navigate
+
+                    // navigate only if you are watching another profile
+                    val emailTextView: TextView = findViewById(R.id.mail)
+                    val navEmail = navView.getHeaderView(0).findViewById(R.id.drawable_mail) as TextView
+                    if((emailTextView.text != navEmail.text))
+                        navController.navigate(R.id.nav_showProfile)
+
                     drawerLayout.closeDrawers()
                 } else {
                     navController.navigate(R.id.nav_showProfile)
@@ -149,6 +155,8 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
                 if(drawerLayout.isDrawerOpen(GravityCompat.START))
                     navProgressbar.visibility = View.INVISIBLE
             }
+        } else {
+            navImage.setImageResource(R.drawable.ic_avatar)
         }
     }
 

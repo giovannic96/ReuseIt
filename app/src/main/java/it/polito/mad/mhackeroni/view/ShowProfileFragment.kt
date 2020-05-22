@@ -169,10 +169,10 @@ class ShowProfileFragment : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if(vm != null && !vm.uid.isNullOrEmpty()){
+        if(vm != null && !vm.uid.isNullOrEmpty()) {
             val image = vm.getProfile().value?.image
 
-            if(!image.isNullOrEmpty()){
+            if(!image.isNullOrEmpty()) {
                 profile_progress_bar.visibility = View.VISIBLE
 
                 val ref = Firebase.storage.reference
