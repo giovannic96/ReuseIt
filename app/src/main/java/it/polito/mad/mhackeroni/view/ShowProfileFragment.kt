@@ -36,6 +36,7 @@ class ShowProfileFragment : Fragment() {
         lateinit var uid : String
 
         val passingUID= arguments?.getString(getString(R.string.uid), "") ?: ""
+        val fromItem: Boolean = arguments?.getBoolean("fromItem", false) ?: false
         getNavigationInfo()
         arguments?.clear()
 
@@ -47,9 +48,16 @@ class ShowProfileFragment : Fragment() {
             uid = repo.getID(requireContext())
         } else { // Show another profile
             uid = passingUID
-
             canEdit = false
             requireActivity().invalidateOptionsMenu()
+            if(!fromItem){
+                phone_number.visibility = View.GONE
+                mail.visibility = View.GONE
+            }
+            else{
+                phone_number.visibility = View.VISIBLE
+                mail.visibility = View.VISIBLE
+            }
         }
 
 

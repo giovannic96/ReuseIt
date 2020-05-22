@@ -176,6 +176,7 @@ class ItemDetailsFragment: Fragment() {
             imageProfileItem.setOnClickListener { listener ->
                 val bundle = Bundle()
                 bundle.putString(getString(R.string.uid), it.user)
+                bundle.putBoolean("fromItem", true)
                 view.findNavController()
                     .navigate(R.id.action_nav_ItemDetail_to_nav_showProfile, bundle)
             }
