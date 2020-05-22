@@ -44,8 +44,8 @@ import it.polito.mad.mhackeroni.model.Profile
 
                 if (token != null) {
                     db.collection("users").document(userID).get().addOnCompleteListener {
-                        if(it.isSuccessful){
-                            if(!it.result?.exists()!!){
+                        if(it.isSuccessful) {
+                            if(!it.result?.exists()!!) {
                                 db.collection("users").document(userID).set(profile).addOnCompleteListener {
                                     if(it.isSuccessful) {
                                         db.collection("users").document(userID).update(
@@ -98,7 +98,6 @@ import it.polito.mad.mhackeroni.model.Profile
                 }
             }
     }
-
 
     fun updateUserToken(uid : String, token : String): Task<Void> {
         return db.collection("users")

@@ -82,9 +82,9 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
 
         imageView.setOnClickListener {
             val navHostFragment : NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            if(navHostFragment != null){
-                val currentFrag = navHostFragment.childFragmentManager.fragments.get(0)
-                if(currentFrag is ShowProfileFragment){
+            if(navHostFragment != null) {
+                val currentFrag = navHostFragment.childFragmentManager.fragments[0]
+                if(currentFrag is ShowProfileFragment) {
                     // No need for navigate
                     drawerLayout.closeDrawers()
                 } else {

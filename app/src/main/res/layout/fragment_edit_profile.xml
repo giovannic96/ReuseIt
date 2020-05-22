@@ -111,7 +111,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:hint="@string/defaultEmail"
-            android:inputType="textEmailAddress"
+            android:inputType="none"
+            android:enabled="false"
             android:textSize="20sp"
             android:drawableEnd="@drawable/ic_email"/>
 

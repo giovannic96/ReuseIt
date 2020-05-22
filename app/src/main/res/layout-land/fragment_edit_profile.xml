@@ -156,7 +156,8 @@
             android:drawableEnd="@drawable/ic_email"
             android:hint="@string/defaultEmail"
             android:imeOptions="flagNoExtractUi"
-            android:inputType="textEmailAddress"
+            android:inputType="none"
+            android:enabled="false"
             android:textSize="20sp" />
 
         <EditText

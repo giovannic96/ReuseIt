@@ -79,7 +79,9 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             var emailVerified: Boolean
             var uid: String
 
-            FirebaseRepo.INSTANCE.setProfile(Profile(), user.uid)
+            val p = Profile()
+            p.email = user.email.toString() // set profile email as google sign-in email
+            FirebaseRepo.INSTANCE.setProfile(p, user.uid)
 
             user.let {
                 // Name, email address, and profile photo Url
