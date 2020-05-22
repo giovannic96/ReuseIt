@@ -17,12 +17,15 @@ import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.fragment_show_profile.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
 
 class ShowProfileFragment : Fragment() {
     private var mListener: OnCompleteListener? = null
     private lateinit var vm : ProfileFragmentViewModel
     private var canEdit = true
+    val logger: Logger = Logger.getLogger(ShowProfileFragment::class.java.name)
     private var profile : Profile = Profile()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,17 +83,19 @@ class ShowProfileFragment : Fragment() {
 
                     ref.downloadUrl.addOnCompleteListener {
                         if (it.isSuccessful) {
-                            Glide.with(requireContext())
-                                .load(it.result)
-                                .into(imageProfile)
+                            try {
+                                Glide.with(requireContext())
+                                    .load(it.result)
+                                    .into(imageProfile)
+                            } catch(ex: IllegalStateException) {
+                                logger.log(Level.WARNING, "context not attached", ex)
+                            }
                         }
-
-                        profile_progress_bar.visibility = View.INVISIBLE
+                        profile_progress_bar?.visibility = View.INVISIBLE
                      }
                 }
             } catch (e: Exception) {
-                Snackbar.make(view,
-                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             fullname.text = it?.fullName ?: resources.getString(R.string.defaultFullName)
@@ -138,10 +143,12 @@ class ShowProfileFragment : Fragment() {
 
     private fun editProfile() {
         val bundle = Bundle()
-        bundle.putString("profile", profile.let { Profile.toJSON(
-            it
-        ).toString()})
-        view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
+        bundle.putString("profile", profile.let { Profile.toJSON(it).toString()})
+        try {
+            view?.findNavController()?.navigate(R.id.action_nav_showProfile_to_nav_editProfile, bundle)
+        } catch (ex: IllegalArgumentException) {
+            logger.log(Level.WARNING, "multiple navigation not allowed", ex)
+        }
     }
 
     private fun getNavigationInfo(){
@@ -181,12 +188,15 @@ class ShowProfileFragment : Fragment() {
 
                 ref.downloadUrl.addOnCompleteListener {
                     if (it.isSuccessful) {
-                        Glide.with(requireContext())
-                            .load(it.result)
-                            .into(imageProfile)
+                        try {
+                            Glide.with(requireContext())
+                                .load(it.result)
+                                .into(imageProfile)
+                        } catch (ex: IllegalStateException) {
+                            logger.log(Level.WARNING, "context not attached", ex)
+                        }
                     }
-
-                    profile_progress_bar.visibility = View.INVISIBLE
+                    profile_progress_bar?.visibility = View.INVISIBLE
                 }
             }
         }

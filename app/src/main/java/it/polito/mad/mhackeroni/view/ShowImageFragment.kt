@@ -9,6 +9,9 @@ import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.android.synthetic.main.fragment_show_image.*
+import java.lang.IllegalStateException
+import java.util.logging.Level
+import java.util.logging.Logger
 
 
 class ShowImageFragment : Fragment() {
@@ -32,25 +35,32 @@ class ShowImageFragment : Fragment() {
                     .child(it)
             }
 
-            if (ref != null) {
-                ref.downloadUrl.addOnCompleteListener {
-                    if(it.isSuccessful) {
+            ref?.downloadUrl?.addOnCompleteListener {
+                if(it.isSuccessful) {
+                    try {
                         context?.let { it1 ->
                             Glide.with(it1)
                                 .load(it.result)
                                 .into(imageFullscreen)
                         }
+                    } catch (ex: IllegalStateException) {
+                        val logger: Logger = Logger.getLogger(ShowImageFragment::class.java.name)
+                        logger.log(Level.WARNING, "context not attached", ex)
                     }
-                    load_image_progessbar.visibility = View.INVISIBLE
                 }
+                load_image_progessbar?.visibility = View.INVISIBLE
             }
         } else {
             val uri = arguments?.getString("uri")
-            Glide.with(requireContext())
-                .load(uri)
-                .into(imageFullscreen)
-
-            load_image_progessbar.visibility = View.INVISIBLE
+            try {
+                Glide.with(requireContext())
+                    .load(uri)
+                    .into(imageFullscreen)
+            } catch (ex: IllegalStateException) {
+                val logger: Logger = Logger.getLogger(ShowImageFragment::class.java.name)
+                logger.log(Level.WARNING, "context not attached", ex)
+            }
+            load_image_progessbar?.visibility = View.INVISIBLE
         }
 
 

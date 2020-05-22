@@ -28,6 +28,9 @@ import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
+import java.lang.IllegalStateException
+import java.util.logging.Level
+import java.util.logging.Logger
 
 
 class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener{
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
     private lateinit var uid: String
+    val logger: Logger = Logger.getLogger(MainActivity::class.java.name)
     private lateinit var vm : ProfileFragmentViewModel
     private lateinit var sharedPref: SharedPreferences
     private lateinit var drawerLayout: DrawerLayout
@@ -147,13 +151,16 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
 
             ref.downloadUrl.addOnCompleteListener {
                 if (it.isSuccessful) {
-                    Glide.with(this)
-                        .load(it.result)
-                        .into(navImage)
+                    try {
+                        Glide.with(this)
+                            .load(it.result)
+                            .into(navImage)
+                    } catch(ex: IllegalStateException) {
+                        logger.log(Level.WARNING, "context not attached", ex)
+                    }
                 }
-
                 if(drawerLayout.isDrawerOpen(GravityCompat.START))
-                    navProgressbar.visibility = View.INVISIBLE
+                    navProgressbar?.visibility = View.INVISIBLE
             }
         } else {
             navImage.setImageResource(R.drawable.ic_avatar)

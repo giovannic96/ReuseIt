@@ -2,14 +2,12 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +24,8 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
-
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class ItemDetailsFragment: Fragment() {
     var price: Double? = null
@@ -34,6 +33,7 @@ class ItemDetailsFragment: Fragment() {
     var item : Item? = Item()
     var canModify : Boolean = true
     private var isOwner = false
+    val logger: Logger = Logger.getLogger(ItemDetailsFragment::class.java.name)
     private lateinit var interestedUsers: MutableList<Pair<String, String>>
     private var snackbar : Snackbar? = null
 
@@ -91,15 +91,17 @@ class ItemDetailsFragment: Fragment() {
                     val requestOptions = RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
 
-                    Glide.with(requireContext().applicationContext)
-                        .load(it.image)
-                        .apply(requestOptions)
-                        .into(itemImage)
-
+                    try {
+                        Glide.with(requireContext().applicationContext)
+                            .load(it.image)
+                            .apply(requestOptions)
+                            .into(itemImage)
+                    } catch(ex: java.lang.IllegalStateException) {
+                        logger.log(Level.WARNING, "context not attached", ex)
+                    }
                 }
             } catch (e: Exception) {
-                Snackbar.make(view,
-                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             itemTitle.text = it.name
@@ -111,8 +113,7 @@ class ItemDetailsFragment: Fragment() {
                     itemPrice.text = "$price"
             }
             catch (e: Exception) {
-                Snackbar.make(view,
-                    R.string.price_error, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
             val defaultColor:Int;
@@ -198,12 +199,15 @@ class ItemDetailsFragment: Fragment() {
                         ref.downloadUrl.addOnCompleteListener {
                             if(imageProfileItem != null) {
                                 if (it.isSuccessful) {
-                                    Glide.with(requireContext())
-                                        .load(it.result)
-                                        .into(imageProfileItem)
+                                    try {
+                                        Glide.with(requireContext())
+                                            .load(it.result)
+                                            .into(imageProfileItem)
+                                    } catch (ex: IllegalStateException) {
+                                        logger.log(Level.WARNING, "context not attached", ex)
+                                    }
                                 }
-
-                                profile_progress_bar_item.visibility = View.INVISIBLE
+                                profile_progress_bar_item?.visibility = View.INVISIBLE
                             }
                             }
                     }
@@ -269,8 +273,7 @@ class ItemDetailsFragment: Fragment() {
                             .navigate(R.id.action_nav_ItemDetail_to_nav_showImage, bundle)
                     }
                 } catch (e: Exception) {
-                    Snackbar.make(view,
-                        R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

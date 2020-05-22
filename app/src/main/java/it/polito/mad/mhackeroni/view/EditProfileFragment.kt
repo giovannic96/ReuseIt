@@ -43,6 +43,8 @@ import kotlinx.android.synthetic.main.fragment_show_profile.*
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class EditProfileFragment : Fragment() {
     private val REQUEST_PICKIMAGE = 9002
@@ -53,6 +55,7 @@ class EditProfileFragment : Fragment() {
     private var startCamera = false
     private var originalPhotPath = ""
     private lateinit  var vm : EditProfileFragmentViewModel
+    val logger: Logger = Logger.getLogger(EditProfileFragment::class.java.name)
     private var  profile : Profile? = null
     private var oldProfile : Profile? = null
 
@@ -91,21 +94,28 @@ class EditProfileFragment : Fragment() {
 
                     ref.downloadUrl.addOnCompleteListener {
                         if (it.isSuccessful) {
-                            Glide.with(requireContext())
-                                .load(it.result)
-                                .into(edit_showImageProfile)
+                            try {
+                                Glide.with(requireContext())
+                                    .load(it.result)
+                                    .into(edit_showImageProfile)
+                            } catch(ex: IllegalStateException) {
+                                logger.log(Level.WARNING, "context not attached", ex)
+                            }
                         } else {
-                            Glide.with(requireContext())
+                            try {
+                                Glide.with(requireContext())
                                 .load(imagePath)
                                 .into(edit_showImageProfile)
+                            } catch(ex: IllegalStateException) {
+                                logger.log(Level.WARNING, "context not attached", ex)
+                            }
                         }
                     }
                 } else {
                         edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
                     }
             } catch (e: Exception) {
-                Snackbar.make(view,
-                    R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
             edit_fullname.setText(profileData.fullName ?: resources.getString(R.string.defaultFullName))

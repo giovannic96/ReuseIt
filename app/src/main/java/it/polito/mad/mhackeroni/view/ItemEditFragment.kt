@@ -45,9 +45,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.lang.IllegalStateException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class ItemEditFragment: Fragment() {
     var item: Item? = null
@@ -67,8 +70,8 @@ class ItemEditFragment: Fragment() {
     lateinit var vm : EditItemFragmentViewModel
     private var startCamera = false
     private var imageChanged = false
-    private var state : Item.ItemState =
-        Item.ItemState.AVAILABLE
+    val logger: Logger = Logger.getLogger(ItemEditFragment::class.java.name)
+    private var state : Item.ItemState = Item.ItemState.AVAILABLE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -160,9 +163,10 @@ class ItemEditFragment: Fragment() {
                             .load(itemData.image)
                             .into(edit_itemImage)
                     }
+                } catch(ex: IllegalStateException) {
+                    logger.log(Level.WARNING, "context not attached", ex)
                 } catch (e: Exception) {
-                    Snackbar.make(view,
-                        R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                 }
             }
 
@@ -208,15 +212,15 @@ class ItemEditFragment: Fragment() {
                     try {
                         if(itemData.image.isNullOrEmpty()){
                             edit_itemImage.setImageResource(R.drawable.ic_box)
-
                         } else {
                             Glide.with(requireContext())
                                 .load(itemData.image)
                                 .into(edit_itemImage)
                         }
+                    } catch(ex: IllegalStateException) {
+                        logger.log(Level.WARNING, "context not attached", ex)
                     } catch (e: Exception) {
-                        Snackbar.make(view,
-                            R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             })

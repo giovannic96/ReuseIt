@@ -18,8 +18,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
+import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 import java.sql.Time
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class ItemAdapter(private var items: MutableList<Item>, private val listener: MyAdapterListener):
     RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
@@ -100,11 +103,15 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
                 val requestOptions = RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
 
-                Log.d("MAD2020", "${item.image}")
-                Glide.with(context.applicationContext)
-                    .load(item.image)
-                    .apply(requestOptions)
-                    .into(image)
+                try {
+                    Glide.with(context.applicationContext)
+                        .load(item.image)
+                        .apply(requestOptions)
+                        .into(image)
+                } catch(ex: IllegalStateException) {
+                    val logger: Logger = Logger.getLogger(ItemAdapter::class.java.name)
+                    logger.log(Level.WARNING, "context not attached", ex)
+                }
             }
         }
     }
