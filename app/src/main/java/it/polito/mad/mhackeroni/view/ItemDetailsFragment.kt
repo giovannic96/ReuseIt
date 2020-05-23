@@ -121,15 +121,15 @@ class ItemDetailsFragment: Fragment() {
             when(it.state){
                 Item.ItemState.AVAILABLE -> {
                     itemState.text = getString(R.string.stateAvailable)
-                    itemState.setBackgroundResource(R.color.green)
+                    itemState.setBackgroundResource(R.drawable.back_green)
                 }
                 Item.ItemState.SOLD -> {
                     itemState.text = getString(R.string.stateSold)
-                    itemState.setBackgroundResource(R.color.red)
+                    itemState.setBackgroundResource(R.drawable.back_red)
                 }
                 Item.ItemState.BLOCKED -> {
                     itemState.text = getString(R.string.stateBlocked)
-                    itemState.setBackgroundResource(R.color.grey)
+                    itemState.setBackgroundResource(R.drawable.back_grey)
                 }
             }
             if (!it.desc.isEmpty()){

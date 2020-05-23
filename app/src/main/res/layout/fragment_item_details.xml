@@ -39,221 +39,296 @@
                     android:layout_gravity="center"
                     android:visibility="invisible"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/itemTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="10dp"
-                android:hint="@string/defaultTitle"
-                android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#000000"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/itemPrice"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_detail_wrapper" />
-
-            <TextView
-                android:id="@+id/itemPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:drawableEnd="@drawable/ic_euro"
-                android:hint="@string/defaultPrice"
-                android:textAlignment="viewEnd"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#4CAF50"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_detail_wrapper" />
-
-            <TextView
-                android:id="@+id/itemDefCond"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultCondition"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDesc" />
-
-            <TextView
-                android:id="@+id/itemCondition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultCondition"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDefCond" />
-
-            <TextView
-                android:id="@+id/itemDefDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultDesc"
-                android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
-
-            <TextView
-                android:id="@+id/itemDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultDesc"
-                android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDefDesc" />
-
-            <TextView
-                android:id="@+id/itemDefCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultCategory"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemCondition" />
-
-            <TextView
-                android:id="@+id/itemCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultCategory"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDefCategory" />
-
-            <TextView
-                android:id="@+id/itemDefSubCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultSubCategory"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintTop_toBottomOf="@+id/itemCategory"
-                tools:layout_editor_absoluteX="310dp" />
-
-            <TextView
-                android:id="@+id/itemSubCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/defaultSubCategory"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintTop_toBottomOf="@+id/itemDefSubCategory"
-                tools:layout_editor_absoluteX="310dp" />
-
-            <TextView
-                android:id="@+id/itemSellerLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/itemSellerLabel"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="30dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#505050"
-                app:layout_constraintTop_toBottomOf="@+id/itemSubCategory"
-                tools:layout_editor_absoluteX="310dp" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemSellerLabel">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageProfileItem"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="left"
-                    android:contentDescription="@string/photo"
-                    android:foregroundGravity="center_horizontal"
-                    android:src="@drawable/ic_avatar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ProgressBar
-                    android:id="@+id/profile_progress_bar_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="6dp"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/itemSeller"
-                    android:layout_width="277dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="70dp"
-                    android:hint="@string/defaultSeller"
+                    android:id="@+id/itemState"
+                    android:background="@drawable/back_green"
+                    android:elevation="14dp"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:layout_gravity="right|bottom"
+                    android:hint="@string/stateAvailable"
+                    android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#505050"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/imageProfileItem"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
 
-            <TextView
-                android:id="@+id/itemState"
-                android:layout_width="100dp"
+            <LinearLayout
+                android:id="@+id/name_desc_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
-                android:hint="@string/stateAvailable"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#FFFFFF"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
+                android:orientation="vertical"
+                android:background="@color/cardview_light_background"
+                android:elevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/image_detail_wrapper">
 
-            <Button
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+                        <TextView
+                            android:id="@+id/itemTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/defaultTitle"
+                            android:textAlignment="viewStart"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#000000"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/price_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+
+                        <TextView
+                            android:id="@+id/itemPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="20dp"
+                            android:drawableEnd="@drawable/ic_euro"
+                            android:hint="@string/defaultPrice"
+                            android:textAlignment="viewEnd"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#4CAF50"
+                            android:textSize="30sp"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/itemDefDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/defaultDesc"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+
+                <TextView
+                    android:id="@+id/itemDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/defaultDesc"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDefDesc" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cond_cat_layout"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/cardview_light_background"
+                android:elevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/name_desc_layout">
+
+                <TextView
+                    android:id="@+id/itemDefCond"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/defaultCondition"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/itemCondition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/defaultCondition"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDefCond" />
+
+                <TextView
+                    android:id="@+id/itemDefCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/defaultCategory"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemCondition" />
+
+                <TextView
+                    android:id="@+id/itemCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/defaultCategory"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDefCategory" />
+
+                <TextView
+                    android:id="@+id/itemDefSubCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/defaultSubCategory"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    app:layout_constraintTop_toBottomOf="@+id/itemCategory"
+                    tools:layout_editor_absoluteX="310dp" />
+
+                <TextView
+                    android:id="@+id/itemSubCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/defaultSubCategory"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDefSubCategory"
+                    tools:layout_editor_absoluteX="310dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/seller_loc_layout"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/cardview_light_background"
+                android:elevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/cond_cat_layout">
+
+                <TextView
+                    android:id="@+id/itemSellerLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/itemSellerLabel"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#505050"
+                    tools:layout_editor_absoluteX="310dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemSellerLabel">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imageProfileItem"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="left"
+                        android:contentDescription="@string/photo"
+                        android:foregroundGravity="center_horizontal"
+                        android:src="@drawable/ic_avatar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/profile_progress_bar_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginStart="6dp"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/itemSeller"
+                        android:layout_width="277dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="70dp"
+                        android:hint="@string/defaultSeller"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#505050"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/imageProfileItem"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/itemLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_location"
+                    android:hint="@string/defaultItemLocation"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
                 android:visibility="gone"
                 android:id="@+id/buyers_listview_label"
                 android:layout_width="match_parent"
@@ -265,37 +340,24 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#505050"
                 android:backgroundTint="#f2f2f2"
+                style="?attr/materialButtonOutlinedStyle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemState" />
-
-            <TextView
-                android:id="@+id/itemLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_location"
-                android:hint="@string/defaultItemLocation"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="20dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buyers_listview_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout" />
 
             <TextView
                 android:id="@+id/itemExpireLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
                 android:text="@string/itemExpire"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemLocation" />
+                app:layout_constraintTop_toBottomOf="@+id/buyers_listview_label" />
 
             <TextView
                 android:id="@+id/itemExpiryDate"

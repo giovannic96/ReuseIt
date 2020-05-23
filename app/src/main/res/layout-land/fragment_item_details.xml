@@ -20,12 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:elevation="3dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/cardview_light_background">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.4">
+            android:layout_weight="1.3">
 
             <FrameLayout
                 android:id="@+id/image_detail_wrapper"
@@ -52,6 +55,28 @@
                     android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/itemState"
+                    android:elevation="14dp"
+                    android:background="@drawable/back_green"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="14dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:layout_gravity="right|bottom"
+                    android:hint="@string/stateAvailable"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
             </FrameLayout>
         </RelativeLayout>
@@ -132,16 +157,6 @@
         </RelativeLayout>
         </LinearLayout>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="5dp"
-            android:background="?android:attr/listDivider" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -170,37 +185,16 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="8dp"
+                android:elevation="3dp"
+                android:background="@color/cardview_light_background"
                 android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-            <TextView
-                android:id="@+id/itemDefCond"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultCondition"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#505050"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/itemCondition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/defaultCondition"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#505050"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
                 android:id="@+id/itemSellerLabel"
@@ -209,7 +203,7 @@
                 android:hint="@string/itemSellerLabel"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#505050"
                 tools:layout_editor_absoluteX="310dp" />
@@ -278,6 +272,10 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="10dp"
+                android:elevation="3dp"
+                android:background="@color/cardview_light_background"
                 android:layout_weight="1">
 
             <LinearLayout
@@ -286,11 +284,37 @@
                 android:orientation="vertical">
 
             <TextView
+                android:id="@+id/itemDefCond"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/defaultCondition"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#505050"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/itemCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/defaultCondition"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#505050"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
                 android:id="@+id/itemDefCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:hint="@string/defaultCategory"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -330,22 +354,11 @@
                 android:hint="@string/defaultSubCategory"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#505050"
                 app:layout_constraintTop_toBottomOf="@+id/itemDefSubCategory"
                 tools:layout_editor_absoluteX="310dp" />
-
-            <TextView
-                android:id="@+id/itemState"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:hint="@string/stateAvailable"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#FFFFFF"
-                app:layout_constraintStart_toStartOf="parent"/>
 
             </LinearLayout>
             </RelativeLayout>
@@ -354,7 +367,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0">
@@ -375,6 +388,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#505050"
                 android:backgroundTint="#f2f2f2"
+                style="?attr/materialButtonOutlinedStyle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
