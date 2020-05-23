@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:drawableEnd="@drawable/ic_phone"
-            android:hint="@string/defaultPhoneNumber"
+            android:hint="-"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
