@@ -169,7 +169,7 @@
                         android:hint="@string/defaultNickname"
                         android:imeOptions="flagNoExtractUi"
                         android:inputType="text"
-                        android:maxLength="32"
+                        android:maxLength="20"
                         android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
             </RelativeLayout>

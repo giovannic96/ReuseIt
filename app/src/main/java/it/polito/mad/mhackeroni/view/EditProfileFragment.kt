@@ -227,14 +227,14 @@ class EditProfileFragment : Fragment() {
 
                 if(::currentPhotoPath.isInitialized) {
                     profile = Profile(
-                        edit_fullname.text.toString(), edit_nickname.text.toString(),
+                        edit_fullname.text.toString().trim(), edit_nickname.text.toString(),
                         edit_mail.text.toString(), edit_location.text.toString(),
                         currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString()
                     )
                     vm.updateProfile(profile!!)
                 }else {
                     profile = Profile(
-                        edit_fullname.text.toString(), edit_nickname.text.toString(),
+                        edit_fullname.text.toString().trim(), edit_nickname.text.toString(),
                         edit_mail.text.toString(), edit_location.text.toString(),
                         profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString()
                     )
@@ -260,7 +260,7 @@ class EditProfileFragment : Fragment() {
                     profile!!.image = currentPhotoPath
                 }
 
-/*
+                /*
                 val repo = FirebaseRepo.INSTANCE
                 val entry = profile
                 val uid = repo.getID(requireContext())
@@ -309,14 +309,10 @@ class EditProfileFragment : Fragment() {
                                 }
                             } else {
                                 val bundle = bundleOf("old_profile" to oldProfile?.let { it1 ->
-                                    Profile.toJSON(
-                                        it1
-                                    ).toString()
+                                    Profile.toJSON(it1).toString()
                                 },
                                     "new_profile" to profile?.let {
-                                        Profile.toJSON(
-                                            it
-                                        ).toString()
+                                        Profile.toJSON(it).toString()
                                     }
                                 )
                                 view?.findNavController()
@@ -433,26 +429,57 @@ class EditProfileFragment : Fragment() {
     private fun checkData() : Boolean {
         var retval = true
 
-        if(!edit_fullname.error.isNullOrEmpty()){
+        // if at least one field has an error -> return false
+        if(!edit_fullname.error.isNullOrEmpty() || !edit_mail.error.isNullOrEmpty() || !edit_nickname.error.isNullOrEmpty()
+            || !edit_location.error.isNullOrEmpty() || !edit_phoneNumber.error.isNullOrEmpty() || !edit_bio.error.isNullOrEmpty()) {
+            return false
+        }
+
+        // validate mandatory fields
+        if(!Validation.isValidLocation(edit_location.text)) {
+            edit_location.setError(getString(R.string.location_error))
             retval = false
-        } else if(edit_fullname.text.isNullOrEmpty()){
+        }
+
+        if(!Validation.isValidNickname(edit_nickname.text)) {
+            edit_nickname.setError(getString(R.string.nickname_error))
+            retval = false
+        }
+
+        if(!Validation.isValidEmail(edit_mail.text)) {
+            edit_mail.setError(getString(R.string.mail_error))
+            retval = false
+        }
+
+        // if some fields are blank or null -> return false
+        if(edit_fullname.text.isNullOrBlank()) {
             edit_fullname.setError(getString(R.string.required_field))
             retval = false
         }
 
-        if(!edit_mail.error.isNullOrEmpty()){
-            retval = false
-        } else if(edit_mail.text.isNullOrEmpty()){
+        if(edit_mail.text.isNullOrBlank()) {
             edit_mail.setError(getString(R.string.required_field))
             retval = false
         }
 
-        if(!edit_nickname.error.isNullOrEmpty()){
-            retval = false
-        } else if(edit_nickname.text.isNullOrEmpty()){
+        if(edit_nickname.text.isNullOrBlank()) {
             edit_nickname.setError(getString(R.string.required_field))
             retval = false
         }
+
+        if(edit_location.text.isNullOrBlank()) {
+            edit_location.setError(getString(R.string.required_field))
+            retval = false
+        }
+
+        // validate optional fields
+        if(!edit_phoneNumber.text.isNullOrBlank()) {
+            if(!Validation.isValidPhoneNumber(edit_phoneNumber.text)) {
+                edit_phoneNumber.setError(getString(R.string.phoneNumber_error))
+                retval = false
+            }
+        }
+
         return retval
     }
 
