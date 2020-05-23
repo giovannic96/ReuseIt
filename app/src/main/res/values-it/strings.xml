@@ -9,12 +9,14 @@
     <string name="itemList_sharedPref">itemListSharedPref</string>
     <string name="defaultWelcome">Benvenuto in ReuseIt!</string>
     <string name="defaultFullName">Nome completo</string>
-    <string name="defaultNickname">nickname</string>
+    <string name="defaultNickname">Nickname</string>
     <string name="defaultEmail">email@dominio</string>
+    <string name="email">Email</string>
     <string name="defaultLocation">Area geografica di interesse</string>
     <string name="defaultAvatar">Avatar</string>
     <string name="defaultBio">Aggiorna la tua biografia!</string>
-    <string name="defaultPhoneNumber">Numero di telefono (opz.)</string>
+    <string name="shortBio">Breve biografia</string>
+    <string name="defaultPhoneNumber">Numero di telefono</string>
     <string name="defaultTitle">Titolo articolo</string>
     <string name="defaultDesc">Descrizione</string>
     <string name="defaultCategory">Categoria</string>

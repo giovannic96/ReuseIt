@@ -72,7 +72,6 @@ class EditProfileFragment : Fragment() {
         vm = ViewModelProvider(this).get(EditProfileFragmentViewModel::class.java)
         vm.uid = repo.getID(requireContext())
 
-
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {profileVal ->
             var profileData = profileVal
             profile = profileVal
@@ -82,7 +81,6 @@ class EditProfileFragment : Fragment() {
                 profileData = vm.getLocalProfile()
                 currentPhotoPath = profileData.image.toString()
             }
-
 
             try {
                 if(!profileData.image.isNullOrEmpty()){

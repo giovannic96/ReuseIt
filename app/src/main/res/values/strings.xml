@@ -8,12 +8,14 @@
     <string name="itemList_sharedPref">itemListSharedPref</string>
     <string name="defaultWelcome">Welcome to ReuseIt!</string>
     <string name="defaultFullName">Full name</string>
-    <string name="defaultNickname">nickname</string>
+    <string name="defaultNickname">Nickname</string>
     <string name="defaultEmail">email@address</string>
+    <string name="email">Email</string>
     <string name="defaultLocation">Geographic area of interest</string>
     <string name="defaultAvatar">Avatar</string>
     <string name="defaultBio">Update your bio!</string>
-    <string name="defaultPhoneNumber">Phone number (opt.)</string>
+    <string name="shortBio">Short bio</string>
+    <string name="defaultPhoneNumber">Phone number</string>
     <string name="defaultTitle">Item title</string>
     <string name="defaultDesc">Description</string>
     <string name="defaultCategory">Category</string>

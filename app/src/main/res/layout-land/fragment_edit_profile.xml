@@ -17,12 +17,12 @@
             android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/edit_bio"
+            android:layout_below="@+id/edit_bio_wrapper"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="60dp"
             android:layout_marginBottom="25dp"
             android:background="?android:attr/listDivider" />
 
@@ -34,13 +34,13 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="30dp"
             android:background="@drawable/image_background"
             android:clickable="true"
             android:contentDescription="@string/photo"
             android:focusable="true"
             android:foregroundGravity="center"
-            android:padding="10dp"
+            android:padding="6dp"
             android:src="@drawable/ic_avatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="30dp"
             android:clickable="true"
             android:contentDescription="@string/photo"
             android:focusable="true"
@@ -83,116 +83,167 @@
             app:civ_border_color="@color/colorPrimaryDark"
             app:civ_border_width="13dp" />
 
-        <EditText
-            android:id="@+id/edit_fullname"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_fullname_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
             android:layout_toEndOf="@+id/edit_imageProfile"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_fullname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="64"
             android:digits="abcdefghijklmnopqrstuvwxyzáéíóúàèìòùABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÈÉÌÍÒÓÙÚ'. "
             android:hint="@string/defaultFullName"
             android:imeOptions="flagNoExtractUi"
             android:inputType="textCapWords"
-            android:maxLength="64"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_bio_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_fullname_wrapper"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="4dp"
+            android:layout_toEndOf="@id/edit_imageProfile"
+            app:startIconDrawable="@drawable/ic_quote"
+            app:endIconMode="clear_text"
+            app:counterEnabled="true"
+            app:counterMaxLength="280"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_bio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_fullname"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="4dp"
-            android:layout_toEndOf="@id/edit_imageProfile"
-            android:drawableEnd="@drawable/ic_quote"
-            android:hint="@string/defaultBio"
+            android:hint="@string/shortBio"
             android:imeOptions="flagNoExtractUi"
             android:inputType="textMultiLine"
-            android:lines="2"
-            android:maxLength="140"
-            android:maxLines="3"
-            android:minLines="2"
+            android:maxLength="280"
             android:scrollbars="vertical"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/edit_nickname"
+        <LinearLayout
+            android:id="@+id/nick_phone_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider2"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="25dp"
-            android:drawableEnd="@drawable/ic_person_solid"
-            android:hint="@string/defaultNickname"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="text"
-            android:textSize="20sp" />
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-        <EditText
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_nickname_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    app:startIconDrawable="@drawable/ic_person_solid"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/defaultNickname"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="text"
+                        android:maxLength="32"
+                        android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_phoneNumber_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:startIconDrawable="@drawable/ic_phone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_phoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/defaultPhoneNumber"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="phone"
+                        android:maxLength="13"
+                        android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_mail_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nick_phone_layout"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="25dp"
+            app:startIconDrawable="@drawable/ic_email"
+            android:enabled="false"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_nickname"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="25dp"
-            android:drawableEnd="@drawable/ic_email"
-            android:hint="@string/defaultEmail"
+            android:hint="@string/email"
+            android:maxLength="32"
             android:imeOptions="flagNoExtractUi"
             android:inputType="none"
-            android:enabled="false"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/edit_phoneNumber"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_mail"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="25dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="20dp"
-            android:drawableEnd="@drawable/ic_phone"
-            android:hint="@string/defaultPhoneNumber"
-            android:imeOptions="flagNoExtractUi"
-            android:inputType="phone"
-            android:textSize="20sp" />
-
-        <EditText
+            android:layout_below="@id/edit_mail_wrapper"
+            app:startIconDrawable="@drawable/ic_location"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="25dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
             android:hint="@string/defaultLocation"
-            android:layout_below="@id/edit_phoneNumber"
-            android:textSize="20sp"
             android:maxLength="64"
             android:inputType="text"
-            android:drawableEnd="@drawable/ic_location"/>
+            android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>
 </ScrollView>
