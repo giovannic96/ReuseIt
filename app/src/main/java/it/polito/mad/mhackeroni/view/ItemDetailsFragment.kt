@@ -306,10 +306,11 @@ class ItemDetailsFragment: Fragment() {
 
     private fun checkFavorite(isOwner: Boolean) {
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-        val entry = item
+        // val entry = item
+        val itemId = vm.itemId
         val uid = repo.getID(requireContext())
-        if(entry != null) {
-            repo.checkFavorite(uid, entry.id).addOnCompleteListener {
+        if(itemId != null) {
+            repo.checkFavorite(uid, itemId).addOnCompleteListener {
                 if(it.isSuccessful){
                     if(it.result?.isEmpty!!) {
                         if(!isOwner)

@@ -219,6 +219,7 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun checkFavorite(user : String, item : String) : Task<QuerySnapshot> {
+        Log.d("MAG2020", "user: ${user} - item: ${item}")
        return db.collection("favorites")
             .whereEqualTo("user", user).whereEqualTo("item", item).get()
     }
