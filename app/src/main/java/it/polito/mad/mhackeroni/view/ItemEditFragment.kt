@@ -72,6 +72,7 @@ class ItemEditFragment: Fragment() {
     private var imageChanged = false
     val logger: Logger = Logger.getLogger(ItemEditFragment::class.java.name)
     private var state : Item.ItemState = Item.ItemState.AVAILABLE
+    private var isBlocked = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -193,6 +194,7 @@ class ItemEditFragment: Fragment() {
 
                     val state = itemData.state.toString()
 
+
                     if(state == "AVAILABLE"){
                         radio_available.isChecked = true
                         radio_sold.isChecked = false
@@ -204,6 +206,7 @@ class ItemEditFragment: Fragment() {
                         radio_block.isChecked = false
                     }
                     else if(state == "BLOCKED"){
+                        isBlocked = true
                         radio_available.isChecked = false
                         radio_sold.isChecked = false
                         radio_block.isChecked = true
@@ -267,14 +270,21 @@ class ItemEditFragment: Fragment() {
 
         edit_state.setOnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
-                R.id.radio_available -> state =
-                    Item.ItemState.AVAILABLE
-                R.id.radio_block -> {
-                    state = Item.ItemState.BLOCKED
-                    Snackbar.make(view, getString(R.string.blockedHint), Snackbar.LENGTH_LONG).show()
+                R.id.radio_available -> {
+                    state = Item.ItemState.AVAILABLE
+                    isBlocked = false
                 }
-                R.id.radio_sold -> state =
-                    Item.ItemState.SOLD
+                R.id.radio_block -> {
+                    if(!isBlocked) {
+                        Snackbar.make(view, getString(R.string.blockedHint), Snackbar.LENGTH_LONG)
+                            .show()
+                    }
+                    state = Item.ItemState.BLOCKED
+                }
+                R.id.radio_sold -> {
+                    state = Item.ItemState.SOLD
+                    isBlocked = false
+                }
             }
         }
 
