@@ -1,6 +1,7 @@
 package it.polito.mad.mhackeroni.utilities
 
 import it.polito.mad.mhackeroni.model.Item
+import java.io.Serializable
 
 class ItemFilter(){
     var name :String = ""
