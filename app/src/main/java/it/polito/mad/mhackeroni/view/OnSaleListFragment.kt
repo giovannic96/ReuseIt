@@ -24,6 +24,8 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ItemFilter
 import it.polito.mad.mhackeroni.view.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.viewmodel.OnSaleListFragmentViewModel
+import java.io.Serializable
+import java.util.ArrayList
 
 
 class OnSaleListFragment: Fragment() {
@@ -139,6 +141,43 @@ class OnSaleListFragment: Fragment() {
             else
                 updateLayoutManager(it)
         })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("filter_key", searchFilter.name)
+        outState.putDouble("filter_price_min", searchFilter.price_min)
+        outState.putDouble("filter_price_max", searchFilter.price_max)
+        outState.putStringArrayList("filter_category", searchFilter.category as ArrayList<String>)
+        outState.putStringArrayList("filter_subcategory", searchFilter.subcategory as ArrayList<String>)
+        outState.putString("filter_location", searchFilter.location)
+        outState.putStringArrayList("filter_condition", searchFilter.condition as ArrayList<String>)
+        outState.putString("filter_user", searchFilter.user)
+
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        if(savedInstanceState != null) {
+            searchFilter.name = savedInstanceState.getString("filter_key") ?: ""
+            searchFilter.price_min = savedInstanceState.getDouble("filter_price_min")
+            searchFilter.price_max = savedInstanceState.getDouble("filter_price_max")
+
+            if(searchFilter.price_max <= 0.0 || searchFilter.price_max < searchFilter.price_min){
+                searchFilter.price_max = 9999.0
+            }
+
+            searchFilter.category.addAll(savedInstanceState.getStringArrayList("filter_category") ?: listOf())
+            searchFilter.subcategory.addAll(savedInstanceState.getStringArrayList("filter_subcategory") ?: listOf())
+
+            searchFilter.location = savedInstanceState.getString("filter_location") ?: ""
+            searchFilter.condition.addAll(savedInstanceState.getStringArrayList("filter_condition") ?: listOf())
+            searchFilter.user = savedInstanceState.getString("filter_user") ?: ""
+        }
+
+        updateFilter()
     }
 
     private fun updateLayoutManager(list: List<Item>) {
