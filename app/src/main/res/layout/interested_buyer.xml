@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:padding="5dip"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
+
+    <LinearLayout
+        android:id="@+id/buyer_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:padding="3dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/buyer_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="image"
+            android:src="@drawable/ic_favorite" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/buyer_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@+id/buyer_layout"
+        android:layout_toRightOf="@+id/buyer_layout"
+        android:gravity="center"
+        android:text="nickname"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#040404"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+</RelativeLayout>

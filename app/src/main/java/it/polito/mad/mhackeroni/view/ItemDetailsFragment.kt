@@ -20,12 +20,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
+import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
+import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.collections.ArrayList
 
 class ItemDetailsFragment: Fragment() {
     var price: Double? = null
@@ -449,10 +452,10 @@ class ItemDetailsFragment: Fragment() {
                                 interestedUsers.add(Pair(it.nickname, it.id))
                             }
 
-                            val arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+                            val arrayAdapter: ListAdapter<String> = ListAdapter(
                                 requireContext(),
                                 android.R.layout.simple_list_item_1,
-                                interestedUsers.map { it.first }
+                                interestedUsers.map { it.first}
                             )
 
                             interested.adapter = arrayAdapter
