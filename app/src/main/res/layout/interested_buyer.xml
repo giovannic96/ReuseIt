@@ -24,7 +24,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:contentDescription="image"
-            android:src="@drawable/ic_favorite" />
+            android:src="@drawable/ic_person_solid" />
 
     </LinearLayout>
 

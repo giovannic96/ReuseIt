@@ -85,7 +85,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
-                    android:src="@drawable/ic_favorite"
+                    android:src="@drawable/ic_fav"
+                    app:tint="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"/>
 
