@@ -2,6 +2,7 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.AdapterView
@@ -70,7 +71,7 @@ class ItemDetailsFragment: Fragment() {
         vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             item = it
 
-            checkFavorite(isOwner)
+            checkFavorite(isOwner, vm.itemId)
 
             try {
                 if(!it.image.isNullOrEmpty()) {
@@ -287,6 +288,22 @@ class ItemDetailsFragment: Fragment() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("item_id", vm.itemId)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        val savedID = savedInstanceState?.getString("item_id")
+
+        if(!savedID.isNullOrEmpty()){
+            vm.itemId = savedID
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if(canModify)
             inflater.inflate(R.menu.main_menu, menu)
@@ -304,17 +321,18 @@ class ItemDetailsFragment: Fragment() {
         }
     }
 
-    private fun checkFavorite(isOwner: Boolean) {
+    private fun checkFavorite(isOwner: Boolean, itemID : String) {
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-        val entry = item
         val uid = repo.getID(requireContext())
-        if(entry != null) {
-            repo.checkFavorite(uid, entry.id).addOnCompleteListener {
+        if(itemID.isNullOrEmpty()) {
+            repo.checkFavorite(uid, itemID).addOnCompleteListener {
                 if(it.isSuccessful){
                     if(it.result?.isEmpty!!) {
-                        if(!isOwner)
-                            if(fab_buy != null)
+                        if(!isOwner) {
+                            if (fab_buy != null) {
                                 fab_buy.visibility = View.VISIBLE
+                            }
+                        }
                     }
                 }
             }
@@ -437,7 +455,7 @@ class ItemDetailsFragment: Fragment() {
             isOwner = true
         }
 
-        checkFavorite(isOwner)
+        // checkFavorite(isOwner)
 
         vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             item = it
