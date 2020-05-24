@@ -64,10 +64,10 @@ class ItemDetailsFragment: Fragment() {
             isOwner = true
         }
 
-        checkFavorite(isOwner)
-
         vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             item = it
+
+            checkFavorite(isOwner)
 
             try {
                 if(!it.image.isNullOrEmpty()) {
