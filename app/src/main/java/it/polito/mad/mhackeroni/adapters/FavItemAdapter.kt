@@ -1,10 +1,11 @@
 package it.polito.mad.mhackeroni.adapters
 
+import android.provider.Settings.Global.getString
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -60,6 +61,7 @@ class FavItemAdapter(private var items: MutableList<Item>, private val listener:
     fun reload(newList : List<Item>) {
         items.clear()
         items.addAll(newList)
+        Log.d("KKK", "ENTRATO")
         notifyDataSetChanged()
     }
 
@@ -67,6 +69,7 @@ class FavItemAdapter(private var items: MutableList<Item>, private val listener:
     class ItemViewHolder(v: View, listener: MyAdapterListener): ViewHolder(v) {
         private val name:TextView = v.findViewById(R.id.item_name)
         private val price:TextView = v.findViewById(R.id.item_price)
+        private val state:TextView = v.findViewById(R.id.itemState)
         private val listenerRef: WeakReference<MyAdapterListener>? = WeakReference(listener)
         private val image:ImageView = v.findViewById(R.id.drawable_pic)
         private val context = v.context
@@ -74,6 +77,20 @@ class FavItemAdapter(private var items: MutableList<Item>, private val listener:
         override fun bind(item: Item) {
             name.text = item.name
             price.text = item.price.toString() + " €"
+            when(item.state) {
+                Item.ItemState.AVAILABLE -> {
+                    state.text = context.getString(R.string.stateAvailable)
+                    state.setBackgroundResource(R.drawable.back_green)
+                }
+                Item.ItemState.SOLD -> {
+                    state.text = context.getString(R.string.stateSold)
+                    state.setBackgroundResource(R.drawable.back_red)
+                }
+                Item.ItemState.BLOCKED -> {
+                    state.text = context.getString(R.string.stateBlocked)
+                    state.setBackgroundResource(R.drawable.back_grey)
+                }
+            }
 
             itemView.setOnClickListener {
                 listenerRef?.get()?.itemViewOnClick(item)

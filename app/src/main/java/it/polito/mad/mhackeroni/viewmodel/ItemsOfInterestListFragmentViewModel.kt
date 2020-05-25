@@ -12,6 +12,5 @@ class ItemsOfInterestListFragmentViewModel : ViewModel() {
         val repo = FirebaseRepo.INSTANCE
         return repo.getInterestedItems(uid)
     }
-
 }
 

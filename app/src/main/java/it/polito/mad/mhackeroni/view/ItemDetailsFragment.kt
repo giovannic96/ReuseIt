@@ -117,9 +117,7 @@ class ItemDetailsFragment: Fragment() {
                 Snackbar.make(view,R.string.price_error, Snackbar.LENGTH_SHORT).show()
             }
 
-            val defaultColor:Int;
-
-            when(it.state){
+            when(it.state) {
                 Item.ItemState.AVAILABLE -> {
                     itemState.text = getString(R.string.stateAvailable)
                     itemState.setBackgroundResource(R.drawable.back_green)
