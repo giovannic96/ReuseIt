@@ -49,6 +49,7 @@
     <string name="undo">Undo</string>
     <string name="profile_nav">Profile</string>
     <string name="items_nav">Items for sale</string>
+    <string name="fav_items_nav">Items of interest</string>
     <string name="edit_item">Edit item</string>
     <string name="date_format">yyyy-MM-dd</string>
     <string name="selectSubcat">Select a subcategory</string>
@@ -63,6 +64,7 @@
     <string name="logout_success">Logout successful</string>
     <string name="my_items_nav">My advertisements</string>
     <string name="on_sale_title">Items for sale</string>
+    <string name="on_interest_title">Items of interest</string>
     <string name="price_min">Minimun price</string>
     <string name="price_max">Maximum price</string>
     <string name="uid">uid</string>

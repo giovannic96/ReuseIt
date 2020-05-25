@@ -1,4 +1,4 @@
-package it.polito.mad.mhackeroni.view
+package it.polito.mad.mhackeroni.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

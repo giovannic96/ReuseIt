@@ -63,7 +63,8 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.nav_showProfile,
             R.id.nav_itemList,
-            R.id.nav_itemListSale
+            R.id.nav_itemListSale,
+            R.id.nav_itemOfInterestList
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)

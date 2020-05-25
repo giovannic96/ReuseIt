@@ -15,9 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.model.Item
-import it.polito.mad.mhackeroni.view.ItemAdapter.MyAdapterListener
+import it.polito.mad.mhackeroni.adapters.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.viewmodel.ItemListFragmentViewModel
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.adapters.ItemAdapter
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.fragment_itemlist.*
 

@@ -1,7 +1,5 @@
-package it.polito.mad.mhackeroni.view
+package it.polito.mad.mhackeroni.adapters
 
-import android.media.AudioRecord.MetricsConstants.SOURCE
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.signature.ObjectKey
-import com.google.firebase.analytics.FirebaseAnalytics.Param.SOURCE
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
-import java.sql.Time
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -46,7 +39,10 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         return if (viewType == VIEW_TYPE_ITEM) {
             v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item, parent, false) //get layout inflater and inflate item layout
-            ItemViewHolder(v, listener)
+            ItemViewHolder(
+                v,
+                listener
+            )
         }
         else { //return view with empty list
             v = LayoutInflater.from(parent.context)
@@ -65,7 +61,7 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         abstract fun bind(item: Item, canModify : Boolean)
     }
 
-    fun reload(newList : List<Item>){
+    fun reload(newList : List<Item>) {
         items.clear()
         items.addAll(newList)
         notifyDataSetChanged()
@@ -125,6 +121,4 @@ class ItemAdapter(private var items: MutableList<Item>, private val listener: My
         fun editItemViewOnClick(item: Item) //listener for edit button of the card view
         fun itemViewOnClick(item: Item) //listener for click on any part of the card view (except edit button)
     }
-
-
 }

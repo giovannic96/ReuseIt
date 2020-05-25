@@ -154,12 +154,10 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun getID(context: Context) : String{
-        val sharedPref = context
-            .getSharedPreferences(context.getString(R.string.shared_pref), Context.MODE_PRIVATE)
-        val uid = sharedPref.getString(context.getString(R.string.uid), "")!!
-
-        return uid
+        val sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref), Context.MODE_PRIVATE)
+        return sharedPref.getString(context.getString(R.string.uid), "")!!
     }
+
     fun getItemRef(id : String) : DocumentReference{
         return db.collection("items").document(id)
     }
@@ -219,9 +217,9 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun checkFavorite(user : String, item : String) : Task<QuerySnapshot> {
-        Log.d("MAG2020", "user: ${user} - item: ${item}")
        return db.collection("favorites")
-            .whereEqualTo("user", user).whereEqualTo("item", item).get()
+            .whereEqualTo("user", user)
+            .whereEqualTo("item", item).get()
     }
 
     fun checkNickname(nickname : String) : Task<QuerySnapshot> {
@@ -267,6 +265,37 @@ import it.polito.mad.mhackeroni.model.Profile
                 }
             }
         return profiles
+    }
+
+    fun getInterestedItems(user : String) : LiveData<List<Item>>{
+        val items : MutableLiveData<List<Item>> = MutableLiveData()
+        val itemList : MutableList<Item> = mutableListOf()
+
+        db.collection("favorites")
+            .whereEqualTo("user", user)
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    if(!it.result?.isEmpty!!) {
+                        it.result?.forEach { snap ->
+                            val item : String = snap["item"] as String
+                            db.collection("items").document(item).get().addOnCompleteListener {
+                                if(it.isSuccessful) {
+                                    if(it.result?.exists()!!) {
+                                        it.result!!.toObject(Item::class.java)?.let { it1 ->
+                                            it1.id = item
+                                            itemList.add(it1)
+                                        }
+                                        items.value = listOf()
+                                        items.value = itemList
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        return items
     }
 
     // just for debug

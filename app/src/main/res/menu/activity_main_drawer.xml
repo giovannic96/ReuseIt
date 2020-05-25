@@ -19,6 +19,11 @@
             android:title="@string/items_nav" />
 
         <item
+            android:id="@id/nav_itemOfInterestList"
+            android:icon="@drawable/ic_fav"
+            android:title="@string/fav_items_nav" />
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit"
             android:title="@string/logout_title" />
