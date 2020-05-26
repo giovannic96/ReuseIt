@@ -25,7 +25,6 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
             }
         }
 
-
         private fun fromJSON(jsonObject: JSONObject): Item {
             return Item(
                 jsonObject.getString("id"),

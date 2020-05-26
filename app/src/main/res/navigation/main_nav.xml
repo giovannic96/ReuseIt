@@ -68,6 +68,11 @@
             app:popUpTo="@id/nav_itemOfInterestList"
             app:popUpToInclusive="true"/>
         <action
+            android:id="@+id/action_nav_ItemDetail_to_nav_boughtItemList"
+            app:destination="@id/nav_boughtItemList"
+            app:popUpTo="@id/nav_boughtItemList"
+            app:popUpToInclusive="true"/>
+        <action
             android:id="@+id/action_nav_ItemDetail_to_nav_showProfile"
             app:destination="@id/nav_showProfile" />
     </fragment>
@@ -131,6 +136,14 @@
         android:label="@string/on_interest_title" >
         <action
             android:id="@+id/action_nav_itemOfInterestList_to_nav_ItemDetail"
+            app:destination="@id/nav_ItemDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_boughtItemList"
+        android:name="it.polito.mad.mhackeroni.view.BoughtItemsListFragment"
+        android:label="@string/on_bought_title" >
+        <action
+            android:id="@+id/action_nav_boughtItemsList_to_nav_ItemDetail"
             app:destination="@id/nav_ItemDetail" />
     </fragment>
 </navigation>

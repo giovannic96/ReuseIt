@@ -24,6 +24,11 @@
             android:title="@string/fav_items_nav" />
 
         <item
+            android:id="@id/nav_boughtItemList"
+            android:icon="@drawable/ic_bought"
+            android:title="@string/bought_items_nav" />
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit"
             android:title="@string/logout_title" />

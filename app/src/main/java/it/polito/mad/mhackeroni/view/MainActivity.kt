@@ -64,7 +64,8 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
             R.id.nav_showProfile,
             R.id.nav_itemList,
             R.id.nav_itemListSale,
-            R.id.nav_itemOfInterestList
+            R.id.nav_itemOfInterestList,
+            R.id.nav_boughtItemList
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)

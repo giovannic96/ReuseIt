@@ -63,9 +63,11 @@
     <string name="logout_title">Logout</string>
     <string name="logout_success">Logout effettuato con successo</string>
     <string name="my_items_nav">Le mie inserzioni</string>
-    <string name="fav_items_nav">Oggetti di interesse</string>
+    <string name="fav_items_nav">Preferiti</string>
+    <string name="bought_items_nav">Acquistati</string>
     <string name="on_sale_title">Oggetti in vendita</string>
-    <string name="on_interest_title">Oggetti di interesse</string>
+    <string name="on_interest_title">Preferiti</string>
+    <string name="on_bought_title">Acquistati</string>
     <string name="price_min">Prezzo minimo</string>
     <string name="price_max">Prezzo massimo</string>
     <string name="uid">uid</string>

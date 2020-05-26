@@ -167,6 +167,11 @@ import it.polito.mad.mhackeroni.model.Profile
         return collectionReference.whereEqualTo("state", state)
     }
 
+    fun getBoughtItem(uid:String): Query {
+        return db.collection("items")
+            .whereEqualTo("buyer", uid)
+    }
+
     fun getItemsRef(uid: String) : Query {
         val collectionReference = db.collection("items")
         return collectionReference.whereEqualTo("user", uid)
