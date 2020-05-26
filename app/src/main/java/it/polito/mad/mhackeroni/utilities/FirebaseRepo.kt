@@ -232,7 +232,8 @@ import it.polito.mad.mhackeroni.model.Profile
             .add(hashMapOf(
                     "user" to user,
                     "item" to item.id,
-                    "seller" to item.user
+                    "seller" to item.user,
+                    "itemState" to item.state
             ))
     }
 
