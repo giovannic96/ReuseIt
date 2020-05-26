@@ -60,7 +60,7 @@ class ItemDetailsFragment: Fragment() {
         if((FirebaseRepo.INSTANCE.getID(requireContext()) != vm.owner) && !vm.owner.isNullOrEmpty())
             canModify = false
 
-        hide_fab()
+        //hide_fab()
         if(!canModify) {
             requireActivity().invalidateOptionsMenu()
             itemState.visibility = View.GONE
@@ -243,18 +243,31 @@ class ItemDetailsFragment: Fragment() {
             if(entry != null) {
                 repo.checkFavorite(uid, entry.id).addOnCompleteListener {
                     if(it.isSuccessful){
-                        if(it.result?.isEmpty!!){
+                        if(it.result?.isEmpty!!) {
                             repo.insertFavorite(repo.getID(requireContext()), entry).addOnCompleteListener {
                                 if (it.isSuccessful) {
-                                    // TODO: Add undo
-                                    hide_fab()
-                                    Snackbar.make(view, getString(R.string.favorite), Snackbar.LENGTH_LONG)
-                                        .show()
+                                    fab_buy.setImageResource(R.drawable.ic_fav)
+                                    Snackbar.make(view, getString(R.string.favorite), Snackbar.LENGTH_LONG).show()
                                 }
                             }
                         } else {
-                            Snackbar.make(view, getString(R.string.alreadyFavorite), Snackbar.LENGTH_LONG).show()
-                            hide_fab()
+                            repo.getFavDocId(repo.getID(requireContext()), entry.id).addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    if(!it.result?.isEmpty!!) {
+                                        var idDoc: String = ""
+                                        for (document in it.result!!) {
+                                            idDoc = document.id
+                                            break
+                                        }
+                                        repo.removeFavorite(idDoc).addOnCompleteListener {
+                                            if(it.isSuccessful) {
+                                                fab_buy.setImageResource(R.drawable.ic_fav_unselect)
+                                                Snackbar.make(view, getString(R.string.unfavorite), Snackbar.LENGTH_LONG).show()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -313,10 +326,14 @@ class ItemDetailsFragment: Fragment() {
             repo.checkFavorite(uid, itemId).addOnCompleteListener {
                 if(it.isSuccessful){
                     if(it.result?.isEmpty!!) {
-                        if(!isOwner)
-                            if(fab_buy != null)
-                                fab_buy.visibility = View.VISIBLE
+                        if(!isOwner && fab_buy != null)
+                            fab_buy.setImageResource(R.drawable.ic_fav_unselect)
+                    } else {
+                        if(!isOwner && fab_buy != null)
+                            fab_buy.setImageResource(R.drawable.ic_fav)
                     }
+                    if(!isOwner)
+                        fab_buy.visibility = View.VISIBLE
                 }
             }
         }
@@ -395,7 +412,7 @@ class ItemDetailsFragment: Fragment() {
         }
     }
 
-    private fun hide_fab(){
+    private fun hide_fab() {
         fab_buy.visibility = View.INVISIBLE
     }
 
@@ -429,7 +446,7 @@ class ItemDetailsFragment: Fragment() {
         if((FirebaseRepo.INSTANCE.getID(requireContext()) != vm.owner) && !vm.owner.isNullOrEmpty())
             canModify = false
 
-        hide_fab()
+        //hide_fab()
         if(!canModify) {
             requireActivity().invalidateOptionsMenu()
             itemState.visibility = View.GONE

@@ -243,6 +243,19 @@ import it.polito.mad.mhackeroni.model.Profile
             ))
     }
 
+    fun removeFavorite(docId: String): Task<Void> {
+        return db.collection("favorites")
+            .document(docId)
+            .delete()
+    }
+
+    fun getFavDocId(user: String, item: String): Task<QuerySnapshot> {
+        return db.collection("favorites")
+            .whereEqualTo("item", item)
+            .whereEqualTo("user", user)
+            .get()
+    }
+
     fun getInterestedProfile(item : String) : LiveData<List<Profile>>{
         val profiles : MutableLiveData<List<Profile>> = MutableLiveData()
         val profileList : MutableList<Profile> = mutableListOf()
@@ -273,7 +286,7 @@ import it.polito.mad.mhackeroni.model.Profile
             }
         return profiles
     }
-    
+
     fun getInterestedItems(user : String) : LiveData<List<Item>>{
         val items : MutableLiveData<List<Item>> = MutableLiveData()
         val itemList : MutableList<Item> = mutableListOf()

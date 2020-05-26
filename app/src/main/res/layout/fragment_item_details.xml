@@ -32,7 +32,7 @@
                     android:scaleType="centerCrop"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/photo"
-                    android:src="@drawable/ic_box"/>
+                    android:src="@drawable/ic_box" />
 
                 <ProgressBar
                     android:id="@+id/detail_progressbar"
@@ -70,10 +70,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
-                    android:src="@drawable/ic_fav"
-                    app:tint="@null"
+                    android:src="@drawable/ic_fav_unselect"
+                    app:backgroundTint="@android:color/transparent"
+                    android:elevation="0dp"
+                    app:elevation="0dp"
+                    app:maxImageSize="32dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"/>
+                    app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"
+                    app:tint="@null" />
 
             </FrameLayout>
 

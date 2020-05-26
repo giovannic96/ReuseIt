@@ -87,6 +87,7 @@
     <string name="nickname_already_exist">Nickname already exists</string>
     <string name="blockedHint">The item will be visible only for you</string>
     <string name="favorite">You will receive update on this item state</string>
+    <string name="unfavorite">Item removed from favorites</string>
     <string name="alreadyFavorite">You are already interested to this ads</string>
     <string name="channelName">ReuseIt App</string>
     <string name="channelDesc">ReuseIt notifications</string>

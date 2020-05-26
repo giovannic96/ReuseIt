@@ -85,7 +85,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
-                    android:src="@drawable/ic_fav"
+                    android:src="@drawable/ic_fav_unselect"
+                    app:backgroundTint="@android:color/transparent"
+                    android:elevation="0dp"
+                    app:elevation="0dp"
+                    app:maxImageSize="32dp"
                     app:tint="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"/>
