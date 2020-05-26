@@ -53,8 +53,10 @@ class ItemsOfInterestListFragment: Fragment() {
         itemList.adapter = myAdapter
         itemList.layoutManager = LinearLayoutManager(context)
 
-        vm.getInterestedItems().observe(viewLifecycleOwner, Observer {
-            myAdapter.reload(it)
+        vm.getItemIds().observe(viewLifecycleOwner, Observer {
+            vm.getItemsByIds(it).observe(viewLifecycleOwner, Observer {
+                myAdapter.reload(it)
+            })
         })
     }
 

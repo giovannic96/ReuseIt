@@ -61,7 +61,6 @@ class FavItemAdapter(private var items: MutableList<Item>, private val listener:
     fun reload(newList : List<Item>) {
         items.clear()
         items.addAll(newList)
-        Log.d("KKK", "ENTRATO")
         notifyDataSetChanged()
     }
 

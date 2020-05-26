@@ -172,6 +172,11 @@ import it.polito.mad.mhackeroni.model.Profile
         return collectionReference.whereEqualTo("user", uid)
     }
 
+    fun getFavorites(uid : String) : Query {
+        return db.collection("favorites")
+            .whereEqualTo("user", uid)
+    }
+
     fun getProfileRef(uid: String): DocumentReference{
         return  db.collection("users").document(uid)
     }
@@ -266,37 +271,6 @@ import it.polito.mad.mhackeroni.model.Profile
                 }
             }
         return profiles
-    }
-
-    fun getInterestedItems(user : String) : LiveData<List<Item>>{
-        val items : MutableLiveData<List<Item>> = MutableLiveData()
-        val itemList : MutableList<Item> = mutableListOf()
-
-        db.collection("favorites")
-            .whereEqualTo("user", user)
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    if(!it.result?.isEmpty!!) {
-                        it.result?.forEach { snap ->
-                            val item : String = snap["item"] as String
-                            db.collection("items").document(item).get().addOnCompleteListener {
-                                if(it.isSuccessful) {
-                                    if(it.result?.exists()!!) {
-                                        it.result!!.toObject(Item::class.java)?.let { it1 ->
-                                            it1.id = item
-                                            itemList.add(it1)
-                                        }
-                                        items.value = listOf()
-                                        items.value = itemList
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        return items
     }
 
     // just for debug
