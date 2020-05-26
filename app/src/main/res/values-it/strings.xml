@@ -43,17 +43,17 @@
     <string name="close_dialog">Chiudi</string>
     <string name="warning_dialog">Attenzione</string>
     <string name="image_not_found">Immagine del profilo non trovata</string>
-    <string name="item_name">Nome Item</string>
+    <string name="item_name">Nome Articolo</string>
     <string name="item_price">Prezzo</string>
     <string name="profile_update">Profilo aggiornato</string>
-    <string name="item_update">Item aggiornato</string>
+    <string name="item_update">Articolo aggiornato</string>
     <string name="undo">Annulla</string>
     <string name="selectSubcat">Seleziona una sottocategoria</string>
     <string name="profile_nav">Profilo</string>
     <string name="items_nav">Oggetti in vendita</string>
     <string name="edit_item">Modifica</string>
     <string name="date_format">dd-MM-yyyy</string>
-    <string name="no_data_available">Nessun item presente nella lista</string>
+    <string name="no_data_available">Nessun articolo presente nella lista</string>
     <string name="frag_list_title">Le mie inserzioni</string>
     <string name="frag_item_title">Articolo</string>
     <string name="frag_profile_title">Profilo</string>
@@ -95,9 +95,18 @@
     <string name="errorConnection">Errore di connessione</string>
     <string name="imageFragment">Immagine</string>
     <string name="interestedDialogLabel">Premi su un utente per vedere il profilo</string>
-    <string name="radio1">0 - 20 EUR</string>
-    <string name="radio2">20 - 50 EUR</string>
-    <string name="radio3">50 - 100 EUR</string>
+    <string name="radio1">0 – 20 EUR</string>
+    <string name="radio2">20 – 50 EUR</string>
+    <string name="radio3">50 – 100 EUR</string>
+    <string name="radio4">100 – 250 EUR</string>
+    <string name="radio5">250 – 1000 EUR</string>
+    <string name="radio6">1000+ EUR</string>
+    <string name="sell">VENDI</string>
+    <string name="sellingTitle">Vendita oggetto</string>
+    <string name="sellingDialog">Sei sicuro di voler vendere l\'articolo a</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="itemSold">Hai venduto l\'articolo a</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

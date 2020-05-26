@@ -364,7 +364,8 @@ class ItemEditFragment: Fragment() {
                         edit_itemExpiryDate.text.toString(),
                         edit_itemLocation.text.toString(),
                         cond ?: "",
-                        null
+                        null,
+                        ""
                     )
                 } else {
                     item = Item(
@@ -378,6 +379,7 @@ class ItemEditFragment: Fragment() {
                         edit_itemLocation.text.toString(),
                         cond ?: oldItem!!.condition,
                         null,
+                        "",
                         state = state
                     )
                 }
@@ -1040,6 +1042,7 @@ class ItemEditFragment: Fragment() {
                 "",
                 "",
                 0.0,
+                "",
                 "",
                 "",
                 "",
