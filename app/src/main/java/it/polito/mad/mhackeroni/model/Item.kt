@@ -4,8 +4,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
 
-class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var user : String = "null", var state : ItemState = ItemState.AVAILABLE) : Serializable {
-    constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "")
+class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var buyer : String? , var user : String = "null", var state : ItemState = ItemState.AVAILABLE) : Serializable {
+    constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "", "")
 
     companion object Factory {
 
@@ -37,7 +37,8 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 jsonObject.getString("expiryDate"),
                 jsonObject.getString("location"),
                 jsonObject.getString("condition"),
-                jsonObject.getString("image")
+                jsonObject.getString("image"),
+                jsonObject.getString("buyer")
             )
         }
 
@@ -53,6 +54,7 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 obj.put("expiryDate", item.expiryDate)
                 obj.put("location", item.location)
                 obj.put("condition", item.condition)
+                obj.put("buyer", item.buyer)
 
                 if(item.image.isNullOrEmpty())
                     obj.put("image", "")

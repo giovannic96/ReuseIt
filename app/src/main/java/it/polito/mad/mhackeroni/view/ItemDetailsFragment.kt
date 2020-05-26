@@ -2,11 +2,13 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +26,8 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
+import kotlinx.android.synthetic.main.interested_buyer.*
+import kotlinx.android.synthetic.main.interested_buyer.view.*
 import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.collections.ArrayList
@@ -462,7 +466,6 @@ class ItemDetailsFragment: Fragment() {
 
                     })
             }
-
 
             interested.onItemClickListener = object : AdapterView.OnItemSelectedListener,
                 AdapterView.OnItemClickListener {

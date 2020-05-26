@@ -202,7 +202,8 @@ import it.polito.mad.mhackeroni.model.Profile
                 "price" to item.price,
                 "subcategory" to item.subcategory,
                 "user" to item.user,
-                "state" to item.state
+                "state" to item.state,
+                "buyer" to item.buyer
             ) as Map<String, Any>).addOnCompleteListener{
                 if (it.isSuccessful && uploadImage){
                     Log.d("XXX", "Im uploading ${uploadImage}")
@@ -271,6 +272,68 @@ import it.polito.mad.mhackeroni.model.Profile
                 }
             }
         return profiles
+    }
+    
+    fun getInterestedItems(user : String) : LiveData<List<Item>>{
+        val items : MutableLiveData<List<Item>> = MutableLiveData()
+        val itemList : MutableList<Item> = mutableListOf()
+
+        db.collection("favorites")
+            .whereEqualTo("user", user)
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    if(!it.result?.isEmpty!!) {
+                        it.result?.forEach { snap ->
+                            val item : String = snap["item"] as String
+                            db.collection("items").document(item).get().addOnCompleteListener {
+                                if(it.isSuccessful) {
+                                    if(it.result?.exists()!!) {
+                                        it.result!!.toObject(Item::class.java)?.let { it1 ->
+                                            it1.id = item
+                                            itemList.add(it1)
+                                        }
+                                        items.value = listOf()
+                                        items.value = itemList
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        return items
+    }
+
+    fun getBuyedItems(user : String) : LiveData<List<Item>>{
+        val items : MutableLiveData<List<Item>> = MutableLiveData()
+        val itemList : MutableList<Item> = mutableListOf()
+
+        db.collection("items")
+            .whereEqualTo("buyer", user)
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    if(!it.result?.isEmpty!!) {
+                        it.result?.forEach { snap ->
+                            val item : String = snap["item"] as String
+                            db.collection("items").document(item).get().addOnCompleteListener {
+                                if(it.isSuccessful) {
+                                    if(it.result?.exists()!!) {
+                                        it.result!!.toObject(Item::class.java)?.let { it1 ->
+                                            it1.id = item
+                                            itemList.add(it1)
+                                        }
+                                        items.value = listOf()
+                                        items.value = itemList
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        return items
     }
 
     // just for debug
