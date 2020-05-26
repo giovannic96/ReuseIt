@@ -64,21 +64,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"
                     tools:ignore="RtlCompat" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <ImageView
                     android:id="@+id/fab_buy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="bottom|end"
+                    android:elevation="4dp"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_fav_unselect"
-                    app:backgroundTint="@android:color/transparent"
-                    android:elevation="0dp"
-                    app:elevation="0dp"
-                    app:maxImageSize="32dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout"
-                    app:tint="@null" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/seller_loc_layout">
+                </ImageView>
             </FrameLayout>
 
             <LinearLayout

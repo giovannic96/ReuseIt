@@ -246,7 +246,7 @@ class ItemDetailsFragment: Fragment() {
                         if(it.result?.isEmpty!!) {
                             repo.insertFavorite(repo.getID(requireContext()), entry).addOnCompleteListener {
                                 if (it.isSuccessful) {
-                                    fab_buy.setImageResource(R.drawable.ic_fav)
+                                    fab_buy.setBackgroundResource(R.drawable.ic_fav)
                                     Snackbar.make(view, getString(R.string.favorite), Snackbar.LENGTH_LONG).show()
                                 }
                             }
@@ -261,7 +261,7 @@ class ItemDetailsFragment: Fragment() {
                                         }
                                         repo.removeFavorite(idDoc).addOnCompleteListener {
                                             if(it.isSuccessful) {
-                                                fab_buy.setImageResource(R.drawable.ic_fav_unselect)
+                                                fab_buy.setBackgroundResource(R.drawable.ic_fav_unselect)
                                                 Snackbar.make(view, getString(R.string.unfavorite), Snackbar.LENGTH_LONG).show()
                                             }
                                         }
@@ -327,10 +327,10 @@ class ItemDetailsFragment: Fragment() {
                 if(it.isSuccessful){
                     if(it.result?.isEmpty!!) {
                         if(!isOwner && fab_buy != null)
-                            fab_buy.setImageResource(R.drawable.ic_fav_unselect)
+                            fab_buy.setBackgroundResource(R.drawable.ic_fav_unselect)
                     } else {
                         if(!isOwner && fab_buy != null)
-                            fab_buy.setImageResource(R.drawable.ic_fav)
+                            fab_buy.setBackgroundResource(R.drawable.ic_fav)
                     }
                     if(!isOwner)
                         fab_buy.visibility = View.VISIBLE
