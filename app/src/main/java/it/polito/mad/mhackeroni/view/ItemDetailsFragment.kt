@@ -353,7 +353,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         if(!isOwner && fab_buy != null)
                             fab_buy.setBackgroundResource(R.drawable.ic_fav)
                     }
-                    if(!isOwner)
+                    if(!isOwner && fab_buy != null)
                         fab_buy.visibility = View.VISIBLE
                 }
             }
