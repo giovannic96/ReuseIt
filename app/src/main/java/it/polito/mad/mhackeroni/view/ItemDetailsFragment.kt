@@ -1,8 +1,6 @@
 package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.*
 import android.view.View.OnTouchListener
@@ -16,11 +14,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
@@ -257,6 +253,32 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                 })
             }
         })
+
+        val scroll: ScrollView = view.findViewById(R.id.detail_scrollview)
+        val transparent: ImageView = view.findViewById(R.id.imagetransparent)
+
+        transparent.setOnTouchListener { v, event ->
+            val action = event.action
+            when (action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Disallow ScrollView to intercept touch events.
+                    scroll.requestDisallowInterceptTouchEvent(true)
+                    // Disable touch on transparent view
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    // Allow ScrollView to intercept touch events.
+                    scroll.requestDisallowInterceptTouchEvent(false)
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    scroll.requestDisallowInterceptTouchEvent(true)
+                    false
+                }
+                else -> true
+            }
+        }
+
 
         fab_buy.setOnClickListener {
             val repo : FirebaseRepo = FirebaseRepo.INSTANCE

@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
+    android:id="@+id/detailProfile_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:splitMotionEvents="false">
@@ -113,6 +114,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+            <ImageView
+                android:id="@+id/imagetransparent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/user_map"
+                android:layout_alignBottom="@+id/user_map"
+                android:layout_alignEnd="@+id/user_map"
+                android:layout_alignRight="@+id/user_map"
+                android:layout_alignLeft="@+id/user_map"
+                android:layout_alignStart="@+id/user_map"
+                android:src="#00FFFFFF" />
         </androidx.cardview.widget.CardView>
 
 
