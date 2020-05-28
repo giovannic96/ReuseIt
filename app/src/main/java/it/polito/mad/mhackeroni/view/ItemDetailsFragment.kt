@@ -2,6 +2,7 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.AdapterView
@@ -240,7 +241,9 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                 imageProfileItem.setImageResource(R.drawable.ic_avatar)
             }
 
-            if(!it.id.isNullOrEmpty() && canModify){
+            if(canModify){
+                buyers_listview_label.visibility = View.VISIBLE
+
                 vm.getInterestedUsers(it.id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                     if(it.isNotEmpty()) {
                         interestedUsers = ArrayList()
@@ -248,8 +251,6 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         it.forEach {
                             interestedUsers.add(Pair(it.nickname, it.id))
                         }
-
-                        buyers_listview_label.visibility = View.VISIBLE
                     }
 
                 })
@@ -480,7 +481,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
         vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             item = it
 
-            if(!it.id.isNullOrEmpty() && canModify) {
+            if(canModify) {
                 vm.getInterestedUsers(it.id)
                     .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                         if (it.isNotEmpty()) {
