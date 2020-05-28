@@ -113,6 +113,14 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="itemSold">Hai venduto l\'articolo a</string>
+    <string name="chipsArt">Arti &amp; Mestieri</string>
+    <string name="chipsSport">Sport &amp; attività all\&#39;aperto</string>
+    <string name="chipsBaby">Bambini</string>
+    <string name="chipsWomen">Donna</string>
+    <string name="chipsMen">Uomo</string>
+    <string name="chipsElectronics">Elettronica</string>
+    <string name="chipsGames">Giochi &amp; Videogiochi</string>
+    <string name="chipsAutomotive">Automobilistica</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

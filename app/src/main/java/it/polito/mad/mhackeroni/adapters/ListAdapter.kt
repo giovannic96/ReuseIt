@@ -2,17 +2,16 @@ package it.polito.mad.mhackeroni.adapters
 
 import android.app.AlertDialog
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.R
-import it.polito.mad.mhackeroni.model.Profile
+import it.polito.mad.mhackeroni.view.ItemDetailsFragment
 
 class ListAdapter<T>(
     context: Context?, textViewResourceId: Int,
@@ -28,8 +27,6 @@ class ListAdapter<T>(
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         convertView = inflater.inflate(R.layout.interested_buyer, parent, false)
-
-        //val image: ImageView = convertView!!.findViewById(R.id.buyer_image)
 
         val nickname: TextView = convertView!!.findViewById(R.id.buyer_nickname)
         val sellButton: Button = convertView!!.findViewById(R.id.interested_sellButton)
@@ -50,11 +47,15 @@ class ListAdapter<T>(
 
             // Set a positive button and its click listener on alert dialog
             builder.setPositiveButton(R.string.yes){dialog, which ->
+                //cancellare le dialog
+                //settare venduto all'item
+                //settare buyer
                 Snackbar.make(convertView, "$messageSold ${nickname.text}! (DA IMPLEMENTARE)", Snackbar.LENGTH_SHORT).show()
 
             }
 
             builder.setNegativeButton(R.string.no){dialog,which ->
+                //close dialog
             }
 
             // Finally, make the alert dialog using builder

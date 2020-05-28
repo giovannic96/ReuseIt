@@ -7,9 +7,12 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import android.widget.CompoundButton
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,14 +20,16 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.adapters.ItemAdapter
+import it.polito.mad.mhackeroni.adapters.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ItemFilter
-import it.polito.mad.mhackeroni.adapters.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.viewmodel.OnSaleListFragmentViewModel
-import java.util.ArrayList
+import kotlinx.android.synthetic.main.fragment_itemlist_sale.*
 
 
 class OnSaleListFragment: Fragment() {
@@ -65,6 +70,79 @@ class OnSaleListFragment: Fragment() {
         myAdapter.allow_modify = false
         itemList.adapter = myAdapter
         itemList.layoutManager = LinearLayoutManager(context)
+
+        defSubCategory.visibility = View.GONE
+        subcatChipGroup.visibility = View.GONE
+
+        var categories = resources.getStringArray(R.array.categories)
+        var subcategories = resources.getStringArray(R.array.subcategories)
+
+        var checkControlCat = ""
+        var checkControlSubcat = ""
+
+        for(category in categories){
+            val mChip =
+                this.layoutInflater.inflate(R.layout.item_chip, null, false) as Chip
+            mChip.text = category
+            mChip.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+                if(compoundButton.isChecked){
+                    checkControlCat = compoundButton.text.toString() //To avoid check/non check bug -> when i press a chip, the other one fall into else case
+                    searchFilter.category.clear()
+                    searchFilter.subcategory.clear()
+                    searchFilter.category.add(compoundButton.text as String)
+                    when (compoundButton.text as String) {
+                        resources.getString(R.string.chipsArt) ->
+                            subcategories = resources.getStringArray(R.array.arts)
+                        resources.getString(R.string.chipsSport) ->
+                            subcategories = resources.getStringArray(R.array.sports)
+                        resources.getString(R.string.chipsBaby) ->
+                            subcategories = resources.getStringArray(R.array.babies)
+                        resources.getString(R.string.chipsWomen) ->
+                            subcategories = resources.getStringArray(R.array.womens)
+                        resources.getString(R.string.chipsMen) ->
+                            subcategories = resources.getStringArray(R.array.mens)
+                        resources.getString(R.string.chipsElectronics) ->
+                            subcategories = resources.getStringArray(R.array.electronics)
+                        resources.getString(R.string.chipsGames) ->
+                            subcategories = resources.getStringArray(R.array.games)
+                        resources.getString(R.string.chipsAutomotive) ->
+                            subcategories = resources.getStringArray(R.array.automotives)
+                    }
+                    subcatChipGroup.removeAllViews()
+                    for(subcategory in subcategories){
+                        val mChip =
+                            this.layoutInflater.inflate(R.layout.item_chip, null, false) as Chip
+                        mChip.text = subcategory
+                        mChip.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+                            if(compoundButton.isChecked){
+                                checkControlSubcat = compoundButton.text.toString() //To avoid check/non check bug -> when i press a chip, the other one fall into else case
+                                searchFilter.subcategory.clear()
+                                searchFilter.subcategory.add(compoundButton.text as String)
+                            }else{
+                                if(checkControlSubcat == compoundButton.text.toString()){
+                                    searchFilter.subcategory.clear()
+                                }
+                            }
+                            updateFilter()
+                        }
+                        subcatChipGroup.addView(mChip)
+                    }
+                    list_subcategory.fullScroll(View.FOCUS_LEFT)
+                    defSubCategory.visibility = View.VISIBLE
+                    subcatChipGroup.visibility = View.VISIBLE
+                }else{
+                    if(checkControlCat == compoundButton.text.toString()){
+                        defSubCategory.visibility = View.GONE
+                        subcatChipGroup.visibility = View.GONE
+                        searchFilter.category.clear()
+                        searchFilter.subcategory.clear()
+                    }
+                }
+                updateFilter()
+            }
+
+            catChipGroup.addView(mChip)
+        }
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
             myAdapter.reload(it)
@@ -220,129 +298,6 @@ class OnSaleListFragment: Fragment() {
         val goodCheckBox = dialog.findViewById<CheckBox>(R.id.filter_cond_good)
         val accCheckBox = dialog.findViewById<CheckBox>(R.id.filter_cond_acc)
 
-        // Auto complete text views
-        val categoryAutoComplete = dialog.findViewById<AutoCompleteTextView>(R.id.filter_box_category)
-        val subcategoryAutoComplete = dialog.findViewById<AutoCompleteTextView>(R.id.filter_box_subcategory)
-
-        // Cetegories and subcategories
-        val categories = resources.getStringArray(R.array.categories)
-        val subcategories = resources.getStringArray(R.array.subcategories)
-        val arts = resources.getStringArray(R.array.arts)
-        val sports = resources.getStringArray(R.array.sports)
-        val babies = resources.getStringArray(R.array.babies)
-        val womens = resources.getStringArray(R.array.womens)
-        val mens = resources.getStringArray(R.array.mens)
-        val electronics = resources.getStringArray(R.array.electronics)
-        val games = resources.getStringArray(R.array.games)
-        val automotives = resources.getStringArray(R.array.automotives)
-        var selectedCat = categories
-
-        var cat : String? = null
-        var subCat : String? = null
-
-        val adapterCat: ArrayAdapter<String> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            categories
-        )
-        categoryAutoComplete.setAdapter(adapterCat)
-
-        var adapterSubcat: ArrayAdapter<String> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            subcategories
-        )
-
-        subcategoryAutoComplete.setAdapter(adapterSubcat)
-
-        categoryAutoComplete.onItemClickListener = object : AdapterView.OnItemSelectedListener,
-            AdapterView.OnItemClickListener {
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-            }
-
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                subcategoryAutoComplete.setText(R.string.selectSubcat)
-
-                when(position){
-                    0-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, arts)
-                        selectedCat = arts
-                    }
-                    1-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, sports)
-                        selectedCat = sports
-                    }
-                    2-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, babies)
-                        selectedCat = babies
-                    }
-                    3-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, womens)
-                        selectedCat = womens
-                    }
-                    4-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, mens)
-                        selectedCat = mens
-                    }
-                    5-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, electronics)
-                        selectedCat = electronics
-                    }
-                    6-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, games)
-                        selectedCat = games
-                    }
-                    7-> {adapterSubcat = ArrayAdapter(requireContext(),
-                        android.R.layout.simple_spinner_item, automotives)
-                        selectedCat = automotives
-                    }
-
-                }
-
-                subcategoryAutoComplete.setAdapter(adapterSubcat)
-                cat = categories[position]
-            }
-        }
-
-        subcategoryAutoComplete.onItemClickListener = object : AdapterView.OnItemSelectedListener,
-            AdapterView.OnItemClickListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-            }
-
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                subCat = selectedCat[position]
-            }
-        }
-
-
         okBtn.setOnClickListener {
             searchFilter = ItemFilter()
 
@@ -372,10 +327,6 @@ class OnSaleListFragment: Fragment() {
                 searchFilter.price_min = 1000.0
                 searchFilter.price_max = Double.POSITIVE_INFINITY
             }
-
-            // Setup cat and subcategory if setted
-            cat?.let { it -> searchFilter.category.add(it)}
-            subCat?.let { it -> searchFilter.subcategory.add(it)}
 
             if(newCheckBox.isChecked)
                 searchFilter.condition.add(getString(R.string.cond_new))

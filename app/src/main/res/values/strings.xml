@@ -113,6 +113,14 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="itemSold">Item was sold to</string>
+    <string name="chipsArt">Arts &amp; Crafts</string>
+    <string name="chipsSport">Sports and Outdoors</string>
+    <string name="chipsBaby">Baby</string>
+    <string name="chipsWomen">Women\&#39;s fashion</string>
+    <string name="chipsMen">Men\&#39;s fashion</string>
+    <string name="chipsElectronics">Electonics</string>
+    <string name="chipsGames">Games &amp; Videogames</string>
+    <string name="chipsAutomotive">Automotive</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>
