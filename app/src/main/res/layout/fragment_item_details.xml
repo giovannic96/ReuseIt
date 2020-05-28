@@ -338,11 +338,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
 
-                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/item_map"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"/>
+                    android:layout_height="110dp"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="5dp">
+
+                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/item_map"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 

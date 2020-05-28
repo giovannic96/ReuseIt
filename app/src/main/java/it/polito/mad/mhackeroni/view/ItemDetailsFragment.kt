@@ -1,13 +1,12 @@
 package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.ListView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,9 +16,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
@@ -190,8 +191,8 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
 
                 if(googleMap != null) {
                     googleMap!!.addMarker(
-                        MarkerOptions().position(pos)
-                            .title("")
+                        MarkerOptions()
+                            .position(pos)
                     )
                     googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
                 }
