@@ -187,11 +187,13 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
             if(it.lat != null && it.lng != null){
                 val pos = LatLng(it.lat!!, it.lng!!)
 
-                googleMap!!.addMarker(
-                    MarkerOptions().position(pos)
-                        .title("")
-                )
-                googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+                if(googleMap != null) {
+                    googleMap!!.addMarker(
+                        MarkerOptions().position(pos)
+                            .title("")
+                    )
+                    googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+                }
 
             }
 
