@@ -292,6 +292,16 @@ import it.polito.mad.mhackeroni.model.Profile
         return profiles
     }
 
+    fun logout(context: Context): Task<Void> {
+        val sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref), Context.MODE_PRIVATE)
+
+        return db.collection("users")
+            .document(getID(context))
+            .update(hashMapOf(
+                "token" to ""
+            ) as HashMap<String, Any>)
+    }
+
     fun getInterestedItems(user : String) : LiveData<List<Item>>{
         val items : MutableLiveData<List<Item>> = MutableLiveData()
         val itemList : MutableList<Item> = mutableListOf()

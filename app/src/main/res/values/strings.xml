@@ -1,4 +1,5 @@
 <resources>
+    <string name="channeld_id">reuseitappchannelid</string>
     <string name="api_places_key">AIzaSyBYZ22DpnUuKnh-hFfXsqOZ7Z8_yul4XyA</string>
     <string name="app_name">ReuseIt</string>
     <string name="edit">Edit</string>

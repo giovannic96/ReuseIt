@@ -27,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Profile
+import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
 import java.lang.IllegalStateException
 import java.util.logging.Level
@@ -114,14 +115,18 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
 
     private fun logout() {
         val auth = FirebaseAuth.getInstance()
-        auth.signOut()
-        with (sharedPref.edit()) {
-            putString(getString(R.string.uid), "")
-            commit()
+
+        // Delete the token from db
+        FirebaseRepo.INSTANCE.logout(this).addOnCompleteListener {
+            auth.signOut()
+            with (sharedPref.edit()) {
+                putString(getString(R.string.uid), "")
+                commit()
+            }
+            val i = Intent(this, GoogleSignInActivity::class.java)
+            i.putExtra(getString(R.string.logout_title), true)
+            startActivity(i)
         }
-        val i = Intent(this, GoogleSignInActivity::class.java)
-        i.putExtra(getString(R.string.logout_title), true)
-        startActivity(i)
     }
 
     private fun updateHeader(profile: Profile) {
