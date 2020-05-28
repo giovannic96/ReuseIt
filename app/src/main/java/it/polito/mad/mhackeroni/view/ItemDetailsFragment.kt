@@ -2,13 +2,11 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +14,12 @@ import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -26,13 +30,10 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
-import kotlinx.android.synthetic.main.interested_buyer.*
-import kotlinx.android.synthetic.main.interested_buyer.view.*
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlin.collections.ArrayList
 
-class ItemDetailsFragment: Fragment() {
+class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
     var price: Double? = null
     lateinit var vm : ItemDetailsFragmentViewModel
     var item : Item? = Item()
@@ -41,6 +42,7 @@ class ItemDetailsFragment: Fragment() {
     val logger: Logger = Logger.getLogger(ItemDetailsFragment::class.java.name)
     private lateinit var interestedUsers: MutableList<Pair<String, String>>
     private var snackbar : Snackbar? = null
+    private var googleMap : GoogleMap? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_details, container, false)
@@ -53,6 +55,11 @@ class ItemDetailsFragment: Fragment() {
 
         vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
         getNavigationInfo()
+
+        // Get the SupportMapFragment and request notification
+        // when the map is ready to be used.
+        val mapFragment = childFragmentManager.findFragmentById(R.id.item_map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
 
         if(vm.itemId.isEmpty())
             vm.itemId = item?.id ?: ""
@@ -175,6 +182,17 @@ class ItemDetailsFragment: Fragment() {
             }
             else{
                 itemLocation.text = resources.getString(R.string.notSpecified)
+            }
+
+            if(it.lat != null && it.lng != null){
+                val pos = LatLng(it.lat!!, it.lng!!)
+
+                googleMap!!.addMarker(
+                    MarkerOptions().position(pos)
+                        .title("")
+                )
+                googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+
             }
 
             imageProfileItem.setOnClickListener { listener ->
@@ -524,5 +542,9 @@ class ItemDetailsFragment: Fragment() {
         }
 
         dialog.show()
+    }
+
+    override fun onMapReady(gmap: GoogleMap?) {
+        googleMap = gmap
     }
 }

@@ -338,6 +338,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
 
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/item_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton

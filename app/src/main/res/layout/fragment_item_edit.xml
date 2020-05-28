@@ -252,7 +252,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="64"
+                android:clickable="true"
                 android:background="#FFFFFF"
+                android:focusable="true"
+                android:inputType="none"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

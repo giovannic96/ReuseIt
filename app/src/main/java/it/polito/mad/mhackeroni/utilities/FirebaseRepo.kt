@@ -208,7 +208,9 @@ import it.polito.mad.mhackeroni.model.Profile
                 "subcategory" to item.subcategory,
                 "user" to item.user,
                 "state" to item.state,
-                "buyer" to item.buyer
+                "buyer" to item.buyer,
+                "lat" to item.lat,
+                "lng" to item.lng
             ) as Map<String, Any>).addOnCompleteListener{
                 if (it.isSuccessful && uploadImage){
                     Log.d("XXX", "Im uploading ${uploadImage}")

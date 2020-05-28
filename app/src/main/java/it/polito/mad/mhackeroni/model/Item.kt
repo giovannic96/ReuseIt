@@ -1,10 +1,11 @@
 package it.polito.mad.mhackeroni.model
 
+import com.google.android.gms.maps.model.LatLng
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
 
-class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var buyer : String? , var user : String = "null", var state : ItemState = ItemState.AVAILABLE) : Serializable {
+class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var buyer : String? , var user : String = "null", var state : ItemState = ItemState.AVAILABLE, var lat: Double? = null, var lng: Double? = null) : Serializable {
     constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "", "")
 
     companion object Factory {

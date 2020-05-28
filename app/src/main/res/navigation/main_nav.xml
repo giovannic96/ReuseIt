@@ -91,6 +91,9 @@
             app:destination="@id/nav_itemList"
             app:popUpTo="@id/nav_itemList"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_ItemDetailEdit_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_itemList"
@@ -145,5 +148,15 @@
         <action
             android:id="@+id/action_nav_boughtItemsList_to_nav_ItemDetail"
             app:destination="@id/nav_ItemDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="it.polito.mad.mhackeroni.view.MapFragment"
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_mapFragment_to_nav_ItemDetailEdit"
+            app:destination="@id/nav_ItemDetailEdit"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/nav_ItemDetailEdit"/>
     </fragment>
 </navigation>

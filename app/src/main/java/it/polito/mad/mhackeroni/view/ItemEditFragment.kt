@@ -6,6 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,6 +29,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.CalendarConstraints
@@ -40,12 +43,13 @@ import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditItemFragmentViewModel
+import it.polito.mad.mhackeroni.viewmodel.MapViewModel
+import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-import java.lang.IllegalStateException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -73,9 +77,14 @@ class ItemEditFragment: Fragment() {
     val logger: Logger = Logger.getLogger(ItemEditFragment::class.java.name)
     private var state : Item.ItemState = Item.ItemState.AVAILABLE
     private var isBlocked = false
+    private var mapViewModel: MapViewModel = MapViewModel()
+    private var location : String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
+        activity?.run {
+            mapViewModel = ViewModelProviders.of(requireActivity()).get(MapViewModel::class.java)
+        }
         setHasOptionsMenu(true)
         return v
     }
@@ -188,9 +197,11 @@ class ItemEditFragment: Fragment() {
                     edit_itemExpiryDate.setText(itemData.expiryDate ?: resources.getString(
                         R.string.defaultExpire
                     ))
-                    edit_itemLocation.setText(itemData.location ?: resources.getString(
-                        R.string.defaultLocation
-                    ))
+
+                    if(location.isNullOrEmpty())
+                        edit_itemLocation.setText(itemData.location)
+                    else
+                        edit_itemLocation.setText(location)
 
                     val state = itemData.state.toString()
 
@@ -232,6 +243,28 @@ class ItemEditFragment: Fragment() {
 
         handleDatePicker()
 
+        mapViewModel.position.observe(viewLifecycleOwner, androidx.lifecycle.Observer { position ->
+
+            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+            val addresses: List<Address> = geocoder
+                .getFromLocation(
+                    position.latitude,
+                    position.longitude,
+                1
+            )
+
+            try {
+                val city: String = addresses[0].locality
+                if (edit_location != null)
+                    edit_location.setText(city)
+                location = city
+                item?.lat = position.latitude
+                item?.lng = position.longitude
+            } catch (e: java.lang.IllegalStateException){
+                Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT).show()
+            }
+        })
+
         /*
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if(item.value != null){
@@ -267,6 +300,11 @@ class ItemEditFragment: Fragment() {
             }
         })
          */
+
+        edit_itemLocation.setOnClickListener {
+            view?.findNavController()
+                ?.navigate(R.id.action_nav_ItemDetailEdit_to_mapFragment)
+        }
 
         edit_state.setOnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
@@ -365,7 +403,9 @@ class ItemEditFragment: Fragment() {
                         edit_itemLocation.text.toString(),
                         cond ?: "",
                         null,
-                        ""
+                        "",
+                        lat = item?.lat,
+                        lng = item?.lng
                     )
                 } else {
                     item = Item(
@@ -380,7 +420,9 @@ class ItemEditFragment: Fragment() {
                         cond ?: oldItem!!.condition,
                         null,
                         "",
-                        state = state
+                        state = state,
+                        lat = item?.lat,
+                        lng = item?.lng
                     )
                 }
 
@@ -941,11 +983,14 @@ class ItemEditFragment: Fragment() {
         //build date picker and add callbacks
         val picker = builder.build()
         edit_itemExpiryDate.inputType = InputType.TYPE_NULL
+        edit_itemLocation.inputType = InputType.TYPE_NULL
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             edit_itemExpiryDate.focusable = View.NOT_FOCUSABLE
+            edit_itemLocation.focusable = View.NOT_FOCUSABLE
         } else {
             edit_itemExpiryDate.isFocusable = false
+            edit_itemLocation.isFocusable = false
         }
 
         edit_itemExpiryDate.setOnClickListener {

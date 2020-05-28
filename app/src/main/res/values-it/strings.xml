@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="channeld_id">reuseitappchannelid</string>
-    <string name="api_places_key">AIzaSyBYZ22DpnUuKnh-hFfXsqOZ7Z8_yul4XyA</string>
+    <string name="locationError">Questa non è una posizione accettabile.</string>
+    <string name="maps_key">AIzaSyBYZ22DpnUuKnh-hFfXsqOZ7Z8_yul4XyA</string>
     <string name="app_name">ReuseIt</string>
     <string name="edit">Modifica</string>
     <string name="shared_pref">SharedPrefs</string>
