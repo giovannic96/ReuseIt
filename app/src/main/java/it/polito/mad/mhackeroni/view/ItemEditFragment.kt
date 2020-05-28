@@ -245,25 +245,31 @@ class ItemEditFragment: Fragment() {
 
         mapViewModel.position.observe(viewLifecycleOwner, androidx.lifecycle.Observer { position ->
 
-            val geocoder = Geocoder(requireContext(), Locale.getDefault())
-            val addresses: List<Address> = geocoder
-                .getFromLocation(
-                    position.latitude,
-                    position.longitude,
-                1
-            )
+            if(position != null) {
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses: List<Address> = geocoder
+                    .getFromLocation(
+                        position.latitude,
+                        position.longitude,
+                        1
+                    )
 
-            try {
-                val city: String = addresses[0].locality
-                if (edit_location != null)
-                    edit_location.setText(city)
-                location = city
-                item?.lat = position.latitude
-                item?.lng = position.longitude
-            } catch (e: java.lang.IllegalStateException){
-                Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT).show()
+                try {
+                    val city: String = addresses[0].locality
+                    if (edit_location != null)
+                        edit_location.setText(city)
+                    location = city
+                    item?.lat = position.latitude
+                    item?.lng = position.longitude
+                } catch (e: java.lang.IllegalStateException) {
+                    Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                mapViewModel.position.value = null
             }
         })
+
 
         /*
         item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {

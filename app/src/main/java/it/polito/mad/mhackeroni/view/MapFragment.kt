@@ -16,14 +16,18 @@ import com.google.android.gms.maps.model.MarkerOptions
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.viewmodel.MapViewModel
+import it.polito.mad.mhackeroni.viewmodel.UserMapViewModel
 
 class MapFragment: Fragment(), OnMapReadyCallback {
     private var mapViewModel: MapViewModel = MapViewModel()
+    private var userMapViewModel: UserMapViewModel = UserMapViewModel()
+    private var isUserPosition = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_map, container, false)
         activity?.run {
             mapViewModel = ViewModelProviders.of(requireActivity()).get(MapViewModel::class.java)
+            userMapViewModel = ViewModelProviders.of(requireActivity()).get(UserMapViewModel::class.java)
         }
         setHasOptionsMenu(true)
         return v
@@ -36,6 +40,9 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         // when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.item_map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+
+        isUserPosition = arguments?.getBoolean("user") ?: false
+        arguments?.clear()
 
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -57,7 +64,11 @@ class MapFragment: Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap?) {
         map?.setOnMapClickListener(OnMapClickListener { point ->
-            mapViewModel.position.value = point
+            if(isUserPosition)
+                userMapViewModel.position.value = point
+            else
+                mapViewModel.position.value = point
+
             map.clear()
             map.addMarker(MarkerOptions().position(point))
         })

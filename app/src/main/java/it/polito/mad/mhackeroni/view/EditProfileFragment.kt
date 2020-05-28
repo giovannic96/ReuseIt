@@ -7,18 +7,22 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -26,9 +30,16 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -38,7 +49,10 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
+import it.polito.mad.mhackeroni.viewmodel.MapViewModel
+import it.polito.mad.mhackeroni.viewmodel.UserMapViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_item_edit.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -57,9 +71,17 @@ class EditProfileFragment : Fragment() {
     val logger: Logger = Logger.getLogger(EditProfileFragment::class.java.name)
     private var  profile : Profile? = null
     private var oldProfile : Profile? = null
+    private var location : String = ""
+    private var mapViewModel : UserMapViewModel = UserMapViewModel()
+    private var lat: Double? = null
+    private var lng: Double? = null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_edit_profile, container, false)
+        activity?.run {
+            mapViewModel = ViewModelProviders.of(requireActivity()).get(UserMapViewModel::class.java)
+        }
         setHasOptionsMenu(true)
         return v
     }
@@ -71,6 +93,19 @@ class EditProfileFragment : Fragment() {
 
         vm = ViewModelProvider(this).get(EditProfileFragmentViewModel::class.java)
         vm.uid = repo.getID(requireContext())
+
+        edit_location.inputType = InputType.TYPE_NULL
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            edit_location.focusable = View.NOT_FOCUSABLE
+        } else {
+            edit_location.isFocusable = false
+        }
+
+
+        edit_location.setOnClickListener {
+            view?.findNavController().navigate(R.id.action_nav_editProfile_to_mapFragment, bundleOf("user" to true))
+        }
 
         vm.getProfile().observe(viewLifecycleOwner, androidx.lifecycle.Observer {profileVal ->
             var profileData = profileVal
@@ -115,12 +150,17 @@ class EditProfileFragment : Fragment() {
                 Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
-            edit_fullname.setText(profileData.fullName ?: resources.getString(R.string.defaultFullName))
-            edit_bio.setText(profileData.bio ?: resources.getString(R.string.defaultNickname))
-            edit_nickname.setText(profileData.nickname ?: resources.getString(R.string.defaultNickname))
-            edit_mail.setText(profileData.email ?: resources.getString(R.string.defaultEmail))
-            edit_phoneNumber.setText(profileData.phoneNumber ?: resources.getString(R.string.defaultLocation))
-            edit_location.setText(profileData.location ?: resources.getString(R.string.defaultLocation))
+            edit_fullname.setText(profileData.fullName)
+            edit_bio.setText(profileData.bio)
+            edit_nickname.setText(profileData.nickname)
+            edit_mail.setText(profileData.email)
+            edit_phoneNumber.setText(profileData.phoneNumber)
+
+            if(location.isNullOrEmpty())
+                edit_location.setText(profileData.location)
+            else
+                edit_location.setText(location)
+
         })
 
         rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
@@ -167,6 +207,31 @@ class EditProfileFragment : Fragment() {
                         .show()
             }
         }
+
+        mapViewModel.position.observe(viewLifecycleOwner, androidx.lifecycle.Observer { position ->
+
+            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+            val addresses: List<Address> = geocoder
+                .getFromLocation(
+                    position.latitude,
+                    position.longitude,
+                    1
+                )
+
+            try {
+                val city: String = addresses[0].locality
+                if (edit_location != null)
+                    edit_location.setText(city)
+
+                location = city
+
+                lat = position.latitude
+                lng = position.longitude
+
+            } catch (e: java.lang.IllegalStateException){
+                Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT).show()
+            }
+        })
     }
 
 
@@ -229,14 +294,16 @@ class EditProfileFragment : Fragment() {
                     profile = Profile(
                         edit_fullname.text.toString().trim(), edit_nickname.text.toString(),
                         edit_mail.text.toString(), edit_location.text.toString(),
-                        currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString()
+                        currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString(),
+                        lat = lat, lng = lng
                     )
                     vm.updateProfile(profile!!)
                 }else {
                     profile = Profile(
                         edit_fullname.text.toString().trim(), edit_nickname.text.toString(),
                         edit_mail.text.toString(), edit_location.text.toString(),
-                        profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString()
+                        profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString(),
+                        lat = lat, lng = lng
                     )
                     vm.updateProfile(profile!!)
                 }
@@ -260,14 +327,6 @@ class EditProfileFragment : Fragment() {
                     profile!!.image = currentPhotoPath
                 }
 
-                /*
-                val repo = FirebaseRepo.INSTANCE
-                val entry = profile
-                val uid = repo.getID(requireContext())
-
-                // TODO: Handle error
-                if (entry != null) {
-                    repo.updateProfile(entry, uid)*/
                 val repo : FirebaseRepo = FirebaseRepo.INSTANCE
 
                 repo.checkNickname(edit_nickname.text.toString()).addOnCompleteListener {

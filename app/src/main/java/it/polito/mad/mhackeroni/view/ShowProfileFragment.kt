@@ -2,14 +2,18 @@ package it.polito.mad.mhackeroni.view
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Profile
@@ -21,12 +25,13 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 
-class ShowProfileFragment : Fragment() {
+class ShowProfileFragment : Fragment(), OnMapReadyCallback {
     private var mListener: OnCompleteListener? = null
     private lateinit var vm : ProfileFragmentViewModel
     private var canEdit = true
     val logger: Logger = Logger.getLogger(ShowProfileFragment::class.java.name)
     private var profile : Profile = Profile()
+    private var googleMap : GoogleMap? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_show_profile, container, false)
@@ -37,6 +42,9 @@ class ShowProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lateinit var uid : String
+
+        val mapFragment = childFragmentManager.findFragmentById(R.id.user_map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
 
         val passingUID= arguments?.getString(getString(R.string.uid), "") ?: ""
         val fromItem: Boolean = arguments?.getBoolean("fromItem", false) ?: false
@@ -104,6 +112,18 @@ class ShowProfileFragment : Fragment() {
             mail.text = it?.email ?: resources.getString(R.string.defaultEmail)
             phone_number.text = it?.phoneNumber ?: resources.getString(R.string.defaultPhoneNumber)
             location.text = it?.location ?: resources.getString(R.string.defaultLocation)
+
+            if(it.lat != null && it.lng != null){
+                val pos = LatLng(it.lat!!, it.lng!!)
+
+                if(googleMap != null) {
+                    googleMap!!.addMarker(
+                        MarkerOptions()
+                            .position(pos)
+                    )
+                    googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+                }
+            }
         })
 
         imageProfile.setOnClickListener {
@@ -213,5 +233,9 @@ class ShowProfileFragment : Fragment() {
 
     interface OnCompleteListener {
         fun onComplete(profile: Profile)
+    }
+
+    override fun onMapReady(map: GoogleMap?) {
+        googleMap = map
     }
 }

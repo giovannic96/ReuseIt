@@ -36,6 +36,9 @@
             app:destination="@id/nav_showProfile"
             app:popUpToInclusive="true"
             app:popUpTo="@id/nav_showProfile" />
+        <action
+            android:id="@+id/action_nav_editProfile_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 
     <fragment
@@ -158,5 +161,10 @@
             app:destination="@id/nav_ItemDetailEdit"
             app:popUpToInclusive="true"
             app:popUpTo="@id/nav_ItemDetailEdit"/>
+        <action
+            android:id="@+id/action_mapFragment_to_nav_editProfile"
+            app:destination="@id/nav_editProfile"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/nav_editProfile"/>
     </fragment>
 </navigation>

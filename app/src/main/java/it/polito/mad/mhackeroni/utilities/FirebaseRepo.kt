@@ -69,7 +69,9 @@ import it.polito.mad.mhackeroni.model.Profile
                 "location" to profile.location,
                 "image" to profile.image,
                 "bio" to profile.bio,
-                "phoneNumber" to profile.phoneNumber
+                "phoneNumber" to profile.phoneNumber,
+                "lat" to profile.lat,
+                "lng" to profile.lng
         ) as Map<String, Any>).addOnCompleteListener{
                 if(it.isSuccessful){
                     if(!profile.image.isNullOrEmpty()){
