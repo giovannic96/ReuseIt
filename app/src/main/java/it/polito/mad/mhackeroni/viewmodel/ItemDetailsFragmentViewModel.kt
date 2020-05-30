@@ -1,8 +1,10 @@
 package it.polito.mad.mhackeroni.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.DocumentReference
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
@@ -62,6 +64,13 @@ class ItemDetailsFragmentViewModel : ViewModel() {
     fun getInterestedUsers(item : String): LiveData<List<Profile>> {
         val repo = FirebaseRepo.INSTANCE
         return repo.getInterestedProfile(item)
+    }
+
+    fun getLoggedProfile(context : Context): DocumentReference {
+        val repo = FirebaseRepo.INSTANCE
+        val id = repo.getID(context)
+
+        return repo.getProfileRef(id)
     }
 
 }

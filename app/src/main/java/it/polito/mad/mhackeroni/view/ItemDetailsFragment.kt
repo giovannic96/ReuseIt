@@ -1,6 +1,7 @@
 package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.view.View.OnTouchListener
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -184,12 +186,40 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
 
             if(it.lat != null && it.lng != null){
                 val pos = LatLng(it.lat!!, it.lng!!)
+                var pPos: LatLng? = null
+
+                vm.getLoggedProfile(requireContext()).get().addOnCompleteListener {
+                    if(it.isSuccessful && it.result?.exists()!!){
+                        val loggedProfile = it.result
+                        val pLat = loggedProfile?.getDouble("lat")
+                        val pLng = loggedProfile?.getDouble("lng")
+
+                        if(pLat != null && pLng != null){
+                            pPos = LatLng(pLat, pLng)
+                        }
+                    }
+
+                    if(pPos != null){
+                        googleMap!!.addMarker(
+                            MarkerOptions()
+                                .position(pPos!!)
+                        )
+
+                        googleMap!!.addPolyline(
+                            PolylineOptions().add(
+                                pPos,
+                                pos
+                            ).width(2F).color(Color.BLUE).geodesic(true)
+                        )
+                    }
+                }
 
                 if(googleMap != null) {
                     googleMap!!.addMarker(
                         MarkerOptions()
                             .position(pos)
                     )
+
                     googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
                 }
 
