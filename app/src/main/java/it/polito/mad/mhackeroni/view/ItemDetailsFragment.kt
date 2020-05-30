@@ -199,7 +199,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         }
                     }
 
-                    if(pPos != null){
+                    if(pPos != null && !canModify){
                         googleMap!!.addMarker(
                             MarkerOptions()
                                 .position(pPos!!)
