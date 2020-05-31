@@ -124,6 +124,10 @@
     <string name="chipsElectronics">Electonics</string>
     <string name="chipsGames">Games &amp; Videogames</string>
     <string name="chipsAutomotive">Automotive</string>
+    <string name="defaultRating">Rating</string>
+    <string name="noRating">No rating yet</string>
+    <string name="leaveFeedback">Leave Feedback</string>
+    <string name="feedback_done">Thank you for the feedback!</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

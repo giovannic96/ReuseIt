@@ -1,5 +1,6 @@
 package it.polito.mad.mhackeroni.adapters
 
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,6 +66,7 @@ class BoughtItemAdapter(private var items: MutableList<Item>, private val listen
     class ItemViewHolder(v: View, listener: MyAdapterListener): ViewHolder(v) {
         private val name:TextView = v.findViewById(R.id.item_name)
         private val price:TextView = v.findViewById(R.id.item_price)
+        private val ratingButton: ImageView = v.findViewById(R.id.leaveCommentButton)
         private val listenerRef: WeakReference<MyAdapterListener>? = WeakReference(listener)
         private val image:ImageView = v.findViewById(R.id.drawable_pic)
         private val context = v.context
@@ -75,6 +77,10 @@ class BoughtItemAdapter(private var items: MutableList<Item>, private val listen
 
             itemView.setOnClickListener {
                 listenerRef?.get()?.itemViewOnClick(item)
+            }
+
+            ratingButton.setOnClickListener{
+                listenerRef?.get()?.ratingItemOnClick(item)
             }
 
             if(item.image.isNullOrEmpty()) {
@@ -102,6 +108,7 @@ class BoughtItemAdapter(private var items: MutableList<Item>, private val listen
     }
 
     interface MyAdapterListener {
-        fun itemViewOnClick(item: Item) //listener for click on any part of the card view (except edit button)
+        fun itemViewOnClick(item: Item) //listener for click on any part of the card view (except feedback button)
+        fun ratingItemOnClick(item: Item)
     }
 }

@@ -2,9 +2,9 @@
 
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardElevation="2dp"
     app:cardCornerRadius="0dp"
     android:layout_marginBottom="18dp"
@@ -39,21 +39,23 @@
                 android:orientation="horizontal"
                 android:layout_gravity="bottom">
 
-                <RelativeLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <LinearLayout
+                        android:id="@+id/linearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_gravity="bottom">
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:id="@+id/item_name"
-                            style="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_width="match_parent"
+                            style="@style/TextAppearance.MaterialComponents.Body1"
+                            android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="15dp"
@@ -69,18 +71,32 @@
                         <TextView
                             android:id="@+id/item_price"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
+                            android:layout_marginTop="1dp"
                             android:layout_marginBottom="4dp"
                             android:text="@string/item_price"
                             android:textAlignment="viewStart"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#55D658"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/item_name" />
+
                     </LinearLayout>
-                </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/leaveCommentButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="10dp"
+                        app:srcCompat="@drawable/ic_feedback"
+                        tools:ignore="VectorDrawableCompat" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
