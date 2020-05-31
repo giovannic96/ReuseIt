@@ -32,6 +32,7 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
+import kotlinx.android.synthetic.main.fragment_show_profile.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -371,7 +372,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
         }
 
         buyers_listview_label.setOnClickListener {
-            showInterestedDialog()
+            showInterestedDialog(item?.state.toString() == "SOLD")
         }
 
     }
@@ -499,18 +500,15 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
             snackbar!!.dismiss()
     }
 
+    private fun showInterestedDialog(itemAlreadySold: Boolean = false) {
 
-    private fun showInterestedDialog() {
         val dialog = Dialog(requireActivity())
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.interested_dialog_box)
-
         dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
 
         val cancelBtn = dialog.findViewById<Button>(R.id.interested_cancel_btn)
-
         val interested = dialog.findViewById<ListView>(R.id.interested_listView)
 
         vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
@@ -522,7 +520,6 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
         if((FirebaseRepo.INSTANCE.getID(requireContext()) != vm.owner) && !vm.owner.isNullOrEmpty())
             canModify = false
 
-        //hide_fab()
         if(!canModify) {
             requireActivity().invalidateOptionsMenu()
             itemState.visibility = View.GONE
@@ -557,12 +554,19 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                                             // update item -> set buyer and state
                                             vm.updateItemSold(nicknameBuyer).addOnCompleteListener {
                                                 if (it.isSuccessful) {
-                                                    Log.d("KKK", "SUCCESS")
+                                                    view?.let { it1 ->
+                                                        dialog.dismiss()
+                                                        Snackbar.make(it1, R.string.item_sold, Snackbar.LENGTH_SHORT).show()
+                                                    }
                                                 } else
-                                                    Log.d("KKK", "FAILURE")
+                                                    view?.let { it1 ->
+                                                        dialog.dismiss()
+                                                        Snackbar.make(it1, R.string.item_sold_error, Snackbar.LENGTH_SHORT).show()
+                                                    }
                                             }
                                         }
-                                    }
+                                    },
+                                    itemAlreadySold
                                 )
                             interested.adapter = arrayAdapter
                             interested.visibility = View.VISIBLE

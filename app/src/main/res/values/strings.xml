@@ -48,6 +48,8 @@
     <string name="image_not_found">Cannot find profile image</string>
     <string name="item_name">Item name</string>
     <string name="item_price">Price</string>
+    <string name="item_sold">The item was sold</string>
+    <string name="item_sold_error">Unexpected error: the item was NOT sold</string>
     <string name="profile_update">Profile updated</string>
     <string name="item_update">Item updated</string>
     <string name="undo">Undo</string>
