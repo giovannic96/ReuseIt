@@ -422,19 +422,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:baselineAligned="false">
-            <com.google.android.material.button.MaterialButton
-                android:visibility="gone"
-                android:id="@+id/buyers_listview_label"
-                android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:hint="@string/interestedUsers"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                style="?attr/materialButtonOutlinedStyle"
-                app:icon="@drawable/ic_group"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+
+                <LinearLayout
+                    android:id="@+id/buyers_listview_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/cardview_light_background"
+                    android:elevation="3dp">
+                <com.google.android.material.button.MaterialButton
+                    android:visibility="gone"
+                    android:id="@+id/buyers_listview_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="@string/interestedUsers"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    style="?attr/materialButtonStyle"
+                    android:textColorHint="@android:color/background_light"
+                    android:textStyle="bold"
+                    app:icon="@drawable/ic_group"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                </LinearLayout>
 
             <TextView
                 android:id="@+id/itemExpireLabel"
