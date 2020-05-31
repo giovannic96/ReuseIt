@@ -125,6 +125,10 @@
     <string name="chipsElectronics">Elettronica</string>
     <string name="chipsGames">Giochi &amp; Videogiochi</string>
     <string name="chipsAutomotive">Automobilistica</string>
+    <string name="defaultRating">Rating</string>
+    <string name="noRating">Ancora nessun rating</string>
+    <string name="leaveFeedback">Lascia una recensione</string>
+    <string name="feedback_done">Grazie per la recensione!</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>

@@ -1,14 +1,16 @@
 package it.polito.mad.mhackeroni.model
 
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
 
 
-class Profile(var fullName:String, var nickname:String,
-              var email:String, var location:String, var image: String?, var bio:String, var phoneNumber:String, var id:String = "", var lat : Double? = null, var lng : Double? = null) : Serializable {
+class Profile(
+    var fullName:String, var nickname:String,
+    var email:String, var location:String, var image: String?, var bio:String, var phoneNumber:String, var totRating: Double, var numRating: Double, var id:String = "", var lat: Double? = null, var lng: Double? = null) : Serializable {
 
-    constructor() : this("", "", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", 0.0, 0.0)
 
     companion object Factory {
 
@@ -36,8 +38,10 @@ class Profile(var fullName:String, var nickname:String,
                 jsonObject.getString("location"),
                 jsonObject.getString("image"),
                 jsonObject.getString("bio"),
-                jsonObject.getString("phoneNumber")
-            )
+                jsonObject.getString("phoneNumber"),
+                jsonObject.getDouble("totRating"),
+                jsonObject.getDouble("numRating")
+                )
         }
 
         fun toJSON(profile: Profile) : JSONObject{
@@ -49,6 +53,8 @@ class Profile(var fullName:String, var nickname:String,
                 obj.put("location", profile.location)
                 obj.put("bio", profile.bio)
                 obj.put("phoneNumber", profile.phoneNumber)
+                obj.put("totRating", profile.totRating)
+                obj.put("numRating", profile.totRating)
 
                 if(profile.image.isNullOrEmpty())
                     obj.put("image", "")

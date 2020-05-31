@@ -23,6 +23,7 @@ import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.fragment_show_profile.*
+import kotlinx.android.synthetic.main.interested_buyer.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -108,12 +109,28 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
                 Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
 
+            if(it?.numRating == 0.0 || it?.totRating == 0.0){
+                imageStar.visibility = View.GONE
+                rating.text = resources.getString(R.string.noRating)
+            }
+            else{
+                var ratingDiv: Double = it?.totRating?.div(it?.numRating!!) ?: 0.0
+                if(ratingDiv!=0.0){
+                    rating.text = "${ratingDiv.toString()} (${it?.numRating!!.toInt()})"
+                }
+                else{
+                    rating.text = resources.getString(R.string.noRating)
+                }
+
+            }
+
             fullname.text = it?.fullName ?: resources.getString(R.string.defaultFullName)
             bio.text = it?.bio ?: resources.getString(R.string.defaultBio)
             nickname.text = it?.nickname ?: resources.getString(R.string.defaultNickname)
             mail.text = it?.email ?: resources.getString(R.string.defaultEmail)
             phone_number.text = it?.phoneNumber ?: resources.getString(R.string.defaultPhoneNumber)
             location.text = it?.location ?: resources.getString(R.string.defaultLocation)
+
 
             if(it.lat != null && it.lng != null){
                 val pos = LatLng(it.lat!!, it.lng!!)

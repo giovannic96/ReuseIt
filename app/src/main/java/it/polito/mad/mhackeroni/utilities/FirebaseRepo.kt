@@ -70,6 +70,8 @@ import it.polito.mad.mhackeroni.model.Profile
                 "image" to profile.image,
                 "bio" to profile.bio,
                 "phoneNumber" to profile.phoneNumber,
+                "totRating" to profile.totRating,
+                "numRating" to profile.numRating,
                 "lat" to profile.lat,
                 "lng" to profile.lng
         ) as Map<String, Any>).addOnCompleteListener{
@@ -106,6 +108,16 @@ import it.polito.mad.mhackeroni.model.Profile
             .update(
                 hashMapOf(
                     "token" to token) as Map<String, Any>)
+    }
+
+    fun updateRating(uid: String, totRating: Double, numRating: Double): Task<Void>{
+        return db.collection("users")
+            .document(uid)
+            .update(
+                hashMapOf(
+                "totRating" to totRating,
+                "numRating" to numRating
+            ) as Map<String, Any>)
     }
 
     fun insertItem(item: Item): Task<DocumentReference> {
