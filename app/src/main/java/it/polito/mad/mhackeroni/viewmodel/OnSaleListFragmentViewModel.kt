@@ -25,7 +25,7 @@ class OnSaleListFragmentViewModel : ViewModel() {
                 val queryItems = doc.toObject(Item::class.java)
                 queryItems.id = doc.id
                 if(queryItems.user != uid) {
-                    itemList.add(queryItems)
+                    itemList.add(Item.localize(queryItems))
                 }
             }
             items.value = itemList
