@@ -231,6 +231,14 @@ import it.polito.mad.mhackeroni.model.Profile
             }
     }
 
+    fun updateItemSold(itemId : String, buyerId : String, state : String = "SOLD"): Task<Void> {
+        return db.collection("items")
+            .document(itemId)
+            .update("buyer", buyerId).addOnCompleteListener {
+
+            }
+    }
+
     fun checkFavorite(user : String, item : String) : Task<QuerySnapshot> {
        return db.collection("favorites")
             .whereEqualTo("user", user)

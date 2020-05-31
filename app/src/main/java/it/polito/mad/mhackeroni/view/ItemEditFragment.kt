@@ -499,96 +499,60 @@ class ItemEditFragment: Fragment() {
                             if (it.isSuccessful) {
                                 val bundle =
                                     bundleOf("new_item" to item?.let {
-                                        Item.toJSON(
-                                            it
-                                        ).toString()
+                                        Item.toJSON(it).toString()
                                     })
 
                                 if (fromList!!) {
                                     val bundle =
                                         bundleOf("edited_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_itemList,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
                                 } else {
                                     val bundle =
                                         bundleOf("new_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
                                 }
                             } else {
                                 view?.let { it1 ->
-                                    Snackbar.make(
-                                        it1,
-                                        getString(R.string.errorConnection),
-                                        Snackbar.LENGTH_SHORT
-                                    ).show()
+                                    Snackbar.make(it1, getString(R.string.errorConnection), Snackbar.LENGTH_SHORT).show()
                                 }
 
                                 val bundle =
                                     bundleOf("new_item" to item?.let {
-                                        Item.toJSON(
-                                            it
-                                        ).toString()
+                                        Item.toJSON(it).toString()
                                     })
 
                                 if (fromList!!) {
                                     val bundle =
                                         bundleOf("edited_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_itemList,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
                                 } else {
                                     val bundle =
                                         bundleOf("new_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
                                 }
                             }
                         }
@@ -596,101 +560,64 @@ class ItemEditFragment: Fragment() {
                         vm.updateItemNoImageUpload(requireContext()).addOnCompleteListener {
 
                             val localImage = vm.getLocalItem()?.image!!
-                            Log.d("XXX", "No upload - Image: ${localImage}")
 
                             if (it.isSuccessful) {
                                 val bundle =
                                     bundleOf("uploadImage" to false, "new_item" to item?.let {
-                                        Item.toJSON(
-                                            it
-                                        ).toString()
+                                        Item.toJSON(it).toString()
                                     })
 
                                 if (fromList!!) {
                                     val bundle =
                                         bundleOf("uploadImage" to false, "edited_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_itemList,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
                                 } else {
                                     val bundle =
                                         bundleOf("uploadImage" to false, "new_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
                                 }
                             } else {
                                 view?.let { it1 ->
-                                    Snackbar.make(
-                                        it1,
-                                        getString(R.string.errorConnection),
-                                        Snackbar.LENGTH_SHORT
-                                    ).show()
+                                    Snackbar.make(it1, getString(R.string.errorConnection), Snackbar.LENGTH_SHORT).show()
                                 }
 
                                 val bundle =
                                     bundleOf("new_item" to item?.let {
-                                        Item.toJSON(
-                                            it
-                                        ).toString()
+                                        Item.toJSON(it).toString()
                                     })
 
                                 if (fromList!!) {
                                     val bundle =
                                         bundleOf("edited_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_itemList,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
                                 } else {
                                     val bundle =
                                         bundleOf("new_item" to item?.let {
-                                            Item.toJSON(
-                                                it
-                                            ).toString()
+                                            Item.toJSON(it).toString()
                                         },
                                             "old_item" to oldItem?.let {
-                                                Item.toJSON(
-                                                    it
-                                                ).toString()
+                                                Item.toJSON(it).toString()
                                             })
                                     view?.findNavController()
-                                        ?.navigate(
-                                            R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail,
-                                            bundle
-                                        )
+                                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_ItemDetail, bundle)
                                 }
                             }
                         }

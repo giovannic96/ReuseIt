@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
@@ -34,10 +35,7 @@ class ItemDetailsFragmentViewModel : ViewModel() {
                 item.value = Item()
             }
         }
-
-
         return item
-
     }
 
     fun getProfile(): LiveData<Profile>{
@@ -57,7 +55,6 @@ class ItemDetailsFragmentViewModel : ViewModel() {
                 profile.value = Profile()
             }
         }
-
         return profile
     }
 
@@ -69,9 +66,12 @@ class ItemDetailsFragmentViewModel : ViewModel() {
     fun getLoggedProfile(context : Context): DocumentReference {
         val repo = FirebaseRepo.INSTANCE
         val id = repo.getID(context)
-
         return repo.getProfileRef(id)
     }
 
+    fun updateItemSold(buyerID: String): Task<Void> {
+        val repo : FirebaseRepo = FirebaseRepo.INSTANCE
+        return repo.updateItemSold(itemId, buyerID)
+    }
 }
 
