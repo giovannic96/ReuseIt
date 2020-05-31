@@ -45,6 +45,7 @@ import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditItemFragmentViewModel
 import it.polito.mad.mhackeroni.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_item_details.*
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -261,10 +262,13 @@ class ItemEditFragment: Fragment() {
                     location = city
                     item?.lat = position.latitude
                     item?.lng = position.longitude
+
                 } catch (e: java.lang.IllegalStateException) {
                     Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT)
                         .show()
                 }
+
+                Log.d("MMM", location)
 
                 mapViewModel.position.value = null
             }
@@ -842,6 +846,10 @@ class ItemEditFragment: Fragment() {
             adapterSubcat.notifyDataSetChanged()
             edit_itemSubCategory.hint = "\n${value}"
             // edit_itemSubCategory.setSelection(pos)
+        }
+
+        if(isAddingItem && !location.isNullOrEmpty()){
+            edit_itemLocation.setText(location)
         }
 
     }
