@@ -48,6 +48,8 @@
     <string name="image_not_found">Immagine del profilo non trovata</string>
     <string name="item_name">Nome Articolo</string>
     <string name="item_price">Prezzo</string>
+    <string name="item_sold">L\'oggetto è stato venduto</string>
+    <string name="item_sold_error">Errore imprevisto: l\'oggetto NON è stato venduto</string>
     <string name="profile_update">Profilo aggiornato</string>
     <string name="item_update">Articolo aggiornato</string>
     <string name="undo">Annulla</string>
