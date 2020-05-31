@@ -269,8 +269,16 @@ class ItemEditFragment: Fragment() {
                     if (edit_location != null)
                         edit_location.setText(city)
                     location = city
+
+                    if(item == null)
+                        item = Item()
+
                     item?.lat = position.latitude
                     item?.lng = position.longitude
+
+                    if(isAddingItem) {
+                        item?.let { vm.updateLocalItem(it) }
+                    }
 
                 } catch (e: java.lang.IllegalStateException) {
                     Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT)
