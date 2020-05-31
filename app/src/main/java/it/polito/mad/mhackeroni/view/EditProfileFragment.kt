@@ -211,14 +211,14 @@ class EditProfileFragment : Fragment() {
         mapViewModel.position.observe(viewLifecycleOwner, androidx.lifecycle.Observer { position ->
 
             val geocoder = Geocoder(requireContext(), Locale.getDefault())
-            val addresses: List<Address> = geocoder
+            try{
+                val addresses: List<Address> = geocoder
                 .getFromLocation(
                     position.latitude,
                     position.longitude,
                     1
                 )
 
-            try {
                 val city: String = addresses[0].locality
                 if (edit_location != null)
                     edit_location.setText(city)
@@ -230,6 +230,9 @@ class EditProfileFragment : Fragment() {
 
             } catch (e: java.lang.IllegalStateException){
                 Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT).show()
+            } catch (e: Exception){
+                Snackbar.make(view, getString(R.string.networkerror), Snackbar.LENGTH_SHORT)
+                    .show()
             }
         })
     }

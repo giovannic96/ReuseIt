@@ -1,5 +1,5 @@
 <resources>
-
+    <string name="networkerror">Check the connection and retry.</string>
     <string name="mapHint">Tap a position on the map to change your location</string>
     <string name="channeld_id">reuseitappchannelid</string>
     <string name="locationError">Error, this is not an acceptable location.</string>
