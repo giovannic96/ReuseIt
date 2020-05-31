@@ -3,9 +3,11 @@ package it.polito.mad.mhackeroni.view
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -548,9 +550,20 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                                 ListAdapter(
                                     requireContext(),
                                     android.R.layout.simple_list_item_1,
-                                    interestedUsers.map { it.first }
-                                )
+                                    interestedUsers.map { it.first },
+                                    object : ListAdapter.ListAdapterListener {
+                                        override fun sellItemViewOnClick(nicknameBuyer: String) {
 
+                                            // update item -> set buyer and state
+                                            vm.updateItemSold(nicknameBuyer).addOnCompleteListener {
+                                                if (it.isSuccessful) {
+                                                    Log.d("KKK", "SUCCESS")
+                                                } else
+                                                    Log.d("KKK", "FAILURE")
+                                            }
+                                        }
+                                    }
+                                )
                             interested.adapter = arrayAdapter
                             interested.visibility = View.VISIBLE
                         }

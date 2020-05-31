@@ -12,22 +12,18 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.view.ItemDetailsFragment
+import java.lang.ref.WeakReference
 
-class ListAdapter<T>(
-    context: Context?, textViewResourceId: Int,
-    objects: List<String?>?
-) :
-    ArrayAdapter<String?>(context!!, textViewResourceId, objects!!) {
-    override fun getView(
-        position: Int,
-        convertView: View?,
-        parent: ViewGroup
-    ): View {
+class ListAdapter<T>(context: Context?, textViewResourceId: Int, objects: List<String?>?, private val listener: ListAdapterListener) :
+        ArrayAdapter<String?>(context!!, textViewResourceId, objects!!) {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         convertView = inflater.inflate(R.layout.interested_buyer, parent, false)
 
+        val listenerRef: WeakReference<ListAdapterListener>? = WeakReference(listener)
         val nickname: TextView = convertView!!.findViewById(R.id.buyer_nickname)
         val sellButton: Button = convertView!!.findViewById(R.id.interested_sellButton)
         val p = getItem(position)
@@ -47,11 +43,9 @@ class ListAdapter<T>(
 
             // Set a positive button and its click listener on alert dialog
             builder.setPositiveButton(R.string.yes){dialog, which ->
-                //cancellare le dialog
-                //settare venduto all'item
-                //settare buyer
-                Snackbar.make(convertView, "$messageSold ${nickname.text}! (DA IMPLEMENTARE)", Snackbar.LENGTH_SHORT).show()
 
+                listenerRef?.get()?.sellItemViewOnClick(nickname.text.toString())
+                Snackbar.make(convertView, "$messageSold ${nickname.text}! (DA IMPLEMENTARE)", Snackbar.LENGTH_SHORT).show()
             }
 
             builder.setNegativeButton(R.string.no){dialog,which ->
@@ -64,8 +58,10 @@ class ListAdapter<T>(
             // Display the alert dialog on app interface
             dialog.show()
         }
-
-
         return convertView
+    }
+
+    interface ListAdapterListener {
+        fun sellItemViewOnClick(nickname: String) //listener for sell button
     }
 }
