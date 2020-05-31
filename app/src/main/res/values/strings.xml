@@ -32,6 +32,7 @@
     <string name="itemExpire">This item will expire on</string>
     <string name="notSpecified">Not specified</string>
     <string name="save">Save</string>
+    <string name="actions">Actions</string>
     <string name="picFromGallery">Select from gallery</string>
     <string name="picFromCamera">Take from camera</string>
     <string name="photo">Photo</string>
@@ -85,7 +86,7 @@
     <string name="error_data">Please, fill all the fields</string>
     <string name="required_field">This field is required</string>
     <string name="sold">Mark as sold</string>
-    <string name="block">Block ads</string>
+    <string name="block">Block advertisement</string>
     <string name="available">Mark as available</string>
     <string name="itemSellerLabel">Sold by</string>
     <string name="defaultSeller">Unknown</string>

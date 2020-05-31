@@ -33,6 +33,7 @@
     <string name="itemExpire">Questo articolo scadrà il</string>
     <string name="notSpecified">Non specificata</string>
     <string name="save">Salva</string>
+    <string name="actions">Azioni</string>
     <string name="picFromGallery">Scegli dalla galleria</string>
     <string name="picFromCamera">Scatta una foto</string>
     <string name="photo">Foto</string>
