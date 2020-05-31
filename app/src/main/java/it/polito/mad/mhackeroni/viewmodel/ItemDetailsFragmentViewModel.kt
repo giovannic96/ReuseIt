@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.QuerySnapshot
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
@@ -69,9 +70,22 @@ class ItemDetailsFragmentViewModel : ViewModel() {
         return repo.getProfileRef(id)
     }
 
-    fun updateItemSold(buyerID: String): Task<Void> {
+    fun updateItemSold(nicknameBuyer: String): Task<QuerySnapshot> {
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-        return repo.updateItemSold(itemId, buyerID)
+
+        // first get buyer id from its nickname, then update item
+        return repo.getBuyerByNickname(nicknameBuyer).addOnCompleteListener {
+            if (it.isSuccessful) {
+                if (!it.result?.isEmpty!!) {
+                    var idDoc: String = ""
+                    for (document in it.result!!) {
+                        idDoc = document.id
+                        break
+                    }
+                    repo.updateItemSold(itemId, idDoc)
+                }
+            }
+        }
     }
 }
 

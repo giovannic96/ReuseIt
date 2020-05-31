@@ -184,8 +184,13 @@ import it.polito.mad.mhackeroni.model.Profile
             .whereEqualTo("user", uid)
     }
 
-    fun getProfileRef(uid: String): DocumentReference{
+    fun getProfileRef(uid: String): DocumentReference {
         return  db.collection("users").document(uid)
+    }
+
+    fun getBuyerByNickname(nickname : String) : Task<QuerySnapshot> {
+        return db.collection("users")
+            .whereEqualTo("nickname", nickname).get()
     }
 
     fun updateItem(id : String, item : Item, uploadImage : Boolean = true): Task<Void> {
@@ -231,11 +236,15 @@ import it.polito.mad.mhackeroni.model.Profile
             }
     }
 
-    fun updateItemSold(itemId : String, buyerId : String, state : String = "SOLD"): Task<Void> {
+    fun updateItemSold(itemId : String, buyerId : String): Task<Void> {
         return db.collection("items")
             .document(itemId)
             .update("buyer", buyerId).addOnCompleteListener {
-
+                if (it.isSuccessful) {
+                    db.collection("items")
+                        .document(itemId)
+                        .update("state", "SOLD")
+                }
             }
     }
 

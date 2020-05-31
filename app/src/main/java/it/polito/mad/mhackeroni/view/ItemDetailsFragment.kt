@@ -554,12 +554,8 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                                     object : ListAdapter.ListAdapterListener {
                                         override fun sellItemViewOnClick(nicknameBuyer: String) {
 
-                                            // get buyer id from its nickname
-                                            val id: String = "" //TODO
-
                                             // update item -> set buyer and state
-                                            vm.updateItemSold(id).addOnCompleteListener {
-
+                                            vm.updateItemSold(nicknameBuyer).addOnCompleteListener {
                                                 if (it.isSuccessful) {
                                                     Log.d("KKK", "SUCCESS")
                                                 } else
