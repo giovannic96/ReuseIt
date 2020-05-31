@@ -145,6 +145,11 @@ class OnSaleListFragment: Fragment() {
         }
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
+
+            it.forEach {
+                item -> Log.d("MMM", item.category)
+            }
+
             myAdapter.reload(it)
             updateLayoutManager(it)
         })

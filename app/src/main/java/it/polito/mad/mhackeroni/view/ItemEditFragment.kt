@@ -45,6 +45,7 @@ import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditItemFragmentViewModel
 import it.polito.mad.mhackeroni.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_item_details.*
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -161,7 +162,7 @@ class ItemEditFragment: Fragment() {
                 ))
 
                 radio_available.isChecked = true
-                radio_sold.isChecked = false
+                 //radio_sold.isChecked = false
                 radio_block.isChecked = false
 
                 try {
@@ -183,6 +184,12 @@ class ItemEditFragment: Fragment() {
         } else {
             vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 var itemData = it
+
+                if(itemData.state == Item.ItemState.SOLD){
+                    edit_state.visibility = View.GONE
+                } else {
+                    edit_state.visibility = View.VISIBLE
+                }
 
                 if(vm.getLocalItem() != null){
                     itemData = vm.getLocalItem()
@@ -208,18 +215,20 @@ class ItemEditFragment: Fragment() {
 
                     if(state == "AVAILABLE"){
                         radio_available.isChecked = true
-                        radio_sold.isChecked = false
+                        // radio_sold.isChecked = false
                         radio_block.isChecked = false
                     }
+                    /*
                     else if(state == "SOLD"){
                         radio_available.isChecked = false
-                        radio_sold.isChecked = true
+                        // radio_sold.isChecked = true
                         radio_block.isChecked = false
                     }
+                     */
                     else if(state == "BLOCKED"){
                         isBlocked = true
                         radio_available.isChecked = false
-                        radio_sold.isChecked = false
+                        // radio_sold.isChecked = false
                         radio_block.isChecked = true
                     }
 
@@ -247,24 +256,31 @@ class ItemEditFragment: Fragment() {
 
             if(position != null) {
                 val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                val addresses: List<Address> = geocoder
-                    .getFromLocation(
-                        position.latitude,
-                        position.longitude,
-                        1
-                    )
 
-                try {
+                try{
+                    val addresses: List<Address> = geocoder
+                        .getFromLocation(
+                            position.latitude,
+                            position.longitude,
+                            1
+                        )
+
                     val city: String = addresses[0].locality
                     if (edit_location != null)
                         edit_location.setText(city)
                     location = city
                     item?.lat = position.latitude
                     item?.lng = position.longitude
+
                 } catch (e: java.lang.IllegalStateException) {
                     Snackbar.make(view, getString(R.string.locationError), Snackbar.LENGTH_SHORT)
                         .show()
+                } catch (e: Exception){
+                    Snackbar.make(view, getString(R.string.networkerror), Snackbar.LENGTH_SHORT)
+                        .show()
                 }
+
+                Log.d("MMM", location)
 
                 mapViewModel.position.value = null
             }
@@ -325,10 +341,12 @@ class ItemEditFragment: Fragment() {
                     }
                     state = Item.ItemState.BLOCKED
                 }
+                /*
                 R.id.radio_sold -> {
                     state = Item.ItemState.SOLD
                     isBlocked = false
                 }
+                 */
             }
         }
 
@@ -842,6 +860,10 @@ class ItemEditFragment: Fragment() {
             adapterSubcat.notifyDataSetChanged()
             edit_itemSubCategory.hint = "\n${value}"
             // edit_itemSubCategory.setSelection(pos)
+        }
+
+        if(isAddingItem && !location.isNullOrEmpty()){
+            edit_itemLocation.setText(location)
         }
 
     }

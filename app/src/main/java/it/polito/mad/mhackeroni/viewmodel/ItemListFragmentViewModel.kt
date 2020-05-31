@@ -23,7 +23,7 @@ class ItemListFragmentViewModel : ViewModel() {
             for (doc in value!!) {
                 var queryItems = doc.toObject(Item::class.java)
                 queryItems.id = doc.id
-                itemList.add(queryItems)
+                itemList.add(Item.localize(queryItems))
             }
             items.value = itemList
         })
