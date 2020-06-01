@@ -657,7 +657,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                                 ListAdapter(
                                     requireContext(),
                                     android.R.layout.simple_list_item_1,
-                                    interestedUsers.map { it.first },
+                                    interestedUsers.map { it.second },
                                     object : ListAdapter.ListAdapterListener {
                                         override fun sellItemViewOnClick(nicknameBuyer: String) {
 

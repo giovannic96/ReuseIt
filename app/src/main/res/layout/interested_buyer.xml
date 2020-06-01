@@ -35,8 +35,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/star_image"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:contentDescription="image"
         android:src="@drawable/ic_star"
         android:layout_alignParentBottom="true"
@@ -47,14 +47,14 @@
 
     <TextView
         android:id="@+id/buyer_rating"
-        android:layout_width="30dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/star_image"
         android:gravity="center"
-        android:text="4.5"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="0.0 (0)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#040404"
         android:typeface="sans"
         android:textAlignment="textEnd"

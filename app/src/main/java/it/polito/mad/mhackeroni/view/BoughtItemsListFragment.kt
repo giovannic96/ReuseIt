@@ -171,7 +171,7 @@ class BoughtItemsListFragment: Fragment() {
                                 }
                             }
 
-                            FirebaseRepo.INSTANCE.insertFeedback(item, true)
+                            FirebaseRepo.INSTANCE.insertFeedback(item, true, newRating)
                             view?.let { it1 ->
                                 Snackbar.make(
                                     it1,
