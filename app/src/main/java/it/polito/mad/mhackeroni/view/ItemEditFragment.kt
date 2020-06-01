@@ -136,8 +136,6 @@ class ItemEditFragment: Fragment() {
             item =
                 Item.fromStringJSON(itemJSON)
 
-            Log.d("MMM", itemJSON)
-
             oldItem =
                 Item.fromStringJSON(itemJSON)
             currentItemPhotoPath = item?.image.toString()
@@ -154,17 +152,13 @@ class ItemEditFragment: Fragment() {
             var itemData = vm.getLocalItem()
 
             if(itemData != null){
-                edit_itemTitle.setText(itemData.name ?: resources.getString(R.string.defaultTitle))
+                edit_itemTitle.setText(itemData.name)
                 edit_itemPrice.setText(
                     itemData.price.toString()
                 )
-                edit_itemDesc.setText(itemData.desc ?: resources.getString(R.string.defaultDesc))
-                edit_itemExpiryDate.setText(itemData.expiryDate ?: resources.getString(
-                    R.string.defaultExpire
-                ))
-                edit_itemLocation.setText(itemData.location ?: resources.getString(
-                    R.string.defaultLocation
-                ))
+                edit_itemDesc.setText(itemData.desc)
+                edit_itemExpiryDate.setText(itemData.expiryDate)
+                edit_itemLocation.setText(itemData.location)
 
                 radio_available.isChecked = true
                  //radio_sold.isChecked = false
@@ -206,14 +200,12 @@ class ItemEditFragment: Fragment() {
                 }
 
                 if(itemData != null){
-                    edit_itemTitle.setText(itemData.name ?: resources.getString(R.string.defaultTitle))
+                    edit_itemTitle.setText(itemData.name)
                     edit_itemPrice.setText(
                         itemData.price.toString()
                     )
-                    edit_itemDesc.setText(itemData.desc ?: resources.getString(R.string.defaultDesc))
-                    edit_itemExpiryDate.setText(itemData.expiryDate ?: resources.getString(
-                        R.string.defaultExpire
-                    ))
+                    edit_itemDesc.setText(itemData.desc)
+                    edit_itemExpiryDate.setText(itemData.expiryDate)
 
                     if(location.isNullOrEmpty())
                         edit_itemLocation.setText(itemData.location)
@@ -301,15 +293,14 @@ class ItemEditFragment: Fragment() {
                         .show()
                 }
 
-                Log.d("MMM", location)
 
                 mapViewModel.position.value = null
             }
         })
 
         edit_itemLocation.setOnClickListener {
-            view?.findNavController()
-                ?.navigate(R.id.action_nav_ItemDetailEdit_to_mapFragment)
+            view.findNavController()
+                .navigate(R.id.action_nav_ItemDetailEdit_to_mapFragment)
         }
 
         edit_state.setOnCheckedChangeListener { _, checkedId ->
@@ -398,8 +389,6 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
-
-                Log.d("MMM","${item?.name} Lat: ${item?.lat} - lng: ${item?.lng}")
 
                 if(isAddingItem){
                     item = Item(
@@ -496,15 +485,16 @@ class ItemEditFragment: Fragment() {
                     val fromList = arguments?.getBoolean("fromList", false)
                     vm.updateLocalItem(item!!)
 
-                    Log.d("MAG", item?.image!!)
-
                     if(imageChanged) {
                         vm.updateItem(requireContext()).addOnCompleteListener {
                             if (it.isSuccessful) {
+                                /*
                                 val bundle =
                                     bundleOf("new_item" to item?.let {
                                         Item.toJSON(it).toString()
                                     })
+
+                                 */
 
                                 if (fromList!!) {
                                     val bundle =
@@ -933,17 +923,11 @@ class ItemEditFragment: Fragment() {
 
                 picker.addOnCancelListener {
                     pickerShowing = false
-                    Log.d("DatePicker Activity", "Dialog was cancelled")
                 }
                 picker.addOnNegativeButtonClickListener {
                     pickerShowing = false
-                    Log.d("DatePicker Activity", "Dialog Negative Button was clicked")
                 }
                 picker.addOnPositiveButtonClickListener {
-                    Log.d(
-                        "DatePicker Activity",
-                        "Date String = ${picker.headerText}:: Date epoch value = $it"
-                    )
                     edit_itemExpiryDate.setText(formatDate(it))
                     pickerShowing = false
                 }

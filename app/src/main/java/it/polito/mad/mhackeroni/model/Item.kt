@@ -46,7 +46,7 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
 
             try{
                 val lat = jsonObject.getDouble("lat")
-                val lng = jsonObject.getDouble("lat")
+                val lng = jsonObject.getDouble("lng")
                 item.lat = lat
                 item.lng = lng
             } catch (e: Exception){
