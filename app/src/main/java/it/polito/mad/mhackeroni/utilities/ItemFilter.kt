@@ -5,7 +5,7 @@ import java.io.Serializable
 
 class ItemFilter(){
     var name :String = ""
-    var price_min:Double = 0.0
+    var price_min:Double = -1.0
     var price_max : Double = 9999.0
     var category:MutableList<String> = mutableListOf()
     var subcategory: MutableList<String> = mutableListOf()
