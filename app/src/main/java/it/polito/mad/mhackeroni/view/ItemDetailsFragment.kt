@@ -2,6 +2,7 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
@@ -33,6 +35,7 @@ import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
 import java.util.logging.Level
 import java.util.logging.Logger
+
 
 class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
     var price: Double? = null
@@ -203,11 +206,11 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
 
                     if(pPos != null && !canModify){
 
-
                         googleMap!!.addMarker(
                             MarkerOptions()
                                 .position(pPos!!)
                                 .title(getString(R.string.yourPosition))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                         )
 
                         googleMap!!.addPolyline(
