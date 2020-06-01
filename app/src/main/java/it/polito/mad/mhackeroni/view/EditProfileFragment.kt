@@ -246,24 +246,28 @@ class EditProfileFragment : Fragment() {
             profile =
                 profile?.totRating?.let {
                     profile?.numRating?.let { it1 ->
-                        Profile(
-                            edit_fullname.text.toString(), edit_nickname.text.toString(),
-                            edit_mail.text.toString(), edit_location.text.toString(),
-                            currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString(),
-                            it, it1
-                        )
+                        profile?.feedbacks?.let { it2 ->
+                            Profile(
+                                edit_fullname.text.toString(), edit_nickname.text.toString(),
+                                edit_mail.text.toString(), edit_location.text.toString(),
+                                currentPhotoPath, edit_bio.text.toString(), edit_phoneNumber.text.toString(),
+                                it, it1, it2
+                            )
+                        }
                     }
                 }
         else
             profile =
                 profile?.totRating?.let {
                     profile?.numRating?.let { it1 ->
-                        Profile(
-                            edit_fullname.text.toString(), edit_nickname.text.toString(),
-                            edit_mail.text.toString(), edit_location.text.toString(),
-                            profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString(),
-                            it, it1
-                        )
+                        profile?.feedbacks?.let { it2 ->
+                            Profile(
+                                edit_fullname.text.toString(), edit_nickname.text.toString(),
+                                edit_mail.text.toString(), edit_location.text.toString(),
+                                profile?.image, edit_bio.text.toString(), edit_phoneNumber.text.toString(),
+                                it, it1, it2
+                            )
+                        }
                     }
                 }
 
@@ -309,36 +313,40 @@ class EditProfileFragment : Fragment() {
                 if(::currentPhotoPath.isInitialized) {
                     profile = profile?.totRating?.let {
                         profile?.numRating?.let { it1 ->
-                            Profile(
-                                edit_fullname.text.toString().trim(),
-                                edit_nickname.text.toString(),
-                                edit_mail.text.toString(),
-                                edit_location.text.toString(),
-                                currentPhotoPath,
-                                edit_bio.text.toString(),
-                                edit_phoneNumber.text.toString(),
-                                it, it1,
-                                lat = lat,
-                                lng = lng
-                            )
+                            profile?.feedbacks?.let { it2 ->
+                                Profile(
+                                    edit_fullname.text.toString().trim(),
+                                    edit_nickname.text.toString(),
+                                    edit_mail.text.toString(),
+                                    edit_location.text.toString(),
+                                    currentPhotoPath,
+                                    edit_bio.text.toString(),
+                                    edit_phoneNumber.text.toString(),
+                                    it, it1, it2,
+                                    lat = lat,
+                                    lng = lng
+                                )
+                            }
                         }
                     }
                     vm.updateProfile(profile!!)
                 }else {
                     profile = profile?.totRating?.let {
                         profile?.numRating?.let { it1 ->
-                            Profile(
-                                edit_fullname.text.toString().trim(),
-                                edit_nickname.text.toString(),
-                                edit_mail.text.toString(),
-                                edit_location.text.toString(),
-                                profile?.image,
-                                edit_bio.text.toString(),
-                                edit_phoneNumber.text.toString(),
-                                it, it1,
-                                lat = lat,
-                                lng = lng
-                            )
+                            profile?.feedbacks?.let { it2 ->
+                                Profile(
+                                    edit_fullname.text.toString().trim(),
+                                    edit_nickname.text.toString(),
+                                    edit_mail.text.toString(),
+                                    edit_location.text.toString(),
+                                    profile?.image,
+                                    edit_bio.text.toString(),
+                                    edit_phoneNumber.text.toString(),
+                                    it, it1, it2,
+                                    lat = lat,
+                                    lng = lng
+                                )
+                            }
                         }
                     }
                     vm.updateProfile(profile!!)

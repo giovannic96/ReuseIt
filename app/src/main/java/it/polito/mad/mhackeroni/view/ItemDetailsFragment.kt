@@ -33,6 +33,13 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
+import kotlinx.android.synthetic.main.fragment_item_details.imageStar1
+import kotlinx.android.synthetic.main.fragment_item_details.imageStar2
+import kotlinx.android.synthetic.main.fragment_item_details.imageStar3
+import kotlinx.android.synthetic.main.fragment_item_details.imageStar4
+import kotlinx.android.synthetic.main.fragment_item_details.imageStar5
+import kotlinx.android.synthetic.main.fragment_item_details.rating
+import kotlinx.android.synthetic.main.fragment_show_profile.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -271,6 +278,102 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                             }
                         }
                     }
+
+                    if(it.numRating == 0.0 || it.totRating == 0.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        rating.text = "(0)"
+                    }
+                    else{
+                        var ratingDiv: Double = it.totRating?.div(it.numRating!!) ?: 0.0
+
+                        if(ratingDiv!=0.0){
+                            val number3digits:Double = Math.round(ratingDiv * 1000.0) / 1000.0
+                            val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
+                            val solution:Double = Math.round(number2digits * 10.0) / 10.0
+                            rating.text = "${solution.toString()} (${it?.numRating!!.toInt()})"
+
+                            if(solution>0.0 && solution<1.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_halfstar)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution == 1.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution>1.0 && solution<2.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_halfstar)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution == 2.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution>2.0 && solution<3.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_halfstar)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution == 3.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution>3.0 && solution<4.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_halfstar)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution == 4.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                            }
+                            else if(solution>4.0 && solution<5.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_halfstar)
+                            }
+                            else if(solution == 5.0){
+                                imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar4.background = resources.getDrawable(R.drawable.ic_star)
+                                imageStar5.background = resources.getDrawable(R.drawable.ic_star)
+                            }
+
+                        }
+                        else{
+                            rating.text = "(0)"
+                        }
+
+                    }
+
                 })
             }
             else{

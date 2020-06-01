@@ -131,6 +131,9 @@
     <string name="noRating">No rating yet</string>
     <string name="leaveFeedback">Leave Feedback</string>
     <string name="feedback_done">Thank you for the feedback!</string>
+    <string name="leaveComment">Leave a comment..</string>
+    <string name="feedback_not_found">You must insert a rating</string>
+    <string name="defaultFeedbacks">Feedbacks</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

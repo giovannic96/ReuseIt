@@ -79,8 +79,13 @@ class BoughtItemAdapter(private var items: MutableList<Item>, private val listen
                 listenerRef?.get()?.itemViewOnClick(item)
             }
 
-            ratingButton.setOnClickListener{
-                listenerRef?.get()?.ratingItemOnClick(item)
+            if(item.hasFeedback){
+                ratingButton.visibility = View.GONE
+            }
+            else{
+                ratingButton.setOnClickListener{
+                    listenerRef?.get()?.ratingItemOnClick(item)
+                }
             }
 
             if(item.image.isNullOrEmpty()) {

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -15,15 +16,14 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.DocumentReference
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.adapters.BoughtItemAdapter
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.viewmodel.BoughtItemsListFragmentViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import org.json.JSONArray
+
 
 class BoughtItemsListFragment: Fragment() {
 
@@ -88,6 +88,8 @@ class BoughtItemsListFragment: Fragment() {
         val cancelBtn = dialog.findViewById<Button>(R.id.feedback_cancel_btn)
         val okBtn = dialog.findViewById<Button>(R.id.feedback_ok_btn)
 
+        val comment = dialog.findViewById<EditText>(R.id.comment)
+
         var newRating: Int = 0
 
         val star1 = dialog.findViewById<ImageView>(R.id.star1)
@@ -138,27 +140,53 @@ class BoughtItemsListFragment: Fragment() {
         }
 
         okBtn.setOnClickListener {
-            val repo = FirebaseRepo.INSTANCE
+            if(newRating!=0) {
+                val repo = FirebaseRepo.INSTANCE
 
-            repo.getProfileRef(item.user).get().addOnCompleteListener {task ->
-                profile.value = Profile()
+                repo.getProfileRef(item.user).get().addOnCompleteListener { task ->
+                    profile.value = Profile()
 
-                if(task.isSuccessful){
-                    if(task.result?.exists()!!){
-                        profile.value = task?.result?.toObject(Profile::class.java)
+                    if (task.isSuccessful) {
+                        if (task.result?.exists()!!) {
+                            profile.value = task?.result?.toObject(Profile::class.java)
 
-                        profile.value?.totRating = profile.value?.totRating?.plus(newRating)!!
-                        profile.value?.numRating = profile.value?.numRating?.plus(1)!!
+                            profile.value?.totRating = profile.value?.totRating?.plus(newRating)!!
+                            profile.value?.numRating = profile.value?.numRating?.plus(1)!!
 
-                        FirebaseRepo.INSTANCE.updateRating(item.user, profile.value?.totRating!!, profile.value?.numRating!!)
-                        view?.let { it1 -> Snackbar.make(it1,R.string.feedback_done, Snackbar.LENGTH_SHORT).show() }
-                        dialog.dismiss()
+                            var feedbacks: ArrayList<String>? = profile.value?.feedbacks
 
+                            if (!comment.text.isNullOrEmpty()) {
+                                feedbacks?.add(comment.text.toString())
+                            }
+
+                            FirebaseRepo.INSTANCE.updateRating(
+                                item.user,
+                                profile.value?.totRating!!,
+                                profile.value?.numRating!!
+                            )
+
+                            if (feedbacks != null) {
+                                for (i in feedbacks) {
+                                    FirebaseRepo.INSTANCE.updateFeedback(item.user, i)
+                                }
+                            }
+
+                            FirebaseRepo.INSTANCE.insertFeedback(item, true)
+                            view?.let { it1 ->
+                                Snackbar.make(
+                                    it1,
+                                    R.string.feedback_done,
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                            dialog.dismiss()
+
+                        }
                     }
+
                 }
-
-            }
-
+            }else
+                view?.let { it1 -> Snackbar.make(it1,R.string.feedback_not_found, Snackbar.LENGTH_SHORT).show() }
         }
 
         cancelBtn.setOnClickListener {

@@ -50,18 +50,60 @@
             android:textStyle="bold" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ratingLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:clickable="true">
 
             <ImageView
-                android:id="@+id/imageStar"
+                android:id="@+id/imageStar1"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_star"
+                android:src="@drawable/ic_emptystar"
                 android:foregroundGravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageStar2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_emptystar"
+                android:foregroundGravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageStar1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageStar3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_emptystar"
+                android:foregroundGravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageStar2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageStar4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_emptystar"
+                android:foregroundGravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageStar3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageStar5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_emptystar"
+                android:foregroundGravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageStar4"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -74,7 +116,7 @@
                 android:textColor="#676767"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageStar"
+                app:layout_constraintStart_toEndOf="@+id/imageStar5"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

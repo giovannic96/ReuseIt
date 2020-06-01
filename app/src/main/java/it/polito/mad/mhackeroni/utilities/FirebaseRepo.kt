@@ -16,6 +16,7 @@ import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Profile
+import org.json.JSONArray
 
 // DAO singleton class
  class FirebaseRepo private constructor() {
@@ -72,6 +73,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "phoneNumber" to profile.phoneNumber,
                 "totRating" to profile.totRating,
                 "numRating" to profile.numRating,
+                "feedbacks" to profile.feedbacks,
                 "lat" to profile.lat,
                 "lng" to profile.lng
         ) as Map<String, Any>).addOnCompleteListener{
@@ -115,9 +117,16 @@ import it.polito.mad.mhackeroni.model.Profile
             .document(uid)
             .update(
                 hashMapOf(
-                "totRating" to totRating,
-                "numRating" to numRating
-            ) as Map<String, Any>)
+                    "totRating" to totRating,
+                    "numRating" to numRating
+                ) as Map<String, Any>
+            )
+    }
+
+    fun updateFeedback(uid: String, feedback: String): Task<Void>{
+        return db.collection("users")
+            .document(uid)
+            .update("feedbacks", FieldValue.arrayUnion(feedback))
     }
 
     fun insertItem(item: Item): Task<DocumentReference> {
@@ -233,6 +242,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "user" to item.user,
                 "state" to item.state,
                 "buyer" to item.buyer,
+                "hasFeedback" to item.hasFeedback,
                 "lat" to item.lat,
                 "lng" to item.lng
             ) as Map<String, Any>).addOnCompleteListener{
@@ -284,6 +294,15 @@ import it.polito.mad.mhackeroni.model.Profile
                     "seller" to item.user,
                     "itemState" to item.state
             ))
+    }
+
+    fun insertFeedback(item: Item, hasFeedback: Boolean): Task<Void> {
+        return db.collection("items")
+            .document(item.id)
+            .update(
+                hashMapOf(
+                    "hasFeedback" to hasFeedback
+                ) as Map<String, Any>)
     }
 
     fun removeFavorite(docId: String): Task<Void> {

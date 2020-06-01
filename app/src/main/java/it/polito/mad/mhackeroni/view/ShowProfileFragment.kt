@@ -1,9 +1,12 @@
 package it.polito.mad.mhackeroni.view
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,12 +21,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import it.polito.mad.mhackeroni.model.Profile
-import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
+import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_show_profile.*
-import kotlinx.android.synthetic.main.interested_buyer.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -110,16 +112,96 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
             }
 
             if(it?.numRating == 0.0 || it?.totRating == 0.0){
-                imageStar.visibility = View.GONE
-                rating.text = resources.getString(R.string.noRating)
+                imageStar1.background = resources.getDrawable(R.drawable.ic_emptystar)
+                imageStar2.background = resources.getDrawable(R.drawable.ic_emptystar)
+                imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                rating.text = "(0)"
             }
             else{
                 var ratingDiv: Double = it?.totRating?.div(it?.numRating!!) ?: 0.0
+
                 if(ratingDiv!=0.0){
-                    rating.text = "${ratingDiv.toString()} (${it?.numRating!!.toInt()})"
+                    val number3digits:Double = Math.round(ratingDiv * 1000.0) / 1000.0
+                    val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
+                    val solution:Double = Math.round(number2digits * 10.0) / 10.0
+                    rating.text = "${solution.toString()} (${it?.numRating!!.toInt()})"
+
+                    if(solution>0.0 && solution<1.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_halfstar)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution == 1.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution>1.0 && solution<2.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_halfstar)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution == 2.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution>2.0 && solution<3.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_halfstar)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution == 3.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_emptystar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution>3.0 && solution<4.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_halfstar)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution == 4.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_emptystar)
+                    }
+                    else if(solution>4.0 && solution<5.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_halfstar)
+                    }
+                    else if(solution == 5.0){
+                        imageStar1.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar2.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar3.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar4.background = resources.getDrawable(R.drawable.ic_star)
+                        imageStar5.background = resources.getDrawable(R.drawable.ic_star)
+                    }
+
                 }
                 else{
-                    rating.text = resources.getString(R.string.noRating)
+                    rating.text = "(0)"
                 }
 
             }
@@ -167,6 +249,15 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
                     false
                 }
                 else -> true
+            }
+        }
+
+        ratingLayout.setOnClickListener {
+            if(profile.numRating!=0.0) {
+                showCommentsDialog(profile)
+            }
+            else{
+                Snackbar.make(view,R.string.noRating, Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -281,5 +372,34 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap?) {
         googleMap = map
+    }
+
+    private fun showCommentsDialog(profile: Profile) {
+        val dialog = Dialog(requireActivity())
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.comments_dialog_box)
+
+        dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+
+        var commentList: ListView = dialog.findViewById<ListView>(R.id.commentList)
+        var comments: ArrayList<String> = profile.feedbacks
+        var commentsMarks: ArrayList<String> = ArrayList()
+        for(c in comments){
+            commentsMarks.add("\"$c\"")
+        }
+
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            android.R.id.text1,
+            commentsMarks
+        )
+        commentList.adapter = adapter
+        commentList
+        adapter.notifyDataSetChanged()
+
+        dialog.show()
     }
 }
