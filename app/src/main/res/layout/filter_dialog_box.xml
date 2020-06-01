@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/defaultPrice"/>
@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:text="@string/radio1"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="8dp"/>
                 <RadioButton android:id="@+id/radioPrice2"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -70,20 +70,20 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/defaultCondition"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginTop="20dp">
+                android:layout_height="60dp"
+                android:layout_marginTop="4dp">
 
                 <CheckBox
                     android:id="@+id/filter_cond_new"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:button="@null"
                     android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
                     android:text="@string/cond_new"
@@ -97,7 +97,7 @@
                 <CheckBox
                     android:id="@+id/filter_cond_as_new"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:button="@null"
                     android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
                     android:text="@string/cond_as_new"
@@ -106,13 +106,12 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/filter_cond_opt"
                     app:layout_constraintStart_toEndOf="@+id/filter_cond_new"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <CheckBox
                     android:id="@+id/filter_cond_opt"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:button="@null"
                     android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
                     android:text="@string/cond_opt"
@@ -126,7 +125,7 @@
                 <CheckBox
                     android:id="@+id/filter_cond_good"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:button="@null"
                     android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
                     android:text="@string/cond_good"
@@ -140,7 +139,7 @@
                 <CheckBox
                     android:id="@+id/filter_cond_acc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:button="@null"
                     android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
                     android:text="@string/cond_acc"
@@ -157,9 +156,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/filter_box_location"
