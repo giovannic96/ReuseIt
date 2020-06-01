@@ -1,88 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detailProfile_scrollview"
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
+        <LinearLayout
+            android:id="@+id/upper_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_gravity="center"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="5dp"
-            android:foregroundGravity="center"
-            android:padding="10dp">
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.1"
+                android:layout_gravity="center_vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="40dp">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageProfile"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/image_background"
                 android:contentDescription="@string/photo"
                 android:src="@drawable/ic_avatar" />
-
 
             <ProgressBar
                 android:id="@+id/profile_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-180dp"
+                android:layout_marginStart="-240dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="25dp"
                 android:layout_gravity="center"
                 android:visibility="invisible" />
+            </FrameLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginLeft="250dp">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/fullname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="19dp"
                     android:layout_marginTop="20dp"
                     android:hint="@string/defaultFullName"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textSize="26sp"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/ratingLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     android:clickable="true"
-                    app:layout_constraintBottom_toTopOf="@+id/bio"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/fullname">
 
                     <ImageView
@@ -142,108 +144,117 @@
                         android:hint="@string/defaultRating"
                         android:textAlignment="center"
                         android:textSize="14sp"
-                        android:textColor="#676767"
+                        android:textColor="@color/quantum_white_100"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageStar5"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+            </LinearLayout>
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:padding="30dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view_bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:cardCornerRadius="10dp">
+
+                <ScrollView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    android:fillViewport="true">
                 <TextView
                     android:id="@+id/bio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
                     android:hint="@string/defaultBio"
-                    android:lines="3"
+                    android:layout_marginTop="20dp"
+                    android:scrollbars="vertical"
                     android:textAlignment="center"
+                    android:paddingBottom="40dp"
+                    android:layout_marginBottom="20dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="20sp"
-                    android:textStyle="italic"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:textStyle="italic" />
+                </ScrollView>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+            </RelativeLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </FrameLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/frameLayout"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="25dp"
-            android:background="?android:attr/listDivider" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_below="@+id/upper_layout"
+            android:layout_marginStart="60dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="25dp"
-            android:drawableEnd="@drawable/ic_person_solid"
+            android:gravity="fill_vertical"
+            android:textStyle="bold"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_person_blue"
             android:hint="@string/defaultNickname"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="26sp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
             android:id="@+id/mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/nickname"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="60dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="25dp"
-            android:drawableEnd="@drawable/ic_email"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_email_blue"
+            android:gravity="fill_vertical"
+            android:textStyle="bold"
             android:hint="@string/defaultEmail"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="26sp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
         <TextView
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/mail"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="60dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="25dp"
-            android:drawableEnd="@drawable/ic_phone"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_phone_blue"
+            android:gravity="fill_vertical"
+            android:textStyle="bold"
             android:hint="-"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="26sp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
         <TextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/phone_number"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="60dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="4dp"
-            android:drawableEnd="@drawable/ic_location"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_location_blue"
+            android:gravity="fill_vertical"
+            android:textStyle="bold"
             android:hint="@string/defaultLocation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="26sp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -271,5 +282,6 @@
         </androidx.cardview.widget.CardView>
 
 
-    </RelativeLayout>
+    </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </ScrollView>
