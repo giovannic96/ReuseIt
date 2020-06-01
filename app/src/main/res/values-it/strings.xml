@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yourPosition">La tua posizione</string>
+    <string name="itemPosition">L\'oggetto si trova qui</string>
     <string name="networkerror">Controlla la connessione e riprova.</string>
     <string name="mapHint">Clicca un punto sulla mappa per aggiornare la tua posizione</string>
     <string name="channeld_id">reuseitappchannelid</string>

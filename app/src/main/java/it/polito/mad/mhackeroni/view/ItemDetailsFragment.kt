@@ -1,13 +1,13 @@
 package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.*
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +32,9 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
-import kotlinx.android.synthetic.main.fragment_show_profile.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.net.URL
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -190,6 +192,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
             if(it.lat != null && it.lng != null){
                 val pos = LatLng(it.lat!!, it.lng!!)
                 var pPos: LatLng? = null
+                var image : Bitmap? = null
 
                 vm.getLoggedProfile(requireContext()).get().addOnCompleteListener {
                     if(it.isSuccessful && it.result?.exists()!!){
@@ -203,9 +206,12 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                     }
 
                     if(pPos != null && !canModify){
+
+
                         googleMap!!.addMarker(
                             MarkerOptions()
                                 .position(pPos!!)
+                                .title(getString(R.string.yourPosition))
                         )
 
                         googleMap!!.addPolyline(
@@ -221,6 +227,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                     googleMap!!.addMarker(
                         MarkerOptions()
                             .position(pos)
+                            .title(getString(R.string.itemPosition))
                     )
 
                     googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
