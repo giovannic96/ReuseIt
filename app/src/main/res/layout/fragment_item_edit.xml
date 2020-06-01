@@ -18,47 +18,54 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
 
-            <ImageView
-                android:id="@+id/edit_itemImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:contentDescription="@string/photo"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_box"/>
-
-            <ImageView
+            <ImageButton
                 android:id="@+id/edit_itemCamera"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
                 android:clickable="true"
                 android:contentDescription="@string/photo"
+                android:background="@drawable/btn_background"
                 android:src="@drawable/ic_camera"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_itemImage"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/edit_itemImage"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/edit_itemImage"
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:contentDescription="@string/photo"
+                android:src="@drawable/ic_box"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_rotate_imageItem"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/edit_itemCamera"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
                 android:id="@+id/btn_rotate_imageItem"
-                android:layout_width="63dp"
-                android:layout_height="63dp"
-                android:layout_marginTop="125dp"
-                android:layout_marginEnd="25dp"
-                android:background="@drawable/ic_camera_background"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:background="@drawable/btn_background"
                 android:src="@drawable/ic_rotate"
-                app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="13dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edit_itemImage" />
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/edit_itemImage"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

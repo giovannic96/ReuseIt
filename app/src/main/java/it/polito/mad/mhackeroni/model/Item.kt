@@ -80,7 +80,6 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                     obj.put("image", item.image)
 
             } catch (e: JSONException) {
-                Log.d("MMM", "ex: ${e}")
                 e.printStackTrace()
             } finally {
                 return obj
@@ -177,19 +176,12 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 }
             } else { // Force to Italian
 
-                Log.d("MMM","Saving; ${item.name} to db")
-
                 if(lang == "italiano"){
-                    Log.d("MMM", "Already italian")
                     return localizedItem
                 } else {
                     localizedItem.subcategory = subCatMapIt.get(item.subcategory) ?: item.subcategory
                     localizedItem.category = catMapIt.get(item.category) ?: item.category
                     localizedItem.condition = condMapIt.get(item.condition) ?: item.condition
-
-                    Log.d("MMM", "New cat: ${localizedItem.category}")
-                    Log.d("MMM", "New subcat: ${localizedItem.subcategory}")
-                    Log.d("MMM", "New cond: ${localizedItem.condition}")
 
                     return localizedItem
                 }

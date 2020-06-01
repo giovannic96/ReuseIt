@@ -1,4 +1,5 @@
 <resources>
+    <string name="mapfragment">Location</string>
     <string name="yourPosition">Your position</string>
     <string name="itemPosition">The item is here</string>
     <string name="networkerror">Check the connection and retry.</string>

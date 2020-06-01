@@ -2,7 +2,6 @@ package it.polito.mad.mhackeroni.view
 
 import android.app.Dialog
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -32,9 +31,6 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.viewmodel.ItemDetailsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_item_details.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.URL
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -280,6 +276,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
 
             if(canModify){
                 buyers_listview_label.visibility = View.VISIBLE
+                buyers_listview_layout.visibility = View.VISIBLE
 
                 vm.getInterestedUsers(it.id).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                     if(it.isNotEmpty()) {

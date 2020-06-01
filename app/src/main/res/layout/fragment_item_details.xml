@@ -367,9 +367,9 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:id="@+id/buyers_listview_layout"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

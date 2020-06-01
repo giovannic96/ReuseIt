@@ -20,6 +20,7 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -171,12 +172,15 @@ class ItemEditFragment: Fragment() {
 
                 try {
                     if(itemData.image.isNullOrEmpty()){
-                        edit_itemImage.setImageResource(R.drawable.ic_box)
+                        // edit_itemImage.setImageResource(R.drawable.ic_box)
+                        Glide.with(requireContext())
+                            .load(R.drawable.ic_box)
+                            .into(edit_itemImage as ImageView)
 
                     } else {
                         Glide.with(requireContext())
                             .load(itemData.image)
-                            .into(edit_itemImage)
+                            .into(edit_itemImage as ImageView)
                     }
                 } catch(ex: IllegalStateException) {
                     logger.log(Level.WARNING, "context not attached", ex)
@@ -240,11 +244,14 @@ class ItemEditFragment: Fragment() {
 
                     try {
                         if(itemData.image.isNullOrEmpty()){
-                            edit_itemImage.setImageResource(R.drawable.ic_box)
+                            // edit_itemImage.setImageResource(R.drawable.ic_box)
+                            Glide.with(requireContext())
+                                .load(R.drawable.ic_box)
+                                .into(edit_itemImage as ImageView)
                         } else {
                             Glide.with(requireContext())
                                 .load(itemData.image)
-                                .into(edit_itemImage)
+                                .into(edit_itemImage as ImageView)
                         }
                     } catch(ex: IllegalStateException) {
                         logger.log(Level.WARNING, "context not attached", ex)
@@ -391,6 +398,8 @@ class ItemEditFragment: Fragment() {
         // Handle menu item selection
         return when (menuItem.itemId) {
             R.id.menu_save -> {
+
+                Log.d("MMM","${item?.name} Lat: ${item?.lat} - lng: ${item?.lng}")
 
                 if(isAddingItem){
                     item = Item(
@@ -866,13 +875,22 @@ class ItemEditFragment: Fragment() {
                 }.toString()
                 File(oldPhoto).delete()
 
-                edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
+                // edit_itemImage.setImageBitmap(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()))
+                Glide.with(requireContext())
+                    .load(currentItemPhotoPath)
+                    .into(edit_itemImage as ImageView)
+
                 rotationCount.value = 0
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
             imageChanged = true
-            edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
+            // edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
+            Glide.with(requireContext())
+                .load(data?.data.toString())
+                .into(edit_itemImage as ImageView)
+
+
             currentItemPhotoPath = data?.data.toString()
             getPermissionOnUri(Uri.parse(currentItemPhotoPath))
             rotationCount.value = 0

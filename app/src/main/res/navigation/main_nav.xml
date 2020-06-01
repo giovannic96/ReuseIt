@@ -155,7 +155,7 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="it.polito.mad.mhackeroni.view.MapFragment"
-        android:label="MapFragment" >
+        android:label="@string/mapfragment" >
         <action
             android:id="@+id/action_mapFragment_to_nav_ItemDetailEdit"
             app:destination="@id/nav_ItemDetailEdit"
