@@ -121,8 +121,11 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun insertItem(item: Item): Task<DocumentReference> {
+
+        val localizedItem = Item.localize(item, true)
+
        return db.collection("items")
-            .add(item)
+            .add(localizedItem)
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     if(!item.image.isNullOrEmpty()){
@@ -212,11 +215,13 @@ import it.polito.mad.mhackeroni.model.Profile
             imageLink = item.image
         }
 
+        val localizedItem = Item.localize(item, true)
+
        return db.collection("items")
             .document(id)
             .update(hashMapOf(
-                "category" to item.category,
-                "condition" to item.condition,
+                "category" to localizedItem.category,
+                "condition" to localizedItem.condition,
                 "desc" to item.desc,
                 "expiryDate" to item.expiryDate,
                 "id" to id,
@@ -224,7 +229,7 @@ import it.polito.mad.mhackeroni.model.Profile
                 "location" to item.location,
                 "name" to item.name,
                 "price" to item.price,
-                "subcategory" to item.subcategory,
+                "subcategory" to localizedItem.subcategory,
                 "user" to item.user,
                 "state" to item.state,
                 "buyer" to item.buyer,

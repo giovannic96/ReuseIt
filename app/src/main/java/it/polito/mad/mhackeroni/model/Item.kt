@@ -2,9 +2,11 @@ package it.polito.mad.mhackeroni.model
 
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import org.intellij.lang.annotations.Language
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
+import java.lang.Exception
 import java.util.*
 
 class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var buyer : String? , var user : String = "null", var state : ItemState = ItemState.AVAILABLE, var lat: Double? = null, var lng: Double? = null) : Serializable {
@@ -29,7 +31,7 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
         }
 
         private fun fromJSON(jsonObject: JSONObject): Item {
-            return Item(
+            val item =  Item(
                 jsonObject.getString("id"),
                 jsonObject.getString("name"),
                 jsonObject.getDouble("price"),
@@ -40,8 +42,19 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 jsonObject.getString("location"),
                 jsonObject.getString("condition"),
                 jsonObject.getString("image"),
-                jsonObject.getString("buyer")
-            )
+                jsonObject.getString("buyer"))
+
+            try{
+                val lat = jsonObject.getDouble("lat")
+                val lng = jsonObject.getDouble("lat")
+                item.lat = lat
+                item.lng = lng
+            } catch (e: Exception){
+                item.lat = null
+                item.lng = null
+            }
+
+            return item
         }
 
         fun toJSON(item: Item): JSONObject {
@@ -57,6 +70,9 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 obj.put("location", item.location)
                 obj.put("condition", item.condition)
                 obj.put("buyer", item.buyer)
+                obj.put("lat", item.lat ?: "")
+                obj.put("lng", item.lng ?: "")
+
 
                 if(item.image.isNullOrEmpty())
                     obj.put("image", "")
@@ -64,23 +80,26 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                     obj.put("image", item.image)
 
             } catch (e: JSONException) {
+                Log.d("MMM", "ex: ${e}")
                 e.printStackTrace()
             } finally {
                 return obj
             }
         }
 
-        fun localize(item : Item) : Item{
+        fun localize(item : Item, toIt : Boolean = false) : Item{
             val localizedItem : Item = item
-            val lang = Locale.getDefault().getDisplayLanguage()
+            val lang = Locale.getDefault().displayLanguage
+
             val catMap = mapOf(
+                "Arti & Mestieri" to "Arts & Crafts",
                 "Sport & attività all'aperto" to "Sports and Outdoors",
-            "Bambini" to "Baby",
-            "Donna" to "Women's fashion",
-            "Uomo" to "Men's fashion",
-            "Elettronica" to "Electonics",
-            "Giochi & Videogiochi" to "Games & Videogames",
-            "Automobilistica" to "Automotive")
+                "Bambini" to "Baby",
+                "Donna" to "Women's fashion",
+                "Uomo" to "Men's fashion",
+                "Elettronica" to "Electronics",
+                "Giochi & Videogiochi" to "Games & Videogames",
+                "Automobilistica" to "Automotive")
 
             val subCatMap = mapOf(
                 "Pittura, Disegno & Accessori" to "Painting, Drawing & Art Supplies",
@@ -136,16 +155,44 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 "Accettabile" to "Acceptable"
             )
 
+            val catMapIt = catMap.entries.associate{(k, v) -> v to k}
+            val subCatMapIt = subCatMap.entries.associate { (k, v) -> v to k }
+            val condMapIt = condMap.entries.associate{(k, v) -> v to k}
 
-            if(!lang.equals(Locale.ITALY)){
-                localizedItem.subcategory = subCatMap.get(item.subcategory) ?: ""
-                localizedItem.category = catMap.get(item.category) ?: ""
-                localizedItem.condition = condMap.get(item.condition) ?: ""
 
-                return localizedItem
-            } else {
-                Log.d("MMM", "Italy")
-                return item
+            if(!toIt) {
+                if (lang != "italiano") {
+                    localizedItem.subcategory = subCatMap.get(item.subcategory) ?: item.subcategory
+                    localizedItem.category = catMap.get(item.category) ?: item.category
+                    localizedItem.condition = condMap.get(item.condition) ?: item.condition
+
+                    return localizedItem
+                } else {
+
+                    localizedItem.subcategory = subCatMapIt.get(item.subcategory) ?: item.subcategory
+                    localizedItem.category = catMapIt.get(item.category) ?: item.category
+                    localizedItem.condition = condMapIt.get(item.condition) ?: item.condition
+
+                    return localizedItem
+                }
+            } else { // Force to Italian
+
+                Log.d("MMM","Saving; ${item.name} to db")
+
+                if(lang == "italiano"){
+                    Log.d("MMM", "Already italian")
+                    return localizedItem
+                } else {
+                    localizedItem.subcategory = subCatMapIt.get(item.subcategory) ?: item.subcategory
+                    localizedItem.category = catMapIt.get(item.category) ?: item.category
+                    localizedItem.condition = condMapIt.get(item.condition) ?: item.condition
+
+                    Log.d("MMM", "New cat: ${localizedItem.category}")
+                    Log.d("MMM", "New subcat: ${localizedItem.subcategory}")
+                    Log.d("MMM", "New cond: ${localizedItem.condition}")
+
+                    return localizedItem
+                }
             }
         }
     }

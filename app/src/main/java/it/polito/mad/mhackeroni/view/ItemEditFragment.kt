@@ -122,6 +122,7 @@ class ItemEditFragment: Fragment() {
                 currentItemPhotoPath = savedItem?.image ?: ""
 
             edit_state.visibility = View.GONE
+            action_layout.visibility = View.GONE
         }
         //EDIT ITEM
         else {
@@ -131,8 +132,11 @@ class ItemEditFragment: Fragment() {
                     it
                 )
             }
-            item=
+            item =
                 Item.fromStringJSON(itemJSON)
+
+            Log.d("MMM", itemJSON)
+
             oldItem =
                 Item.fromStringJSON(itemJSON)
             currentItemPhotoPath = item?.image.toString()
@@ -187,8 +191,10 @@ class ItemEditFragment: Fragment() {
 
                 if(itemData.state == Item.ItemState.SOLD){
                     edit_state.visibility = View.GONE
+                    action_layout.visibility = View.GONE
                 } else {
                     edit_state.visibility = View.VISIBLE
+                    action_layout.visibility = View.VISIBLE
                 }
 
                 if(vm.getLocalItem() != null){
@@ -293,43 +299,6 @@ class ItemEditFragment: Fragment() {
                 mapViewModel.position.value = null
             }
         })
-
-
-        /*
-        item.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if(item.value != null){
-                edit_itemTitle.setText(item.value?.name ?: resources.getString(R.string.defaultTitle))
-                edit_itemPrice.setText(
-                    item.value?.price.toString()
-                )
-                edit_itemDesc.setText(item.value?.desc ?: resources.getString(R.string.defaultDesc))
-                edit_itemExpiryDate.setText(item.value?.expiryDate ?: resources.getString(
-                    R.string.defaultExpire
-                ))
-                edit_itemLocation.setText(item.value?.location ?: resources.getString(
-                    R.string.defaultLocation
-                ))
-
-                try {
-                    if(item.value?.image.isNullOrEmpty()){
-                        edit_itemImage.setImageResource(R.drawable.ic_box)
-
-                    } else {
-                        if(item.value?.image?.let { it1 -> ImageUtils.getBitmap(it1, requireContext()) } == null){
-                            edit_itemImage.setImageResource(R.drawable.ic_box)
-                        } else {
-                            edit_itemImage.setImageBitmap(item.value?.image?.let { it1 ->
-                                ImageUtils.getBitmap(it1, requireContext())
-                            })
-                        }
-                    }
-                } catch (e: Exception) {
-                    Snackbar.make(view,
-                        R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
-                }
-            }
-        })
-         */
 
         edit_itemLocation.setOnClickListener {
             view?.findNavController()

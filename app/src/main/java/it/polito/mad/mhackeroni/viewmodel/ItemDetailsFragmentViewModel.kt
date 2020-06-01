@@ -26,7 +26,7 @@ class ItemDetailsFragmentViewModel : ViewModel() {
             }
 
             if(snapshot != null && snapshot.exists()){
-                item.value = snapshot.toObject(Item::class.java)
+                item.value = snapshot.toObject(Item::class.java)?.let { Item.localize(it) }
                 item.value?.id  = snapshot.id
                 runBlocking {
                     launch { item.value?.user?.let { loadProfile(it)

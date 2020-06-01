@@ -121,7 +121,7 @@
     <string name="chipsBaby">Baby</string>
     <string name="chipsWomen">Women\&#39;s fashion</string>
     <string name="chipsMen">Men\&#39;s fashion</string>
-    <string name="chipsElectronics">Electonics</string>
+    <string name="chipsElectronics">Electronics</string>
     <string name="chipsGames">Games &amp; Videogames</string>
     <string name="chipsAutomotive">Automotive</string>
     <string name="defaultRating">Rating</string>
@@ -134,7 +134,7 @@
         <item>Baby</item>
         <item>Women\&#39;s fashion</item>
         <item>Men\&#39;s fashion</item>
-        <item>Electonics</item>
+        <item>Electronics</item>
         <item>Games &amp; Videogames</item>
         <item>Automotive</item>
     </string-array>
