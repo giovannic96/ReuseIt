@@ -54,8 +54,8 @@
             android:orientation="horizontal">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/star_image"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginLeft="10dp"
         android:contentDescription="image"
         android:src="@drawable/ic_star"
@@ -66,8 +66,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="4.5"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="0.0 (0)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#040404"
         android:typeface="sans"
         android:textAlignment="textEnd"

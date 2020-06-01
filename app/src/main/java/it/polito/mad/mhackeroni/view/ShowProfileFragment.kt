@@ -254,7 +254,11 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
         ratingLayout.setOnClickListener {
             if(profile.numRating!=0.0) {
-                showCommentsDialog(profile)
+                if(profile.feedbacks.size == 0)
+                    Snackbar.make(view,R.string.noComment, Snackbar.LENGTH_SHORT).show()
+                else{
+                    showCommentsDialog(profile)
+                }
             }
             else{
                 Snackbar.make(view,R.string.noRating, Snackbar.LENGTH_SHORT).show()

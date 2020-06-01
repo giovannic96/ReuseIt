@@ -392,42 +392,48 @@ class ItemEditFragment: Fragment() {
 
                 if(isAddingItem){
                     item = item?.hasFeedback?.let {
-                        Item(
-                            "",
-                            edit_itemTitle.text.toString(),
-                            edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
-                            edit_itemDesc.text.toString(),
-                            cat ?: "",
-                            subCat ?: "",
-                            edit_itemExpiryDate.text.toString(),
-                            edit_itemLocation.text.toString(),
-                            cond ?: "",
-                            null,
-                            "",
-                            it,
-                            lat = item?.lat,
-                            lng = item?.lng
-                        )
+                        item?.rating?.let { it1 ->
+                            Item(
+                                "",
+                                edit_itemTitle.text.toString(),
+                                edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                                edit_itemDesc.text.toString(),
+                                cat ?: "",
+                                subCat ?: "",
+                                edit_itemExpiryDate.text.toString(),
+                                edit_itemLocation.text.toString(),
+                                cond ?: "",
+                                null,
+                                "",
+                                it,
+                                it1,
+                                lat = item?.lat,
+                                lng = item?.lng
+                            )
+                        }
                     }
                 } else {
                     item = item?.hasFeedback?.let {
-                        Item(
-                            oldItem?.id ?: "",
-                            edit_itemTitle.text.toString(),
-                            edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
-                            edit_itemDesc.text.toString(),
-                            cat ?: oldItem!!.category,
-                            subCat ?: oldItem!!.subcategory,
-                            edit_itemExpiryDate.text.toString(),
-                            edit_itemLocation.text.toString(),
-                            cond ?: oldItem!!.condition,
-                            null,
-                            "",
-                            it,
-                            state = state,
-                            lat = item?.lat,
-                            lng = item?.lng
-                        )
+                        item?.rating?.let { it1 ->
+                            Item(
+                                oldItem?.id ?: "",
+                                edit_itemTitle.text.toString(),
+                                edit_itemPrice.text.toString().toDoubleOrNull() ?: 0.0,
+                                edit_itemDesc.text.toString(),
+                                cat ?: oldItem!!.category,
+                                subCat ?: oldItem!!.subcategory,
+                                edit_itemExpiryDate.text.toString(),
+                                edit_itemLocation.text.toString(),
+                                cond ?: oldItem!!.condition,
+                                null,
+                                "",
+                                it,
+                                it1,
+                                state = state,
+                                lat = item?.lat,
+                                lng = item?.lng
+                            )
+                        }
                     }
                 }
 
@@ -1016,7 +1022,8 @@ class ItemEditFragment: Fragment() {
                 "",
                 "",
                 "",
-                false
+                false,
+                0
             )
 
 

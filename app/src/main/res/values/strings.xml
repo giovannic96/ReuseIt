@@ -129,6 +129,7 @@
     <string name="chipsAutomotive">Automotive</string>
     <string name="defaultRating">Rating</string>
     <string name="noRating">No rating yet</string>
+    <string name="noComment">No comment yet</string>
     <string name="leaveFeedback">Leave Feedback</string>
     <string name="feedback_done">Thank you for the feedback!</string>
     <string name="leaveComment">Leave a comment..</string>
