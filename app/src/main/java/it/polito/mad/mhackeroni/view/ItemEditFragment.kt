@@ -628,25 +628,6 @@ class ItemEditFragment: Fragment() {
     override fun onResume() {
         super.onResume()
 
-        // Used to solve lazy update issue
-        if(item?.image?.let { ImageUtils.getBitmap(it, requireContext()) } == null){
-            edit_itemImage.setImageResource(R.drawable.ic_box)
-        }
-
-        if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty()){
-
-            if(ImageUtils.getBitmap(currentItemPhotoPath, requireContext()) == null){
-                edit_itemImage.setImageResource(R.drawable.ic_box)
-            } else {
-                edit_itemImage.setImageBitmap(
-                    ImageUtils.getBitmap(
-                        currentItemPhotoPath,
-                        requireContext()
-                    )
-                )
-            }
-        }
-
         val categories = resources.getStringArray(R.array.categories)
         val subcategories = resources.getStringArray(R.array.subcategories)
         val arts = resources.getStringArray(R.array.arts)

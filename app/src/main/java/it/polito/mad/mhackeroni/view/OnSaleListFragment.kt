@@ -145,11 +145,6 @@ class OnSaleListFragment: Fragment() {
         }
 
         vm.getItems().observe(viewLifecycleOwner, Observer {
-
-            it.forEach {
-                item -> Log.d("MMM", item.category)
-            }
-
             myAdapter.reload(it)
             updateLayoutManager(it)
         })
@@ -302,6 +297,33 @@ class OnSaleListFragment: Fragment() {
         val optCheckBox = dialog.findViewById<CheckBox>(R.id.filter_cond_opt)
         val goodCheckBox = dialog.findViewById<CheckBox>(R.id.filter_cond_good)
         val accCheckBox = dialog.findViewById<CheckBox>(R.id.filter_cond_acc)
+
+        if(searchFilter.price_min == 0.0){
+            radioPrice1.isChecked = true
+        } else if(searchFilter.price_min == 20.0){
+            radioPrice2.isChecked = true
+        } else if(searchFilter.price_min == 50.0){
+            radioPrice3.isChecked = true
+        } else if(searchFilter.price_min == 100.0){
+            radioPrice4.isChecked = true
+        } else if(searchFilter.price_min == 250.0){
+            radioPrice5.isChecked = true
+        } else if(searchFilter.price_min == 1000.0){
+            radioPrice6.isChecked = true
+        }
+
+        searchFilter.condition.forEach {
+            when(it){
+                getString(R.string.cond_new) -> newCheckBox.isChecked = true
+                getString(R.string.cond_as_new) -> asNewCheckBox.isChecked = true
+                getString(R.string.cond_opt) -> optCheckBox.isChecked = true
+                getString(R.string.cond_good) -> goodCheckBox.isChecked = true
+                getString(R.string.cond_acc) -> accCheckBox.isChecked = true
+            }
+        }
+
+        locationEditText.setText(searchFilter.location)
+
 
         okBtn.setOnClickListener {
             searchFilter = ItemFilter()
