@@ -135,6 +135,7 @@
     <string name="leaveComment">Leave a comment..</string>
     <string name="feedback_not_found">You must insert a rating</string>
     <string name="defaultFeedbacks">Feedbacks</string>
+    <string name="features">Features</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

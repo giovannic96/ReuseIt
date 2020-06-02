@@ -30,7 +30,6 @@
                 android:layout_height="52dp"
                 android:contentDescription="@string/photo"
                 android:src="@drawable/ic_camera_blue"
-                android:padding="1dp"
                 android:background="@drawable/image_button_border"
                 android:layout_marginStart="60dp"
                 app:layout_constraintBottom_toBottomOf="parent"
