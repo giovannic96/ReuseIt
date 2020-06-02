@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@color/cardview_light_background"
             android:layout_gravity="center_horizontal">
 
             <ImageButton
@@ -28,6 +29,8 @@
                 android:layout_height="52dp"
                 android:contentDescription="@string/photo"
                 android:src="@drawable/ic_camera_blue"
+                android:tint="@color/colorPrimary"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:background="@drawable/image_button_border"
                 android:layout_marginStart="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -60,6 +63,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_rotate_blue"
+                android:tint="@color/colorPrimary"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:background="@drawable/image_button_border"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -70,16 +75,36 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="2dp"
+            android:background="@color/cardview_light_background">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/info">
+            </TextView>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:textAlignment="viewStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_title"
+            app:startIconTint="@color/colorPrimary"
+            app:endIconTint="@color/colorPrimary"
             app:endIconMode="clear_text"
             android:hint="@string/defaultTitle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -106,6 +131,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_description"
+            app:startIconTint="@color/colorPrimary"
+            app:endIconTint="@color/colorPrimary"
             app:endIconMode="clear_text"
             app:counterEnabled="true"
             app:counterMaxLength="280"
@@ -122,7 +149,6 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,6 +159,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_euro_black"
+            app:startIconTint="@color/colorPrimary"
             android:hint="@string/defaultPrice"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -156,6 +183,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_date"
+            app:startIconTint="@color/colorPrimary"
             app:hintAnimationEnabled="false"
             android:hint="@string/defaultExpire"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -165,7 +193,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-
                 android:focusable="true"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -176,11 +203,12 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="16dp"
             android:textAlignment="viewStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_location"
+            app:startIconTint="@color/colorPrimary"
             android:hint="@string/defaultItemLocation"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"  >
 
@@ -194,16 +222,14 @@
                 android:inputType="none"
                 />
         </com.google.android.material.textfield.TextInputLayout>
-
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/features_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
             android:elevation="2dp"
             android:background="@color/cardview_light_background">
 
@@ -225,6 +251,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:startIconDrawable="@drawable/ic_condition"
+                app:startIconTint="@color/colorPrimary"
                 android:hint="@string/defaultCondition"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
@@ -247,6 +274,7 @@
                 android:layout_marginEnd="20dp"
                 android:gravity="center"
                 app:startIconDrawable="@drawable/ic_category"
+                app:startIconTint="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:hint="@string/defaultCategory"
@@ -270,9 +298,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="16dp"
                 android:gravity="center"
                 app:startIconDrawable="@drawable/ic_subcategory"
+                app:startIconTint="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:hint="@string/defaultSubCategory"
@@ -295,9 +324,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:elevation="2dp"
             android:background="@color/cardview_light_background">
@@ -322,6 +348,7 @@
                 android:id="@+id/radio_available"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/colorPrimary"
                 android:text="@string/available">
             </RadioButton>
 
@@ -329,6 +356,7 @@
                 android:id="@+id/radio_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/colorPrimary"
                 android:text="@string/block">
             </RadioButton>
 

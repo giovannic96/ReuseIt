@@ -22,63 +22,94 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@color/cardview_light_background"
             android:layout_gravity="center_horizontal">
 
             <ImageButton
                 android:id="@+id/edit_itemCamera"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:contentDescription="@string/photo"
                 android:src="@drawable/ic_camera_blue"
+                android:tint="@color/colorPrimary"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:background="@drawable/image_button_border"
                 android:layout_marginStart="60dp"
+                app:layout_constraintEnd_toStartOf="@+id/edit_itemImage"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/edit_itemImage"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/photo"
                 android:src="@drawable/ic_box"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintCircleRadius="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_rotate_imageItem"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/edit_itemCamera"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/btn_rotate_imageItem"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_rotate_blue"
+                android:tint="@color/colorPrimary"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:background="@drawable/image_button_border"
                 android:layout_marginEnd="60dp"
+                app:layout_constraintStart_toEndOf="@+id/edit_itemImage"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="2dp"
+            android:background="@color/cardview_light_background">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/info">
+            </TextView>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:textAlignment="viewStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_itemImage"
             app:startIconDrawable="@drawable/ic_title"
+            app:startIconTint="@color/colorPrimary"
+            app:endIconTint="@color/colorPrimary"
             app:endIconMode="clear_text"
-            android:hint="@string/defaultTitle">
+            android:hint="@string/defaultTitle"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_itemTitle"
@@ -86,7 +117,6 @@
                 android:layout_height="wrap_content"
                 android:maxLength="64"
                 android:textColor="#000000"
-                android:background="#FFFFFF"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,9 +131,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:startIconDrawable="@drawable/ic_description"
             app:endIconMode="clear_text"
+            app:startIconTint="@color/colorPrimary"
+            app:endIconTint="@color/colorPrimary"
             app:counterEnabled="true"
             app:counterMaxLength="280"
-            android:hint="@string/defaultDesc" >
+            android:hint="@string/defaultDesc"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_itemDesc"
@@ -111,19 +144,106 @@
                 android:layout_height="wrap_content"
                 android:maxLength="280"
                 android:inputType="textMultiLine"
-                android:textColor="#000000"
-                android:background="#FFFFFF" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/ic_euro_black"
+            app:startIconTint="@color/colorPrimary"
+            android:hint="@string/defaultPrice"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:hintAnimationEnabled="false"
+            app:startIconDrawable="@drawable/ic_date"
+            app:startIconTint="@color/colorPrimary"
+            android:hint="@string/defaultExpire"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemExpiryDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/ic_location"
+            app:startIconTint="@color/colorPrimary"
+            android:hint="@string/defaultItemLocation"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_itemLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="64"
+                android:clickable="true"
+                android:focusable="true"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/features_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+            android:elevation="2dp"
+            android:background="@color/cardview_light_background">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/features">
+            </TextView>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
             app:startIconDrawable="@drawable/ic_condition"
+            app:startIconTint="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCondition"
@@ -148,6 +268,7 @@
             android:layout_marginEnd="20dp"
             android:gravity="center"
             app:startIconDrawable="@drawable/ic_category"
+            app:startIconTint="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultCategory"
@@ -171,8 +292,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             app:startIconDrawable="@drawable/ic_subcategory"
+            app:startIconTint="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:hint="@string/defaultSubCategory"
@@ -187,86 +310,13 @@
                 android:backgroundTint="#FFFFFF"
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:textAlignment="viewStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:startIconDrawable="@drawable/ic_euro_black"
-            android:hint="@string/defaultPrice" >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_itemPrice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:background="#FFFFFF"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:textAlignment="viewStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:hintAnimationEnabled="false"
-            app:startIconDrawable="@drawable/ic_date"
-            android:hint="@string/defaultExpire" >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_itemExpiryDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:inputType="none"
-                android:background="#FFFFFF"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:textAlignment="viewStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:startIconDrawable="@drawable/ic_location"
-            android:hint="@string/defaultItemLocation" >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_itemLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="64"
-                android:clickable="true"
-                android:background="#FFFFFF"
-
-                android:focusable="true"
-                android:inputType="none"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/action_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:elevation="2dp"
             android:background="@color/cardview_light_background">
@@ -292,6 +342,7 @@
                 android:id="@+id/radio_available"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/colorPrimary"
                 android:text="@string/available">
             </RadioButton>
 
@@ -299,6 +350,7 @@
                 android:id="@+id/radio_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/colorPrimary"
                 android:text="@string/block">
             </RadioButton>
 

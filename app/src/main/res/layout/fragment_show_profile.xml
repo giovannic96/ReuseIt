@@ -212,8 +212,11 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="210dp"
-                    android:layout_margin="8dp"
+                    android:layout_height="130dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="42dp"
+                    android:layout_marginEnd="42dp"
                     android:layout_below="@+id/location"
                     app:cardCornerRadius="5dp">
 
@@ -229,8 +232,6 @@
                         android:layout_alignTop="@+id/user_map"
                         android:layout_alignBottom="@+id/user_map"
                         android:layout_alignEnd="@+id/user_map"
-                        android:layout_alignRight="@+id/user_map"
-                        android:layout_alignLeft="@+id/user_map"
                         android:layout_alignStart="@+id/user_map"
                         android:src="#00FFFFFF" />
                 </androidx.cardview.widget.CardView>

@@ -36,6 +36,7 @@
     <string name="notSpecified">Not specified</string>
     <string name="save">Save</string>
     <string name="actions">Actions</string>
+    <string name="info">General info</string>
     <string name="picFromGallery">Select from gallery</string>
     <string name="picFromCamera">Take from camera</string>
     <string name="photo">Photo</string>

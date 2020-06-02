@@ -1,22 +1,20 @@
 package it.polito.mad.mhackeroni.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import it.polito.mad.mhackeroni.R
-import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.viewmodel.MapViewModel
 import it.polito.mad.mhackeroni.viewmodel.UserMapViewModel
+
 
 class MapFragment: Fragment(), OnMapReadyCallback {
     private var mapViewModel: MapViewModel = MapViewModel()
@@ -33,6 +31,7 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         return v
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,7 +42,6 @@ class MapFragment: Fragment(), OnMapReadyCallback {
 
         isUserPosition = arguments?.getBoolean("user") ?: false
         arguments?.clear()
-
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.edit_map_menu, menu)
@@ -61,7 +59,6 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         }
     }
 
-
     override fun onMapReady(map: GoogleMap?) {
         map?.setOnMapClickListener(OnMapClickListener { point ->
             if(isUserPosition)
@@ -73,4 +70,5 @@ class MapFragment: Fragment(), OnMapReadyCallback {
             map.addMarker(MarkerOptions().position(point))
         })
     }
+
 }
