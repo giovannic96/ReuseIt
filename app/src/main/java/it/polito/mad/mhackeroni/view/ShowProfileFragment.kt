@@ -229,8 +229,32 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
         val scroll: ScrollView = view.findViewById(R.id.detailProfile_scrollview)
         val transparent: ImageView = view.findViewById(R.id.imagetransparent)
+        val transparent2: ImageView = view.findViewById(R.id.imagetransparent2)
+
 
         transparent.setOnTouchListener { v, event ->
+            val action = event.action
+            when (action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Disallow ScrollView to intercept touch events.
+                    scroll.requestDisallowInterceptTouchEvent(true)
+                    // Disable touch on transparent view
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    // Allow ScrollView to intercept touch events.
+                    scroll.requestDisallowInterceptTouchEvent(false)
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    scroll.requestDisallowInterceptTouchEvent(true)
+                    false
+                }
+                else -> true
+            }
+        }
+
+        transparent2.setOnTouchListener { v, event ->
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
