@@ -32,9 +32,6 @@ class MessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Check if message contains a data payload.
-        remoteMessage.data.isNotEmpty().let {
-            Log.d("MAD2020", "Message data payload: " + remoteMessage.data)
-        }
 
         remoteMessage.notification?.let {
             if(!it.body.isNullOrEmpty()){
@@ -58,6 +55,7 @@ class MessagingService : FirebaseMessagingService() {
 
         if(!itemID.isNullOrEmpty()){
             intent.putExtra("goto", itemID)
+            Log.d("MAD2020","Service put: ${itemID}")
         }
 
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -78,31 +76,11 @@ class MessagingService : FirebaseMessagingService() {
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId,
-                "Channel human readable title",
+                "ReuseIt channel",
                 NotificationManager.IMPORTANCE_DEFAULT)
             notificationManager.createNotificationChannel(channel)
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
     }
-
-    /*
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channelName)
-            val descriptionText = getString(R.string.channelDesc)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(channelId, name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-     */
-
 }

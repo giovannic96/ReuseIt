@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -115,7 +116,11 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
     }
 
     private fun handleExtra(navController: NavController){
-        val itemID = intent.getStringExtra("goto")
+        var itemID = intent.getStringExtra("goto")
+
+        if(itemID == null){
+            // Check if the notification was receveid in background
+        }
 
         if(!itemID.isNullOrEmpty()){
             FirebaseRepo.INSTANCE.getItemRef(itemID).get().addOnCompleteListener {doc ->

@@ -105,6 +105,9 @@ class GoogleSignInActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             val i = Intent(this, MainActivity::class.java)
+
+            i.putExtra("goto", intent.extras?.get("item").toString())
+
             startActivity(i)
             finish()
         }
