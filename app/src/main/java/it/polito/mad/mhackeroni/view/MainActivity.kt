@@ -4,32 +4,30 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.Auth
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
-import java.lang.IllegalStateException
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -106,11 +104,35 @@ class MainActivity : AppCompatActivity(), ShowProfileFragment.OnCompleteListener
                 }
             }
         }
+
+        handleExtra(navController)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun handleExtra(navController: NavController){
+        val itemID = intent.getStringExtra("goto")
+
+        if(!itemID.isNullOrEmpty()){
+            FirebaseRepo.INSTANCE.getItemRef(itemID).get().addOnCompleteListener {doc ->
+                if(doc.isSuccessful){
+                    val item =  doc.result!!.toObject(Item::class.java)
+                    if(item != null) {
+                        val bundle = Bundle()
+
+                        bundle.putString("item", Item.toJSON(item).toString())
+                        bundle.putBoolean("fromList", false)
+
+                        navController.navigate(R.id.nav_ItemDetail, bundle)
+                    }
+                }
+            }
+
+        }
     }
 
     private fun logout() {

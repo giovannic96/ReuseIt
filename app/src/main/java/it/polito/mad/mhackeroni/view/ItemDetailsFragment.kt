@@ -211,7 +211,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         }
                     }
 
-                    if(pPos != null && !canModify){
+                    if(pPos != null && !canModify && googleMap != null){
 
                         googleMap!!.addMarker(
                             MarkerOptions()

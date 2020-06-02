@@ -21,13 +21,9 @@ class MessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         val repo : FirebaseRepo = FirebaseRepo.INSTANCE
-
         var id = repo.getID(this)
 
-        Log.d("MAD2020", "New token: ${token}")
-
         if(!id.isNullOrEmpty()) {
-            Log.d("MAD2020", "Updated token")
             repo.updateUserToken(repo.getID(this), token)
         }
 
@@ -41,35 +37,29 @@ class MessagingService : FirebaseMessagingService() {
         }
 
         remoteMessage.notification?.let {
-           /*
-            createNotificationChannel()
-            var builder = NotificationCompat.Builder(this, it.channelId ?: channelId)
-                .setSmallIcon(R.drawable.ic_shopping_cart)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(it.body)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-
-            with(NotificationManagerCompat.from(this)) {
-                // notificationId is a unique int for each notification that you must define
-                notify(9009, builder.build())
-            }
-            */
-
             if(!it.body.isNullOrEmpty()){
-                sendNotification(it.body!!)
+                if(remoteMessage.data.isNotEmpty()){
+                    val itemID = remoteMessage.data.get("item")
+                    if(!itemID.isNullOrEmpty()){
+                        sendNotification(it.body!!, itemID)
+                    }
+                } else {
+                    sendNotification(it.body!!)
+                }
             }
 
         }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 
 
-    private fun sendNotification(messageBody: String) {
+    private fun sendNotification(messageBody: String, itemID: String? = null) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        if(!itemID.isNullOrEmpty()){
+            intent.putExtra("goto", itemID)
+        }
+
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
             PendingIntent.FLAG_ONE_SHOT)
 
