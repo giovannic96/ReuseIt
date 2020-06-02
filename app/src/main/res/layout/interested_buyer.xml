@@ -47,13 +47,13 @@
 
     <TextView
         android:id="@+id/buyer_rating"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/star_image"
         android:gravity="center"
-        android:text="0.0 (0)"
+        android:text="@string/defaultRating"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#040404"
         android:typeface="sans"

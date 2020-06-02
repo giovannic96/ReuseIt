@@ -243,7 +243,6 @@ import org.json.JSONArray
                 "state" to item.state,
                 "buyer" to item.buyer,
                 "hasFeedback" to item.hasFeedback,
-                "rating" to item.rating,
                 "lat" to item.lat,
                 "lng" to item.lng
             ) as Map<String, Any>).addOnCompleteListener{
@@ -297,12 +296,11 @@ import org.json.JSONArray
             ))
     }
 
-    fun insertFeedback(item: Item, hasFeedback: Boolean, rating: Int): Task<Void> {
+    fun insertFeedback(item: Item, hasFeedback: Boolean): Task<Void> {
         return db.collection("items")
             .document(item.id)
             .update(
                 hashMapOf(
-                    "rating" to rating,
                     "hasFeedback" to hasFeedback
                 ) as Map<String, Any>)
     }

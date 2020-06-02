@@ -9,8 +9,8 @@ import java.io.Serializable
 import java.lang.Exception
 import java.util.*
 
-class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var buyer : String?, var hasFeedback: Boolean, var rating: Int, var user : String = "null" , var state : ItemState = ItemState.AVAILABLE, var lat: Double? = null, var lng: Double? = null) : Serializable {
-    constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "",  false, 0, "")
+class Item(var id: String, var name:String, var price:Double, var desc:String, var category:String, var subcategory: String, var expiryDate:String, var location:String, var condition: String, var image: String?, var buyer : String?, var hasFeedback: Boolean, var user : String = "null" , var state : ItemState = ItemState.AVAILABLE, var lat: Double? = null, var lng: Double? = null) : Serializable {
+    constructor() : this("", "", 0.0, "", "", "", "", "", "", "", "",  false, "")
 
     companion object Factory {
 
@@ -43,8 +43,7 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 jsonObject.getString("condition"),
                 jsonObject.getString("image"),
                 jsonObject.getString("buyer"),
-                jsonObject.getBoolean("hasFeedback"),
-                jsonObject.getInt("rating")
+                jsonObject.getBoolean("hasFeedback")
             )
 
             try{
@@ -74,7 +73,6 @@ class Item(var id: String, var name:String, var price:Double, var desc:String, v
                 obj.put("condition", item.condition)
                 obj.put("buyer", item.buyer)
                 obj.put("hasFeedback", item.hasFeedback)
-                obj.put("rating", item.rating)
                 obj.put("lat", item.lat ?: "")
                 obj.put("lng", item.lng ?: "")
 

@@ -1,81 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/buyer_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="8dp"
         android:contentDescription="image"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_person_solid"/>
+        android:src="@drawable/ic_person_solid"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 
-        <TextView
-            android:id="@+id/buyer_nickname"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingEnd="10dp"
-            android:text="nickname"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#040404"
-            android:typeface="sans"
-            android:textAlignment="viewStart"
-            android:layout_marginStart="10dp"
-            tools:ignore="RtlCompat" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/buyer_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/buyer_image"
+        android:gravity="center"
+        android:text="nickname"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#040404"
+        android:typeface="sans"
+        android:layout_marginEnd="5dp"
+        android:textAlignment="viewStart"
+        android:layout_toEndOf="@+id/buyer_image"
+        android:layout_marginStart="10dp"
+        android:layout_toStartOf="@+id/star_image"
+        tools:ignore="RtlCompat" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="2.8">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/star_image"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginLeft="10dp"
         android:contentDescription="image"
         android:src="@drawable/ic_star"
-        android:layout_gravity="center"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_toStartOf="@+id/buyer_rating" />
 
     <TextView
         android:id="@+id/buyer_rating"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:focusable="false"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/star_image"
         android:gravity="center"
-        android:text="0.0 (0)"
+        android:text="@string/defaultRating"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#040404"
         android:typeface="sans"
         android:textAlignment="textEnd"
-        android:layout_marginEnd="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@+id/interested_sellButton"
         tools:ignore="RtlCompat" />
 
-        </LinearLayout>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

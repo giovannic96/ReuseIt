@@ -392,7 +392,6 @@ class ItemEditFragment: Fragment() {
 
                 if(isAddingItem){
                     item = item?.hasFeedback?.let {
-                        item?.rating?.let { it1 ->
                             Item(
                                 "",
                                 edit_itemTitle.text.toString(),
@@ -406,15 +405,13 @@ class ItemEditFragment: Fragment() {
                                 null,
                                 "",
                                 it,
-                                it1,
                                 lat = item?.lat,
                                 lng = item?.lng
                             )
-                        }
+
                     }
                 } else {
                     item = item?.hasFeedback?.let {
-                        item?.rating?.let { it1 ->
                             Item(
                                 oldItem?.id ?: "",
                                 edit_itemTitle.text.toString(),
@@ -428,13 +425,12 @@ class ItemEditFragment: Fragment() {
                                 null,
                                 "",
                                 it,
-                                it1,
                                 state = state,
                                 lat = item?.lat,
                                 lng = item?.lng
                             )
                         }
-                    }
+
                 }
 
 
@@ -1022,8 +1018,7 @@ class ItemEditFragment: Fragment() {
                 "",
                 "",
                 "",
-                false,
-                0
+                false
             )
 
 
