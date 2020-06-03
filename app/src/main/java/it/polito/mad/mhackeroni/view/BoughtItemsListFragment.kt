@@ -156,7 +156,7 @@ class BoughtItemsListFragment: Fragment() {
                             var feedbacks: ArrayList<String>? = profile.value?.feedbacks
 
                             if (!comment.text.isNullOrEmpty()) {
-                                feedbacks?.add(comment.text.toString())
+                                feedbacks?.add("${item.name}:${newRating}-${comment.text}")
                             }
 
                             FirebaseRepo.INSTANCE.updateRating(
