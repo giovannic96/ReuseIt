@@ -279,6 +279,7 @@ class OnSaleListFragment: Fragment() {
         // Buttons
         val okBtn = dialog.findViewById<Button>(R.id.filter_ok_btn)
         val cancelBtn = dialog.findViewById<Button>(R.id.filter_cancel_btn)
+        val clearBtn = dialog.findViewById<Button>(R.id.filter_clear_btn)
 
         // Radio Buttons
         val radioPrice1 = dialog.findViewById<RadioButton>(R.id.radioPrice1)
@@ -323,6 +324,23 @@ class OnSaleListFragment: Fragment() {
         }
 
         locationEditText.setText(searchFilter.location)
+
+        clearBtn.setOnClickListener {
+            locationEditText.setText("")
+
+            newCheckBox.isChecked = false
+            asNewCheckBox.isChecked = false
+            optCheckBox.isChecked = false
+            goodCheckBox.isChecked = false
+            accCheckBox.isChecked = false
+
+            radioPrice1.isChecked = false
+            radioPrice2.isChecked = false
+            radioPrice3.isChecked = false
+            radioPrice4.isChecked = false
+            radioPrice5.isChecked = false
+            radioPrice6.isChecked = false
+        }
 
 
         okBtn.setOnClickListener {

@@ -137,6 +137,7 @@
     <string name="feedback_not_found">You must insert a rating</string>
     <string name="defaultFeedbacks">Feedbacks</string>
     <string name="features">Features</string>
+    <string name="clear">Clear</string>
     <string-array name="categories">
         <item>Arts &amp; Crafts</item>
         <item>Sports and Outdoors</item>

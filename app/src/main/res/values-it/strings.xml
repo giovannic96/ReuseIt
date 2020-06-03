@@ -138,6 +138,7 @@
     <string name="feedback_not_found">Devi inserire un rating</string>
     <string name="defaultFeedbacks">Recensioni</string>
     <string name="features">Caratteristiche</string>
+    <string name="clear">Azzera</string>
     <string-array name="categories">
         <item>Arti &amp; Mestieri</item>
         <item>Sport &amp; attività all\&#39;aperto</item>
