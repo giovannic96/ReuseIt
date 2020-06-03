@@ -10,15 +10,23 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.MediaStore.Images
+import android.util.Log
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.bumptech.glide.request.RequestOptions
 import it.polito.mad.mhackeroni.R
-import java.io.FileNotFoundException
-import java.io.InputStream
-import java.io.OutputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
+import java.io.*
+import java.lang.ref.WeakReference
 
 
 class ImageUtils {
@@ -147,6 +155,43 @@ class ImageUtils {
                     stringUrl = url.toString()
                 }
                 return stringUrl
+            }
+
+        suspend fun downloadAndSaveImageTask(context: Context, url : String) : String?  =
+            withContext(Dispatchers.IO){
+                var path : String? = null
+                var mContext: WeakReference<Context> = WeakReference(context)
+                val requestOptions = RequestOptions()
+                    .downsample(DownsampleStrategy.CENTER_INSIDE)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+
+                Log.d("MAG", "Downloading: ${url}")
+
+                mContext.get()?.let {
+                    val bitmap = async {
+                        Glide.with(it)
+                            .asBitmap()
+                            .load(url)
+                            .apply(requestOptions)
+                            .submit()
+                            .get()
+                    }
+
+                    try {
+                        var file = it.getDir("Pictures", Context.MODE_PRIVATE)
+                        file = File(file, "itemImage.jpg")
+                        val out = FileOutputStream(file)
+                        bitmap.await().compress(Bitmap.CompressFormat.JPEG, 100, out)
+                        out.flush()
+                        out.close()
+                        path = file.absolutePath
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                return@withContext path
             }
 
     }

@@ -22,7 +22,6 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -30,16 +29,10 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -49,11 +42,11 @@ import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
-import it.polito.mad.mhackeroni.viewmodel.MapViewModel
 import it.polito.mad.mhackeroni.viewmodel.UserMapViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_item_edit.*
-import org.json.JSONArray
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -116,6 +109,34 @@ class EditProfileFragment : Fragment() {
             if(vm.getLocalProfile() != null) {
                 profileData = vm.getLocalProfile()
                 currentPhotoPath = profileData.image.toString()
+            } else {
+                if(!profileData.image.isNullOrEmpty()){
+                    try {
+                        val imagePath: String = profileData.image!!
+
+                        val ref = Firebase.storage.reference
+                            .child("profiles_images")
+                            .child(imagePath)
+
+                        ref.downloadUrl.addOnCompleteListener {
+                            if (it.isSuccessful && it.result != null) {
+                                try {
+                                    GlobalScope.launch {
+                                        ImageUtils.downloadAndSaveImageTask(requireContext(),
+                                            it.result.toString()
+                                        ).let { if(!it.isNullOrEmpty()) currentPhotoPath = it}
+                                    }
+                                    rotationCount.value = 0
+                                } catch(ex: IllegalStateException) {
+                                    logger.log(Level.WARNING, "context not attached", ex)
+                                }
+                            }
+                        }
+
+                    } catch (e : Exception){
+                        e.printStackTrace()
+                    }
+                }
             }
 
             try {

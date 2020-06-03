@@ -49,6 +49,8 @@ import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_item_details.*
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
@@ -195,6 +197,19 @@ class ItemEditFragment: Fragment() {
 
                 if(vm.getLocalItem() != null){
                     itemData = vm.getLocalItem()
+                } else {
+                    if(!itemData.image.isNullOrEmpty()){
+                        try {
+                            GlobalScope.launch {
+                                ImageUtils.downloadAndSaveImageTask(requireContext(),
+                                    itemData.image!!
+                                ).let { if(!it.isNullOrEmpty()) currentItemPhotoPath = it}
+                            }
+                            rotationCount.value = 0
+                        } catch(ex: IllegalStateException) {
+                            logger.log(Level.WARNING, "context not attached", ex)
+                        }
+                    }
                 }
 
                 if(itemData != null){
