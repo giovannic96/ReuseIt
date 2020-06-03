@@ -94,23 +94,6 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
 
             try {
                 if(!it.image.isNullOrEmpty()) {
-                    /*
-                    detail_progressbar.visibility = View.VISIBLE
-
-                    val imageRef = it.image
-                    val ref = Firebase.storage.reference
-                        .child("items_images")
-                        .child(imageRef!!)
-
-                    ref.downloadUrl.addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Glide.with(requireContext())
-                                .load(it.result)
-                                .into(itemImage)
-                        }
-                        detail_progressbar.visibility = View.INVISIBLE
-                    }
-                     */
                     val requestOptions = RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
 
@@ -235,10 +218,8 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                             .position(pos)
                             .title(getString(R.string.itemPosition))
                     )
-
-                    googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+                    googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 4.0f))
                 }
-
             }
 
             imageProfileItem.setOnClickListener { listener ->

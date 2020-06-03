@@ -3,9 +3,7 @@ package it.polito.mad.mhackeroni.view
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.ScrollView
@@ -24,7 +22,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.adapters.FeedbackAdapter
-import it.polito.mad.mhackeroni.adapters.ListAdapter
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
@@ -222,10 +219,9 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
                 if(googleMap != null) {
                     googleMap!!.addMarker(
-                        MarkerOptions()
-                            .position(pos)
+                        MarkerOptions().position(pos)
                     )
-                    googleMap!!.moveCamera(CameraUpdateFactory.newLatLng(pos))
+                    googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 5.0f))
                 }
             }
         })
@@ -234,10 +230,8 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
         val transparent: ImageView = view.findViewById(R.id.imagetransparent)
         val transparent2: ImageView = view.findViewById(R.id.imagetransparent2)
 
-
-        transparent.setOnTouchListener { v, event ->
-            val action = event.action
-            when (action) {
+        transparent.setOnTouchListener { _, event ->
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // Disallow ScrollView to intercept touch events.
                     scroll.requestDisallowInterceptTouchEvent(true)
