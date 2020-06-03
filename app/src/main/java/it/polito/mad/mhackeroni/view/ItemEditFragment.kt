@@ -161,12 +161,10 @@ class ItemEditFragment: Fragment() {
                 edit_itemLocation.setText(itemData.location)
 
                 radio_available.isChecked = true
-                 //radio_sold.isChecked = false
                 radio_block.isChecked = false
 
                 try {
                     if(itemData.image.isNullOrEmpty()){
-                        // edit_itemImage.setImageResource(R.drawable.ic_box)
                         Glide.with(requireContext())
                             .load(R.drawable.ic_box)
                             .into(edit_itemImage as ImageView)
@@ -220,13 +218,6 @@ class ItemEditFragment: Fragment() {
                         // radio_sold.isChecked = false
                         radio_block.isChecked = false
                     }
-                    /*
-                    else if(state == "SOLD"){
-                        radio_available.isChecked = false
-                        // radio_sold.isChecked = true
-                        radio_block.isChecked = false
-                    }
-                     */
                     else if(state == "BLOCKED"){
                         isBlocked = true
                         radio_available.isChecked = false
@@ -316,12 +307,6 @@ class ItemEditFragment: Fragment() {
                     }
                     state = Item.ItemState.BLOCKED
                 }
-                /*
-                R.id.radio_sold -> {
-                    state = Item.ItemState.SOLD
-                    isBlocked = false
-                }
-                 */
             }
         }
 
@@ -496,14 +481,6 @@ class ItemEditFragment: Fragment() {
                     if(imageChanged) {
                         vm.updateItem(requireContext()).addOnCompleteListener {
                             if (it.isSuccessful) {
-                                /*
-                                val bundle =
-                                    bundleOf("new_item" to item?.let {
-                                        Item.toJSON(it).toString()
-                                    })
-
-                                 */
-
                                 if (fromList!!) {
                                     val bundle =
                                         bundleOf("edited_item" to item?.let {
@@ -1207,5 +1184,10 @@ class ItemEditFragment: Fragment() {
         }
 
         return retVal
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapViewModel.position.value = null
     }
 }
