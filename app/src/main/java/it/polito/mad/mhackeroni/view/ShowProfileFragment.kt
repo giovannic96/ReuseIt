@@ -3,6 +3,7 @@ package it.polito.mad.mhackeroni.view
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -415,7 +416,11 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
         var comments: ArrayList<String> = profile.feedbacks
         var commentsMarks: ArrayList<String> = ArrayList()
         for(c in comments){
-            commentsMarks.add("\"$c\"")
+            var itemName: String= c.substringBefore(':')
+            var numRating: Int = c.substringAfter(":").substringBefore('-').toInt()
+            val stringComment: String = c.substringAfter("-")
+            commentsMarks.add("\"$stringComment\"")
+            Log.d("KKK","$itemName , $numRating, $stringComment")
         }
 
         val adapter: ArrayAdapter<String> = ArrayAdapter(
