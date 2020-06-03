@@ -23,6 +23,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.adapters.FeedbackAdapter
+import it.polito.mad.mhackeroni.adapters.ListAdapter
 import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import it.polito.mad.mhackeroni.viewmodel.ProfileFragmentViewModel
@@ -414,24 +416,17 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
         var commentList: ListView = dialog.findViewById<ListView>(R.id.commentList)
         var comments: ArrayList<String> = profile.feedbacks
-        var commentsMarks: ArrayList<String> = ArrayList()
-        for(c in comments){
-            var itemName: String= c.substringBefore(':')
-            var numRating: Int = c.substringAfter(":").substringBefore('-').toInt()
-            val stringComment: String = c.substringAfter("-")
-            commentsMarks.add("\"$stringComment\"")
-            Log.d("KKK","$itemName , $numRating, $stringComment")
-        }
 
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
+        val adapter: FeedbackAdapter<String> = FeedbackAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
-            android.R.id.text1,
-            commentsMarks
+            comments
         )
+
         commentList.adapter = adapter
         commentList
         adapter.notifyDataSetChanged()
+
 
         dialog.show()
     }
