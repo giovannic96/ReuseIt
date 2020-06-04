@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -194,7 +195,7 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         }
                     }
 
-                    if(pPos != null && !canModify && googleMap != null){
+                    if(pPos != null && !canModify && googleMap != null && view != null && view.isVisible){
 
                         googleMap!!.addMarker(
                             MarkerOptions()

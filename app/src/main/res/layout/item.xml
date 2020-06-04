@@ -72,7 +72,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_name" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/edit_item"
             android:layout_width="25dp"
             android:layout_height="25dp"
