@@ -29,7 +29,12 @@ class FeedbackAdapter<T>(context: Context?, textViewResourceId: Int, objects: Li
         var feedback: String = getItem(position)!!
 
         itemName.text = feedback.substringBefore(':')
-        itemComment.text =  "\"${feedback.substringAfter("-")}\""
+        if(feedback.substringAfter("-")=="null"){
+            itemComment.visibility = View.GONE
+        }
+        else{
+            itemComment.text =  "\"${feedback.substringAfter("-")}\""
+        }
         var numRating: Int = feedback.substringAfter(":").substringBefore('-').toInt()
 
         when(numRating){
