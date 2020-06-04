@@ -195,31 +195,38 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         }
                     }
 
-                    if(pPos != null && !canModify && googleMap != null && view != null && view.isVisible){
+                    if(pPos != null && !canModify && googleMap != null ){
+                        try{
+                            googleMap!!.addMarker(
+                                MarkerOptions()
+                                    .position(pPos!!)
+                                    .title(getString(R.string.yourPosition))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                            )
 
-                        googleMap!!.addMarker(
-                            MarkerOptions()
-                                .position(pPos!!)
-                                .title(getString(R.string.yourPosition))
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                        )
-
-                        googleMap!!.addPolyline(
-                            PolylineOptions().add(
-                                pPos,
-                                pos
-                            ).width(2F).color(Color.BLUE).geodesic(true)
-                        )
+                            googleMap!!.addPolyline(
+                                PolylineOptions().add(
+                                    pPos,
+                                    pos
+                                ).width(2F).color(Color.BLUE).geodesic(true)
+                            )
+                        } catch (e : Exception){
+                            e.printStackTrace()
+                        }
                     }
                 }
 
                 if(googleMap != null) {
-                    googleMap!!.addMarker(
-                        MarkerOptions()
-                            .position(pos)
-                            .title(getString(R.string.itemPosition))
-                    )
-                    googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 4.0f))
+                    try{
+                        googleMap!!.addMarker(
+                            MarkerOptions()
+                                .position(pos)
+                                .title(getString(R.string.itemPosition))
+                        )
+                        googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 4.0f))
+                    }catch (e : Exception){
+                        e.printStackTrace()
+                    }
                 }
             }
 
