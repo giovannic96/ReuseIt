@@ -65,8 +65,6 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val logger: Logger = Logger.getLogger(ItemDetailsFragment::class.java.name)
-
         vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
         getNavigationInfo()
 
