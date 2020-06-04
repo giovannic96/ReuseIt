@@ -65,6 +65,8 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val logger: Logger = Logger.getLogger(ItemDetailsFragment::class.java.name)
+
         vm = ViewModelProvider(this).get(ItemDetailsFragmentViewModel::class.java)
         getNavigationInfo()
 
@@ -210,8 +212,8 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                                     pos
                                 ).width(2F).color(Color.BLUE).geodesic(true)
                             )
-                        } catch (e : Exception){
-                            e.printStackTrace()
+                        }  catch (ex: IllegalStateException) {
+                            logger.log(Level.WARNING, "context not attached", ex)
                         }
                     }
                 }
@@ -224,8 +226,8 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                                 .title(getString(R.string.itemPosition))
                         )
                         googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 4.0f))
-                    }catch (e : Exception){
-                        e.printStackTrace()
+                    } catch (ex: IllegalStateException) {
+                        logger.log(Level.WARNING, "context not attached", ex)
                     }
                 }
             }
