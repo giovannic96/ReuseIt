@@ -203,21 +203,23 @@ class OnSaleListFragment: Fragment() {
     }
 
     private fun updateFilter() {
-        vm.getItems().removeObservers(viewLifecycleOwner)
-        vm.getItems().observe(viewLifecycleOwner, Observer {
-            var found = false
-            myAdapter.reload(it.filter { item ->
-                    if(searchFilter.match(item)) {
+        if(view != null) {
+            vm.getItems().removeObservers(viewLifecycleOwner)
+            vm.getItems().observe(viewLifecycleOwner, Observer {
+                var found = false
+                myAdapter.reload(it.filter { item ->
+                    if (searchFilter.match(item)) {
                         found = true
                         true
                     } else
                         false
+                })
+                if (!found)
+                    updateLayoutManager(listOf())
+                else
+                    updateLayoutManager(it)
             })
-            if(!found)
-                updateLayoutManager(listOf())
-            else
-                updateLayoutManager(it)
-        })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

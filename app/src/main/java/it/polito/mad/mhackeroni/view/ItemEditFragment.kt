@@ -370,6 +370,7 @@ class ItemEditFragment: Fragment() {
                 && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())
                 && hasExStoragePermission()){
                 rotationCount.value = rotationCount.value?.plus(1)
+                imageChanged = true
             } else if(!hasExStoragePermission()) {
                 checkExStoragePermission()
             } else{
@@ -456,7 +457,7 @@ class ItemEditFragment: Fragment() {
 
 
                 if(isAddingItem) {
-                    item!!.id = IDGenerator.getNextID(requireContext()).toString()
+                    // item!!.id = IDGenerator.getNextID(requireContext()).toString()
 
                     if(!checkData())
                         return false
@@ -821,6 +822,13 @@ class ItemEditFragment: Fragment() {
 
         if(isAddingItem && !location.isNullOrEmpty()){
             edit_itemLocation.setText(location)
+            edit_itemLocation.error = null
+        }
+
+        if(::currentItemPhotoPath.isInitialized && !currentItemPhotoPath.isNullOrEmpty() && isAddingItem){
+            Glide.with(requireContext())
+                .load(currentItemPhotoPath)
+                .into(edit_itemImage as ImageView)
         }
 
     }
@@ -929,6 +937,7 @@ class ItemEditFragment: Fragment() {
                 }
                 picker.addOnPositiveButtonClickListener {
                     edit_itemExpiryDate.setText(formatDate(it))
+                    edit_itemExpiryDate.error = null
                     pickerShowing = false
                 }
             }

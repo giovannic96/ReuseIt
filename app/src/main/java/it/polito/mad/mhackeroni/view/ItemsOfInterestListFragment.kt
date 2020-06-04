@@ -60,6 +60,11 @@ class ItemsOfInterestListFragment: Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("KKKKK","Item count: ${myAdapter.itemCount}")
+    }
+
     private fun navigateWithInfo(item: Item) {
         val bundle = Bundle()
         bundle.putString("item", item.let { Item.toJSON(it).toString()})
