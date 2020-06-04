@@ -391,6 +391,10 @@ class ItemEditFragment: Fragment() {
         return when (menuItem.itemId) {
             R.id.menu_save -> {
 
+                if(!imageChanged && !isAddingItem){
+                    currentItemPhotoPath = oldItem?.image ?: ""
+                }
+
                 if(isAddingItem){
                     item = item?.hasFeedback?.let {
                             Item(

@@ -106,6 +106,7 @@ class EditProfileFragment : Fragment() {
             profile = profileVal
             oldProfile = profileVal
 
+
             if(vm.getLocalProfile() != null) {
                 profileData = vm.getLocalProfile()
                 currentPhotoPath = profileData.image.toString()

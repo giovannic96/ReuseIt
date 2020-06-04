@@ -1,9 +1,12 @@
 package it.polito.mad.mhackeroni.model
 
+import android.util.Log
+import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
 class Profile(
@@ -31,9 +34,13 @@ class Profile(
         }
 
         private fun fromJSON(jsonObject : JSONObject ) : Profile {
-            val arrJson: JSONArray = jsonObject.getJSONArray("feedbacks")
-            val feedbacks = ArrayList<String>(arrJson.length())
-            for (i in 0 until arrJson.length()) feedbacks[i] = arrJson.getString(i)
+            val arrJson = jsonObject.getJSONArray("feedbacks")
+            val feedbacks = ArrayList<String>()
+
+            if(arrJson.length() != 0) {
+                for (i in 0 until arrJson.length())
+                    feedbacks.add(arrJson.getString(i))
+            }
 
             return Profile(
                 jsonObject.getString("fullname"),
@@ -51,6 +58,7 @@ class Profile(
 
         fun toJSON(profile: Profile) : JSONObject{
             val obj:JSONObject = JSONObject()
+
             try {
                 obj.put("fullname", profile.fullName)
                 obj.put("nickname", profile.nickname)
@@ -60,7 +68,8 @@ class Profile(
                 obj.put("phoneNumber", profile.phoneNumber)
                 obj.put("totRating", profile.totRating)
                 obj.put("numRating", profile.totRating)
-                obj.put("feedbacks", profile.feedbacks)
+                val jsonArray = JSONArray(profile.feedbacks)
+                obj.put("feedbacks", jsonArray as Object)
 
                 if(profile.image.isNullOrEmpty())
                     obj.put("image", "")

@@ -6,13 +6,9 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import android.widget.CompoundButton
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.adapters.ItemAdapter
 import it.polito.mad.mhackeroni.adapters.ItemAdapter.MyAdapterListener
@@ -181,6 +176,20 @@ class OnSaleListFragment: Fragment() {
                 return false
             }
         })
+
+        menu.findItem(R.id.menu_search).setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                searchFilter.name = ""
+                updateFilter()
+                return true
+            }
+        })
+
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -403,6 +412,7 @@ class OnSaleListFragment: Fragment() {
 
         dialog.show()
     }
+
 
     override fun onResume() {
         super.onResume()

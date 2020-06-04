@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="noInterested">Non ci sono ancora utenti interessati</string>
     <string name="mapfragment">Posizione</string>
     <string name="yourPosition">La tua posizione</string>
     <string name="itemPosition">L\'oggetto si trova qui</string>

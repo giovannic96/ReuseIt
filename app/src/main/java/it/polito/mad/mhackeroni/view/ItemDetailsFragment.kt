@@ -471,7 +471,11 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
         }
 
         buyers_listview_label.setOnClickListener {
-            showInterestedDialog(item?.state.toString() == "SOLD")
+            if(!::interestedUsers.isInitialized || interestedUsers.size == 0){
+                Snackbar.make(view, getString(R.string.noInterested), Snackbar.LENGTH_LONG).show()
+            } else {
+                showInterestedDialog(item?.state.toString() == "SOLD")
+            }
         }
 
     }

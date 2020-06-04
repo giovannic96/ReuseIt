@@ -3,6 +3,7 @@ package it.polito.mad.mhackeroni.view
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.ListView
@@ -53,18 +54,26 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
         val passingUID= arguments?.getString(getString(R.string.uid), "") ?: ""
         val fromItem: Boolean = arguments?.getBoolean("fromItem", false) ?: false
+        val repo = FirebaseRepo.INSTANCE
+        val appUserID = repo.getID(requireContext())
+
         getNavigationInfo()
         arguments?.clear()
 
         vm = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
 
-        // Show personal profile
-        if(passingUID.isNullOrEmpty() || passingUID.equals("null") && vm.uid.isEmpty()) {
-            val repo = FirebaseRepo.INSTANCE
-            uid = repo.getID(requireContext())
-        } else { // Show another profile
+        if((!passingUID.isNullOrEmpty() && passingUID != "null") && appUserID != passingUID){
             uid = passingUID
             canEdit = false
+        } else if( !vm.uid.isNullOrEmpty() && vm.uid != appUserID){
+            uid = passingUID
+            canEdit = false
+        } else {
+            uid = appUserID
+            vm.uid = uid
+        }
+
+        if(!canEdit){
             requireActivity().invalidateOptionsMenu()
             if(!fromItem){
                 phone_number.visibility = View.GONE
@@ -75,6 +84,27 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
                 mail.visibility = View.VISIBLE
             }
         }
+
+        // Show personal profile
+        /*
+        if((passingUID.isNullOrEmpty() || passingUID.equals("null")) && vm.) {
+            val repo = FirebaseRepo.INSTANCE
+            uid = repo.getID(requireContext())
+        } else { // Show another profile
+            uid = passingUID
+            canEdit = false
+
+            requireActivity().invalidateOptionsMenu()
+            if(!fromItem){
+                phone_number.visibility = View.GONE
+                mail.visibility = View.GONE
+            }
+            else{
+                phone_number.visibility = View.VISIBLE
+                mail.visibility = View.VISIBLE
+            }
+        }
+         */
 
 
         if(vm.uid.isNullOrEmpty())
@@ -95,7 +125,7 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
                         .child(imagePath)
 
                     ref.downloadUrl.addOnCompleteListener {
-                        if (it.isSuccessful) {
+                        if (it.isSuccessful && it.result != null) {
                             try {
                                 Glide.with(requireContext())
                                     .load(it.result)
@@ -329,6 +359,10 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
         } catch (ex: IllegalArgumentException) {
             logger.log(Level.WARNING, "multiple navigation not allowed", ex)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
     private fun getNavigationInfo(){
