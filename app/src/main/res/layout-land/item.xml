@@ -77,6 +77,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginTop="8dp"
+            android:foreground="?android:attr/selectableItemBackground"
             android:layout_marginEnd="20dp"
             android:src="@drawable/ic_edit_32dp"
             app:layout_constraintEnd_toEndOf="parent"

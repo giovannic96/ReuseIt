@@ -80,6 +80,7 @@
             android:layout_marginEnd="20dp"
             android:src="@drawable/ic_edit_32dp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintTop_toBottomOf="@+id/item_name"
             android:clickable="true"/>
 
