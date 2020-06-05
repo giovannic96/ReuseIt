@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputFilter
 import android.text.InputType
+import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
@@ -31,7 +32,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -82,6 +82,7 @@ class ItemEditFragment: Fragment() {
     private var mapViewModel: MapViewModel = MapViewModel()
     private var location : String = ""
     private var imageDownloadFailed = false
+    private var generalInfo: MutableList<String> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -151,7 +152,6 @@ class ItemEditFragment: Fragment() {
 
         if(isAddingItem){
             var itemData = vm.getLocalItem()
-
             if(itemData != null){
                 edit_itemTitle.setText(itemData.name)
                 edit_itemPrice.setText(
@@ -265,7 +265,6 @@ class ItemEditFragment: Fragment() {
             })
         }
 
-
         handleDatePicker()
 
         mapViewModel.position.observe(viewLifecycleOwner, androidx.lifecycle.Observer { position ->
@@ -310,6 +309,10 @@ class ItemEditFragment: Fragment() {
         })
 
         edit_itemLocation.setOnClickListener {
+            generalInfo.add(edit_itemTitle.text.toString())
+            generalInfo.add(edit_itemDesc.text.toString())
+            generalInfo.add(edit_itemPrice.text.toString())
+            generalInfo.add(edit_itemExpiryDate.text.toString())
             view.findNavController()
                 .navigate(R.id.action_nav_ItemDetailEdit_to_mapFragment)
         }
@@ -383,6 +386,16 @@ class ItemEditFragment: Fragment() {
                     .make(view.rootView, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
                     .show()
             }
+        }
+    }
+
+    private fun displayPreviousItemData() {
+        if(generalInfo.isNotEmpty() && generalInfo.size == 4) {
+            edit_itemTitle.setText(generalInfo[0])
+            edit_itemDesc.setText(generalInfo[1])
+            edit_itemPrice.setText(generalInfo[2])
+            edit_itemExpiryDate.setText(generalInfo[3])
+            generalInfo.clear()
         }
     }
 
@@ -838,6 +851,7 @@ class ItemEditFragment: Fragment() {
                 .into(edit_itemImage as ImageView)
         }
 
+        displayPreviousItemData()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
