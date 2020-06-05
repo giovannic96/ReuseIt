@@ -65,7 +65,7 @@
     <string name="profile_nav">Profilo</string>
     <string name="items_nav">Oggetti in vendita</string>
     <string name="edit_item">Modifica</string>
-    <string name="date_format">dd-MM-yyyy</string>
+    <string name="date_format">yyyy-MM-dd</string>
     <string name="no_data_available">Nessun articolo presente nella lista</string>
     <string name="frag_list_title">Le mie inserzioni</string>
     <string name="frag_item_title">Articolo</string>

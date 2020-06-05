@@ -7,7 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.*
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
@@ -16,6 +18,11 @@ import com.google.firebase.storage.ktx.storage
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
+
 
 // DAO singleton class
  class FirebaseRepo private constructor() {
@@ -131,6 +138,7 @@ import it.polito.mad.mhackeroni.model.Profile
     fun insertItem(item: Item): Task<DocumentReference> {
 
         val localizedItem = Item.localize(item, true)
+        localizedItem.image = ""
 
        return db.collection("items")
             .add(localizedItem)
@@ -189,7 +197,7 @@ import it.polito.mad.mhackeroni.model.Profile
 
     fun getItemsRef(state : Item.ItemState = Item.ItemState.AVAILABLE): Query {
         val collectionReference = db.collection("items")
-        return collectionReference.whereEqualTo("state", state)
+       return collectionReference.whereEqualTo("state", state)
     }
 
     fun getBoughtItem(uid:String): Query {
@@ -217,7 +225,7 @@ import it.polito.mad.mhackeroni.model.Profile
     }
 
     fun updateItem(id : String, item : Item, uploadImage : Boolean = true): Task<Void> {
-        var imageLink : String? = null
+        var imageLink : String? = ""
 
         if(!uploadImage) {
             imageLink = item.image
@@ -423,5 +431,11 @@ import it.polito.mad.mhackeroni.model.Profile
     // just for debug
     fun clearPersistency(){
         db.clearPersistence()
+    }
+
+    fun blockItem(itemID : String){
+        db.collection("items")
+            .document(itemID)
+            .update(hashMapOf("state" to Item.ItemState.BLOCKED) as Map<String, Any>)
     }
 }

@@ -161,16 +161,16 @@ class EditProfileFragment : Fragment() {
                         } else {
                             try {
                                 Glide.with(requireContext())
-                                .load(imagePath)
-                                .into(edit_showImageProfile)
+                                    .load(imagePath)
+                                    .into(edit_showImageProfile)
                             } catch(ex: IllegalStateException) {
                                 logger.log(Level.WARNING, "context not attached", ex)
                             }
                         }
                     }
                 } else {
-                        edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
-                    }
+                    edit_showImageProfile.setImageResource(R.drawable.ic_avatar)
+                }
             } catch (e: Exception) {
                 Snackbar.make(view,R.string.image_not_found, Snackbar.LENGTH_SHORT).show()
             }
@@ -192,7 +192,7 @@ class EditProfileFragment : Fragment() {
             val deg: Float = 90f * it
             if(edit_showImageProfile != null)
                 edit_showImageProfile.animate().rotation(deg).interpolator =
-                        AccelerateDecelerateInterpolator()
+                    AccelerateDecelerateInterpolator()
         })
 
         setupValidationListener()
@@ -222,15 +222,15 @@ class EditProfileFragment : Fragment() {
 
         btn_rotate_image.setOnClickListener {
             if(::currentPhotoPath.isInitialized
-                    && ImageUtils.canDisplayBitmap(currentPhotoPath, requireContext())
-                    && hasExStoragePermission()){
+                && ImageUtils.canDisplayBitmap(currentPhotoPath, requireContext())
+                && hasExStoragePermission()){
                 rotationCount.value = rotationCount.value?.plus(1)
             } else if(!hasExStoragePermission()) {
                 checkExStoragePermission()
             } else{
                 Snackbar
-                        .make(edit_main_container, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
-                        .show()
+                    .make(edit_main_container, resources.getString(R.string.rotate_error), Snackbar.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -239,11 +239,11 @@ class EditProfileFragment : Fragment() {
             val geocoder = Geocoder(requireContext(), Locale.getDefault())
             try{
                 val addresses: List<Address> = geocoder
-                .getFromLocation(
-                    position.latitude,
-                    position.longitude,
-                    1
-                )
+                    .getFromLocation(
+                        position.latitude,
+                        position.longitude,
+                        1
+                    )
 
                 val city: String = addresses[0].locality
                 if (edit_location != null)
@@ -385,14 +385,14 @@ class EditProfileFragment : Fragment() {
                 if(::currentPhotoPath.isInitialized){
                     if (nRotation != null) {
                         if(nRotation != 0 && nRotation.rem(4) != 0
-                                && ImageUtils.canDisplayBitmap(currentPhotoPath, requireContext())){ // Save the edited photo
+                            && ImageUtils.canDisplayBitmap(currentPhotoPath, requireContext())){ // Save the edited photo
                             ImageUtils.rotateImageFromUri(
-                                    Uri.parse(currentPhotoPath),
-                                    90.0F* nRotation,
-                                    requireContext()
+                                Uri.parse(currentPhotoPath),
+                                90.0F* nRotation,
+                                requireContext()
                             )?.let {
                                 currentPhotoPath = ImageUtils.insertImage(requireActivity().contentResolver,
-                                        it
+                                    it
                                 ).toString()
                             }
                         }
@@ -473,7 +473,7 @@ class EditProfileFragment : Fragment() {
                         dispatchTakePictureIntent()
                 } else {
                     Snackbar.make(edit_main_container, resources.getString(R.string.permission_err), Snackbar.LENGTH_SHORT)
-                            .show()
+                        .show()
                 }
                 return
             }
@@ -492,7 +492,7 @@ class EditProfileFragment : Fragment() {
 
                 currentPhotoPath = ImageUtils.getBitmap(currentPhotoPath, requireContext())?.let {
                     ImageUtils.insertImage(requireActivity().contentResolver,
-                            it
+                        it
                     )
                 }.toString()
                 File(oldPhoto).delete()
@@ -642,9 +642,9 @@ class EditProfileFragment : Fragment() {
                 // Continue only if the File was successfully created
                 photoFile?.also {
                     val photoURI: Uri = FileProvider.getUriForFile(
-                            requireContext(),
-                            "it.polito.mad.mhackeroni.fileprovider",
-                            it
+                        requireContext(),
+                        "it.polito.mad.mhackeroni.fileprovider",
+                        it
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, REQUEST_CREATEIMAGE)
@@ -659,9 +659,9 @@ class EditProfileFragment : Fragment() {
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
         return File.createTempFile(
-                "JPEG_${UUID.randomUUID()}_marketApp_", /* prefix */
-                ".jpg", /* suffix */
-                storageDir /* directory */
+            "JPEG_${UUID.randomUUID()}_marketApp_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
         ).apply {
             currentPhotoPath = absolutePath
         }
@@ -669,7 +669,7 @@ class EditProfileFragment : Fragment() {
 
     private fun hasExStoragePermission(): Boolean{
         return (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
 
     private fun checkExStoragePermission(): Boolean{
