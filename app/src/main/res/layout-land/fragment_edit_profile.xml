@@ -4,6 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <RelativeLayout
         android:id="@+id/edit_main_container"
         android:layout_width="match_parent"
@@ -246,4 +250,13 @@
             android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/editprofile_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 </ScrollView>

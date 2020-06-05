@@ -476,6 +476,7 @@ class ItemEditFragment: Fragment() {
                     if(!checkData())
                         return false
 
+
                     vm.updateLocalItem(item!!)
 
                     vm.addItem(requireContext())
@@ -494,6 +495,8 @@ class ItemEditFragment: Fragment() {
                     if(!checkData())
                         return false
 
+                    item_progressbar.visibility = View.VISIBLE
+                    
                     item!!.id = oldItem?.id ?: ""
                     val fromList = arguments?.getBoolean("fromList", false)
                     vm.updateLocalItem(item!!)

@@ -45,6 +45,7 @@ import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditProfileFragmentViewModel
 import it.polito.mad.mhackeroni.viewmodel.UserMapViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_show_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -189,8 +190,9 @@ class EditProfileFragment : Fragment() {
 
         rotationCount.observe(requireActivity(), androidx.lifecycle.Observer {
             val deg: Float = 90f * it
-            edit_showImageProfile.animate().rotation(deg).interpolator =
-                    AccelerateDecelerateInterpolator()
+            if(edit_showImageProfile != null)
+                edit_showImageProfile.animate().rotation(deg).interpolator =
+                        AccelerateDecelerateInterpolator()
         })
 
         setupValidationListener()
@@ -333,6 +335,8 @@ class EditProfileFragment : Fragment() {
                 if(!checkData())
                     return false
 
+                editprofile_progress_bar.visibility = View.VISIBLE
+
                 val firebaseRepo = FirebaseRepo.INSTANCE
 
                 if(::currentPhotoPath.isInitialized) {
@@ -447,6 +451,7 @@ class EditProfileFragment : Fragment() {
                                     ?.navigate(R.id.action_nav_editProfile_to_nav_showProfile, bundle)
                             }
                         } else {
+                            editprofile_progress_bar.visibility = View.INVISIBLE
                             edit_nickname.setError(getString(R.string.nickname_already_exist))
                         }
                     }

@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
     <LinearLayout
         android:id="@+id/edit_main_container"
         android:layout_width="match_parent"
@@ -203,4 +208,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
+        <ProgressBar
+            android:id="@+id/editprofile_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 </ScrollView>
