@@ -13,10 +13,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
-import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.model.Profile
-import org.json.JSONArray
 
 // DAO singleton class
  class FirebaseRepo private constructor() {

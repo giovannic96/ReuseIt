@@ -32,6 +32,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
@@ -331,6 +332,8 @@ class EditProfileFragment : Fragment() {
 
                 if(!checkData())
                     return false
+
+                val firebaseRepo = FirebaseRepo.INSTANCE
 
                 if(::currentPhotoPath.isInitialized) {
                     profile = profile?.totRating?.let {

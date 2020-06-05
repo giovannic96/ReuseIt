@@ -108,7 +108,7 @@ class ItemListFragment: Fragment() {
         arguments?.clear()
 
         if(!editedItemJSON.isEmpty() && !oldItem.isEmpty() && oldItem != editedItemJSON){
-            val snackbar = view?.let { Snackbar.make(it, getString(R.string.undo), Snackbar.LENGTH_LONG) }
+            val snackbar = view?.let { Snackbar.make(it, getString(R.string.item_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
                     val repo : FirebaseRepo = FirebaseRepo.INSTANCE

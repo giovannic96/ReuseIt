@@ -15,7 +15,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputFilter
 import android.text.InputType
-import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.AdapterView
@@ -32,6 +31,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -40,13 +40,11 @@ import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.mhackeroni.R
 import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
-import it.polito.mad.mhackeroni.utilities.IDGenerator
 import it.polito.mad.mhackeroni.utilities.ImageUtils
 import it.polito.mad.mhackeroni.utilities.Validation
 import it.polito.mad.mhackeroni.viewmodel.EditItemFragmentViewModel
 import it.polito.mad.mhackeroni.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_item_details.*
 import kotlinx.android.synthetic.main.fragment_item_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -83,6 +81,7 @@ class ItemEditFragment: Fragment() {
     private var isBlocked = false
     private var mapViewModel: MapViewModel = MapViewModel()
     private var location : String = ""
+    private var imageDownloadFailed = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_item_edit, container, false)
@@ -201,9 +200,15 @@ class ItemEditFragment: Fragment() {
                     if(!itemData.image.isNullOrEmpty()){
                         try {
                             GlobalScope.launch {
-                                ImageUtils.downloadAndSaveImageTask(requireContext(),
-                                    itemData.image!!
-                                ).let { if(!it.isNullOrEmpty()) currentItemPhotoPath = it}
+                                try {
+                                    ImageUtils.downloadAndSaveImageTask(
+                                        requireContext(),
+                                        itemData.image!!
+                                    ).let { if (!it.isNullOrEmpty()) currentItemPhotoPath = it }
+                                } catch (e : Exception){
+                                    imageDownloadFailed = true
+                                    Snackbar.make(view, getString(R.string.errorConnection), Snackbar.LENGTH_LONG).show()
+                                }
                             }
                             rotationCount.value = 0
                         } catch(ex: IllegalStateException) {
@@ -370,7 +375,7 @@ class ItemEditFragment: Fragment() {
                 && ImageUtils.canDisplayBitmap(currentItemPhotoPath, requireContext())
                 && hasExStoragePermission()){
                 rotationCount.value = rotationCount.value?.plus(1)
-                imageChanged = true
+              if(!imageDownloadFailed) imageChanged = true
             } else if(!hasExStoragePermission()) {
                 checkExStoragePermission()
             } else{
@@ -395,6 +400,10 @@ class ItemEditFragment: Fragment() {
                     currentItemPhotoPath = oldItem?.image ?: ""
                 }
 
+                if (imageDownloadFailed){
+                    currentItemPhotoPath = oldItem?.image ?: ""
+                }
+
                 if(isAddingItem){
                     item = item?.hasFeedback?.let {
                             Item(
@@ -416,6 +425,7 @@ class ItemEditFragment: Fragment() {
 
                     }
                 } else {
+
                     item = item?.hasFeedback?.let {
                             Item(
                                 oldItem?.id ?: "",
@@ -468,27 +478,17 @@ class ItemEditFragment: Fragment() {
 
                     vm.updateLocalItem(item!!)
 
-                    vm.addItem(requireContext()).addOnCompleteListener {
-                        if(it.isSuccessful){
-                            val bundle =
-                                bundleOf("new_item" to item?.let { Item.toJSON(
-                                    it
-                                ).toString() })
+                    vm.addItem(requireContext())
 
-                            view?.findNavController()
-                                ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
-                        } else {
-                            view?.let { it1 -> Snackbar.make(it1, getString(R.string.errorConnection), Snackbar.LENGTH_SHORT).show() }
-                            val bundle =
-                                bundleOf("new_item" to item?.let { Item.toJSON(
-                                    it
-                                ).toString() })
+                    val bundle =
+                        bundleOf("new_item" to item?.let { Item.toJSON(
+                            it
+                        ).toString() })
 
-                            view?.findNavController()
-                                ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_nav_ItemDetailEdit_to_nav_itemList, bundle)
 
-                        }
-                    }
+
                 }else {
 
                     if(!checkData())
@@ -882,11 +882,13 @@ class ItemEditFragment: Fragment() {
                     .load(currentItemPhotoPath)
                     .into(edit_itemImage as ImageView)
 
+                imageDownloadFailed = false
                 rotationCount.value = 0
             }
         }
         else if(requestCode == REQUEST_PICKIMAGE && resultCode == Activity.RESULT_OK) {
             imageChanged = true
+            imageDownloadFailed = false
             // edit_itemImage.setImageBitmap(ImageUtils.getBitmap(data?.data.toString(), requireContext()))
             Glide.with(requireContext())
                 .load(data?.data.toString())

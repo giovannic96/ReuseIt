@@ -1,4 +1,5 @@
 <resources>
+    <string name="timeout">There are some connection issues, changes may require time</string>
     <string name="noInterested">No interested users yet</string>
     <string name="mapfragment">Location</string>
     <string name="yourPosition">Your position</string>
