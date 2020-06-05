@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -186,6 +187,8 @@ class ItemEditFragment: Fragment() {
             vm.getItem().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 var itemData = it
 
+                state = itemData.state
+
                 if(itemData.state == Item.ItemState.SOLD){
                     edit_state.visibility = View.GONE
                     action_layout.visibility = View.GONE
@@ -230,19 +233,18 @@ class ItemEditFragment: Fragment() {
                     else
                         edit_itemLocation.setText(location)
 
-                    val state = itemData.state.toString()
-
-
-                    if(state == "AVAILABLE"){
-                        radio_available.isChecked = true
-                        // radio_sold.isChecked = false
-                        radio_block.isChecked = false
+                    if(state == Item.ItemState.AVAILABLE){
+                        if(radio_available.isVisible){
+                            radio_available.isChecked = true
+                            radio_block.isChecked = false
+                        }
                     }
-                    else if(state == "BLOCKED"){
-                        isBlocked = true
-                        radio_available.isChecked = false
-                        // radio_sold.isChecked = false
-                        radio_block.isChecked = true
+                    else if(state == Item.ItemState.BLOCKED){
+                        if(radio_block.isVisible){
+                            isBlocked = true
+                            radio_available.isChecked = false
+                            radio_block.isChecked = true
+                        }
                     }
 
                     try {
@@ -1088,6 +1090,10 @@ class ItemEditFragment: Fragment() {
                 item?.condition = cond ?: ""
             }
 
+            if(radio_block.isChecked){
+                item?.state = Item.ItemState.BLOCKED
+            }
+
             outState.putString("item", item?.let { Item.toJSON(
                 it
             ).toString() })
@@ -1194,19 +1200,19 @@ class ItemEditFragment: Fragment() {
             retVal = false
         }
 
-        if(item?.condition.isNullOrEmpty()){
+        if(cond.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemCondition.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item?.category.isNullOrEmpty()){
+        if(cat.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemCategory.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item?.subcategory.isNullOrEmpty()){
+        if(subCat.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemSubCategory.error = getString(R.string.required_field)
             retVal = false
