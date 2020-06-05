@@ -510,6 +510,7 @@
                 android:baselineAligned="false">
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/buyers_listview_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -520,6 +521,7 @@
                     android:layout_marginEnd="8dp"
                     android:background="@color/cardview_light_background"
                     android:elevation="3dp">
+
                 <com.google.android.material.button.MaterialButton
                     android:visibility="gone"
                     android:id="@+id/buyers_listview_label"
