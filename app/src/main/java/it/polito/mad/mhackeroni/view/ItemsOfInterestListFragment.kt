@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -58,11 +57,13 @@ class ItemsOfInterestListFragment: Fragment() {
                 myAdapter.reload(it)
             })
         })
+
+
+
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("KKKKK","Item count: ${myAdapter.itemCount}")
     }
 
     private fun navigateWithInfo(item: Item) {

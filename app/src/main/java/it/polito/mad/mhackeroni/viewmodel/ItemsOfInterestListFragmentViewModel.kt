@@ -14,8 +14,15 @@ class ItemsOfInterestListFragmentViewModel : ViewModel() {
     fun getItemsByIds(ids: List<String>) : LiveData<List<Item>> {
         val repo = FirebaseRepo.INSTANCE
         val itemList: MutableList<Item> = mutableListOf()
+        val strings: ArrayList<String> = ArrayList()
 
         for(id in ids) {
+            if (!strings.contains(id)) {
+                strings.add(id);
+            }
+        }
+
+        for(id in strings) {
             repo.getItemRef(id)
                 .addSnapshotListener { snapshot, e ->
                     if (e != null) {
