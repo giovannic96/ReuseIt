@@ -372,6 +372,7 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
         if(!newProfileJSON.isEmpty() && !oldProfileJSON.isEmpty() && oldProfileJSON != newProfileJSON){
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
+                /*
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
 
                     val repo : FirebaseRepo = FirebaseRepo.INSTANCE
@@ -381,8 +382,8 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
                     if(prevProfile != null)
                         repo.updateProfile(prevProfile, repo.getID(requireContext()))
-
                 })
+                */
                 snackbar.show()
             }
         }
