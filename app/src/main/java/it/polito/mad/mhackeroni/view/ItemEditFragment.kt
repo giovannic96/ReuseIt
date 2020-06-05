@@ -1186,19 +1186,19 @@ class ItemEditFragment: Fragment() {
             retVal = false
         }
 
-        if(item?.condition.isNullOrEmpty()){
+        if(cond.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemCondition.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item?.category.isNullOrEmpty()){
+        if(cat.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemCategory.error = getString(R.string.required_field)
             retVal = false
         }
 
-        if(item?.subcategory.isNullOrEmpty()){
+        if(subCat.isNullOrEmpty()){
             view?.let { Snackbar.make(it, getString(R.string.error_data), Snackbar.LENGTH_SHORT).show() }
             edit_itemSubCategory.error = getString(R.string.required_field)
             retVal = false
