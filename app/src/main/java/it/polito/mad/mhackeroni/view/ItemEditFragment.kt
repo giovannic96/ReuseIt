@@ -153,7 +153,7 @@ class ItemEditFragment: Fragment() {
 
         if(isAddingItem){
             var itemData = vm.getLocalItem()
-            if(itemData != null){
+            if(itemData != null ){
                 edit_itemTitle.setText(itemData.name)
                 edit_itemPrice.setText(
                     itemData.price.toString()
@@ -393,10 +393,26 @@ class ItemEditFragment: Fragment() {
 
     private fun displayPreviousItemData() {
         if(generalInfo.isNotEmpty() && generalInfo.size == 4) {
-            edit_itemTitle.setText(generalInfo[0])
-            edit_itemDesc.setText(generalInfo[1])
-            edit_itemPrice.setText(generalInfo[2])
-            edit_itemExpiryDate.setText(generalInfo[3])
+            val itemData = item
+            val title = generalInfo[0]
+            val desc = generalInfo[1]
+            val price = generalInfo[2]
+            val exDate = generalInfo[3]
+
+            itemData?.name = title
+            itemData?.desc = desc
+            itemData?.price = price.toDoubleOrNull() ?: 0.0
+            itemData?.expiryDate = exDate
+
+            cat = vm.getLocalItem()?.category ?: item?.category
+            subCat = vm.getLocalItem()?.subcategory ?: item?.subcategory
+            cond = vm.getLocalItem()?.condition ?: item?.condition
+
+            if (itemData != null) {
+                vm.updateLocalItem(itemData)
+
+            }
+
             generalInfo.clear()
         }
     }
@@ -807,6 +823,7 @@ class ItemEditFragment: Fragment() {
             val pos = adapterCat.getPosition(value)
 
             edit_itemCategory.hint = "\n${value}"
+            cat = value
 
             adapterCat.notifyDataSetChanged()
             try {
@@ -819,6 +836,7 @@ class ItemEditFragment: Fragment() {
             val value = item?.condition
             val pos = adapterCond.getPosition(value)
 
+            cond = value
             edit_itemCondition.hint = "\n${value}"
             adapterCond.notifyDataSetChanged()
          try{
@@ -831,10 +849,10 @@ class ItemEditFragment: Fragment() {
         if(!item?.subcategory.isNullOrEmpty()){
             val value = item?.subcategory
 
-
            if (item?.category.isNullOrEmpty())
             return
 
+            subCat = value
             // val pos = adapterSubcat.getPosition(value)
 
             adapterSubcat.notifyDataSetChanged()
