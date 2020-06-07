@@ -1,5 +1,6 @@
 package it.polito.mad.mhackeroni.view
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -372,7 +373,6 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
         if(!newProfileJSON.isEmpty() && !oldProfileJSON.isEmpty() && oldProfileJSON != newProfileJSON){
             val snackbar = view?.let { Snackbar.make(it, getString(R.string.profile_update), Snackbar.LENGTH_LONG) }
             if (snackbar != null) {
-                /*
                 snackbar.setAction(getString(R.string.undo), View.OnClickListener {
 
                     val repo : FirebaseRepo = FirebaseRepo.INSTANCE
@@ -382,8 +382,8 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
 
                     if(prevProfile != null)
                         repo.updateProfile(prevProfile, repo.getID(requireContext()))
+                    showReuploadImageDialog()
                 })
-                */
                 snackbar.show()
             }
         }
@@ -451,12 +451,19 @@ class ShowProfileFragment : Fragment(), OnMapReadyCallback {
             android.R.layout.simple_list_item_1,
             comments
         )
-
         commentList.adapter = adapter
         commentList
         adapter.notifyDataSetChanged()
 
-
         dialog.show()
+    }
+
+    private fun showReuploadImageDialog() {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle(R.string.warning_dialog)
+        builder.setMessage(R.string.reuploadImage)
+        builder.setPositiveButton(android.R.string.yes) { _, _ -> }
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }

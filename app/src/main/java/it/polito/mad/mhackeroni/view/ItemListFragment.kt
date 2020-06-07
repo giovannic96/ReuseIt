@@ -1,11 +1,12 @@
 package it.polito.mad.mhackeroni.view
 
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +19,9 @@ import it.polito.mad.mhackeroni.model.Item
 import it.polito.mad.mhackeroni.adapters.ItemAdapter.MyAdapterListener
 import it.polito.mad.mhackeroni.viewmodel.ItemListFragmentViewModel
 import it.polito.mad.mhackeroni.R
+import it.polito.mad.mhackeroni.adapters.FeedbackAdapter
 import it.polito.mad.mhackeroni.adapters.ItemAdapter
+import it.polito.mad.mhackeroni.model.Profile
 import it.polito.mad.mhackeroni.utilities.FirebaseRepo
 import kotlinx.android.synthetic.main.fragment_itemlist.*
 
@@ -124,10 +127,20 @@ class ItemListFragment: Fragment() {
                             else
                                 FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem, false)
                         }
+                        showReuploadImageDialog()
                     }
                 })
                 snackbar.show()
             }
         }
+    }
+
+    private fun showReuploadImageDialog() {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle(R.string.warning_dialog)
+        builder.setMessage(R.string.reuploadImage)
+        builder.setPositiveButton(android.R.string.yes) { _, _ -> }
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }

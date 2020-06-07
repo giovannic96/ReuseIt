@@ -40,6 +40,7 @@
     <string name="save">Salva</string>
     <string name="actions">Azioni</string>
     <string name="info">Informazioni generali</string>
+    <string name="reuploadImage">La modifica dell\'immagine non è reversibile. Se l\'hai modificata, per favore caricala nuovamente</string>
     <string name="picFromGallery">Scegli dalla galleria</string>
     <string name="picFromCamera">Scatta una foto</string>
     <string name="photo">Foto</string>

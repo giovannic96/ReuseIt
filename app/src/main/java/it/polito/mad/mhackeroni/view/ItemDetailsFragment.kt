@@ -1,5 +1,6 @@
 package it.polito.mad.mhackeroni.view
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -577,12 +578,21 @@ class ItemDetailsFragment: Fragment(), OnMapReadyCallback {
                         else
                             FirebaseRepo.INSTANCE.updateItem(prevItem.id, prevItem, false)
                     }
+                    showReuploadImageDialog()
                 }
             })
             snackbar!!.show()
         }
     }
 
+    private fun showReuploadImageDialog() {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle(R.string.warning_dialog)
+        builder.setMessage(R.string.reuploadImage)
+        builder.setPositiveButton(android.R.string.yes) { _, _ -> }
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
 
     private fun handleSelectedItem(selectedItemJSON: String) {
         item = selectedItemJSON.let {
