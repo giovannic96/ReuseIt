@@ -427,6 +427,9 @@ class ItemEditFragment: Fragment() {
         return when (menuItem.itemId) {
             R.id.menu_save -> {
 
+                Log.d("MAD2020","Image changed: ${imageChanged} add ${isAddingItem}")
+                Log.d("MAD2020","Image failed: ${imageDownloadFailed}")
+
                 if(!imageChanged && !isAddingItem){
                     currentItemPhotoPath = oldItem?.image ?: ""
                 }

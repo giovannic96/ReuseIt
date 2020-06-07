@@ -109,7 +109,9 @@ class EditProfileFragment : Fragment() {
             oldProfile = profileVal
 
 
+
             if(vm.getLocalProfile() != null) {
+                Log.d("MAD2020", "Saved profile ${Profile.toJSON(vm.getLocalProfile()!!)}")
                 profileData = vm.getLocalProfile()
                 currentPhotoPath = profileData.image.toString()
             } else {
@@ -300,7 +302,9 @@ class EditProfileFragment : Fragment() {
             profile?.image = ""
 
 
-        outState.putString("profile", profile?.let { Profile.toJSON(
+        Log.d("MAD2020", "Saving profile: ${vm.getLocalProfile()}")
+
+        outState.putString("profile", vm.getLocalProfile()?.let { Profile.toJSON(
             it
         ).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }
@@ -309,7 +313,7 @@ class EditProfileFragment : Fragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         val savedProfileJSON = savedInstanceState?.getString("profile") ?: ""
-        Log.d("MAD2020", savedProfileJSON)
+
         val savedProfile =
             Profile.fromStringJSON(
                 savedProfileJSON
