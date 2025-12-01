@@ -137,6 +137,9 @@ import kotlin.collections.HashMap
 
     fun insertItem(item: Item): Task<DocumentReference> {
 
+        Log.d("MAD2020", "Item image: ${item.image}")
+        val imagePath = item.image
+
         val localizedItem = Item.localize(item, true)
         localizedItem.image = ""
 
@@ -144,17 +147,20 @@ import kotlin.collections.HashMap
             .add(localizedItem)
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    if(!item.image.isNullOrEmpty()){
+                    if(!imagePath.isNullOrEmpty()){
                         it.result?.id?.let { id ->
-                            val uploadTask = uploadItemImage(Uri.parse(item.image), id)
+                            val uploadTask = uploadItemImage(Uri.parse(imagePath), id)
                             val getUriTask = uploadTask.second
                             uploadTask.first.addOnCompleteListener {
                                 if(it.isSuccessful){
                                     getUriTask.downloadUrl.addOnCompleteListener { task ->
                                         if(task.isSuccessful){
                                             db.collection("items").document(id).update(hashMapOf("image" to task.result.toString()) as Map<String, Any>)
+                                            Log.d("MAD2020", "Upload successfull")
                                         }
                                     }
+                                } else {
+                                    Log.d("MAD2020", "Exception: ${it.exception}")
                                 }
                             }
                         }
@@ -178,6 +184,8 @@ import kotlin.collections.HashMap
         var storageRef = storage.reference
 
         var ref = storageRef.child("items_images/${documentId}.jpg")
+
+        Log.d("MAD2020", "uploading: ${uri}")
 
         return Pair(ref.putFile(uri), ref)
     }

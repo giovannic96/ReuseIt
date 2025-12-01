@@ -36,13 +36,22 @@ class Profile(
         private fun fromJSON(jsonObject : JSONObject ) : Profile {
             val arrJson = jsonObject.getJSONArray("feedbacks")
             val feedbacks = ArrayList<String>()
+            var lat : Double? = null
+            var lng : Double? = null
+
+            try{
+                lat = jsonObject.getDouble("lat")
+                lng = jsonObject.getDouble("lng")
+            } catch (e : Exception){
+                e.printStackTrace()
+            }
 
             if(arrJson.length() != 0) {
                 for (i in 0 until arrJson.length())
                     feedbacks.add(arrJson.getString(i))
             }
 
-            return Profile(
+            val retProfile =  Profile(
                 jsonObject.getString("fullname"),
                 jsonObject.getString("nickname"),
                 jsonObject.getString("email"),
@@ -54,6 +63,13 @@ class Profile(
                 jsonObject.getDouble("numRating"),
                 feedbacks
                 )
+
+            if(lat != null && lng != null){
+                retProfile.lat = lat
+                retProfile.lng = lng
+            }
+
+            return retProfile
         }
 
         fun toJSON(profile: Profile) : JSONObject{
@@ -68,6 +84,8 @@ class Profile(
                 obj.put("phoneNumber", profile.phoneNumber)
                 obj.put("totRating", profile.totRating)
                 obj.put("numRating", profile.totRating)
+                obj.put("lat", profile.lat)
+                obj.put("lng", profile.lng)
                 val jsonArray = JSONArray(profile.feedbacks)
                 obj.put("feedbacks", jsonArray as Object)
 

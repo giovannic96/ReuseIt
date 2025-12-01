@@ -100,6 +100,7 @@ class EditProfileFragment : Fragment() {
 
 
         edit_location.setOnClickListener {
+            saveLocalData()
             view?.findNavController().navigate(R.id.action_nav_editProfile_to_mapFragment, bundleOf("user" to true))
         }
 
@@ -107,6 +108,7 @@ class EditProfileFragment : Fragment() {
             var profileData = profileVal
             profile = profileVal
             oldProfile = profileVal
+
 
 
             if(vm.getLocalProfile() != null) {
@@ -300,7 +302,7 @@ class EditProfileFragment : Fragment() {
             profile?.image = ""
 
 
-        outState.putString("profile", profile?.let { Profile.toJSON(
+        outState.putString("profile", vm.getLocalProfile()?.let { Profile.toJSON(
             it
         ).toString() })
         rotationCount.value?.let { outState.putInt("rotation", it) }
@@ -309,7 +311,7 @@ class EditProfileFragment : Fragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         val savedProfileJSON = savedInstanceState?.getString("profile") ?: ""
-        Log.d("MAD2020", savedProfileJSON)
+
         val savedProfile =
             Profile.fromStringJSON(
                 savedProfileJSON
@@ -326,6 +328,7 @@ class EditProfileFragment : Fragment() {
         inflater.inflate(R.menu.edit_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle menu item selection
@@ -557,6 +560,24 @@ class EditProfileFragment : Fragment() {
         ViewCompat.setBackgroundTintList(edit_mail, detectColor(edit_mail))
         ViewCompat.setBackgroundTintList(edit_phoneNumber, detectColor(edit_phoneNumber))
         ViewCompat.setBackgroundTintList(edit_location, detectColor(edit_location))
+    }
+
+    private fun saveLocalData(){
+        val localProfile = Profile()
+
+        localProfile.fullName = edit_fullname.text.toString().trim()
+        localProfile.nickname = edit_nickname.text.toString()
+        localProfile.email = edit_mail.text.toString()
+        localProfile.location = edit_location.text.toString()
+        if(::currentPhotoPath.isInitialized)
+            localProfile.image = currentPhotoPath
+        localProfile.bio = edit_bio.text.toString()
+        localProfile.phoneNumber = edit_phoneNumber.text.toString()
+        localProfile.lat = lat
+        localProfile.lng = lng
+
+        vm.updateProfile(localProfile)
+
     }
 
     private fun checkData() : Boolean {
